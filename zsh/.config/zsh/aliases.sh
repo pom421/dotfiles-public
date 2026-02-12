@@ -11,6 +11,10 @@ alias aero="killall AeroSpace && open /Applications/AeroSpace.app"
 alias reset-aero="aerospace enable off && aerospace enable on"
 alias reset-karabiner="launchctl kickstart -k gui/`id -u`/org.pqrs.service.agent.karabiner_console_user_server"
 alias lg="lazygit"
+
 alias sz="source ~/.zshrc"
 alias ez="nvim ~/.zshrc"
 
+alias dpu="cd ~/dotfiles/dotfiles-public/"
+alias dpr="cd ~/dotfiles/dotfiles-private/"
+alias stow="stow -t ~"
