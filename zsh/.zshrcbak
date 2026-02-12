@@ -132,8 +132,6 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="/Users/pom/lab/scripts:$PATH"
 
-export SNYK_TOKEN=0046c05a-08c3-44c3-a744-91b650b841e8
-
 # Yazi call which cd the directory on yazi exit
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
