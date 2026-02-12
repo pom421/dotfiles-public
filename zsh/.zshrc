@@ -27,7 +27,7 @@ source "$XDG_CONFIG_HOME/zsh/nvm.sh"
 source "$XDG_CONFIG_HOME/zsh/dgfip-proxy.sh"
 source "$XDG_CONFIG_HOME/zsh/functions.sh"
 source "$XDG_CONFIG_HOME/zsh/next.sh"
-source "$XDG_CONFIG_HOME/zsh/local.sh.chezmoiignore"
+source "$XDG_CONFIG_HOME/zsh/snyk.sh" # dans dotfiles-private
 
 # Keybindings
 #bindkey "^f" autosuggest-accept
