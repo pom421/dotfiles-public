@@ -1,0 +1,144 @@
+# Zinit is a plugin manager for zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+
+source "${ZINIT_HOME}/zinit.zsh"
+
+source "$HOME/.zsh_perso/nvm.sh"
+source "$HOME/.zsh_perso/proxy.sh"
+source "$HOME/.zsh_perso/misc.sh"
+source "$HOME/.zsh_perso/next.sh"
+source "$HOME/.zsh_perso/git.sh"
+
+# powerlevel10k is a zsh theme
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# plugin zsh-autosuggestions
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Add in snippets
+# doc : https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vscode
+
+
+export ZSH_CACHE_DIR="${HOME}/.cache/zinit"
+mkdir -p "$ZSH_CACHE_DIR/completions"
+
+zinit snippet OMZP::git
+zinit snippet OMZP::command-not-found
+zinit snippet OMZP::ansible
+zinit snippet OMZP::gh
+# Patch: prevent error if _gh completion file is missing
+#if [[ -f "$HOME/.cache/zinit/completions/_gh" ]]; then
+#  fpath=($HOME/.cache/zinit/completions $fpath)
+#  autoload -Uz _gh && compdef _gh gh
+#fi
+
+# add gitignore by using `gi node`
+zinit snippet OMZP::gitignore
+zinit snippet OMZP::ssh
+## Type Esc ESC to add sudo to the start of the command line
+zinit snippet OMZP::sudo
+# show tldr doc for command by using Esc + tldr
+zinit snippet OMZP::tldr
+zinit snippet OMZP::chezmoi
+
+# Load completions
+autoload -U compinit && compinit
+# add autocompletion for sqlite-utils
+eval "$(_SQLITE_UTILS_COMPLETE=zsh_source sqlite-utils)"
+# completion for scalingo CLI
+source ~/.zsh/completion/scalingo_complete.zsh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Keybindings
+#bindkey "^f" autosuggest-accept
+#bindkey "^p" history-search-backward
+#bindkey "^n" history-search-forward
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_find_no_dups
+setopt hist_ignore_all_dups
+setopt hist_ignore_dups
+setopt hist_save_no_dups
+
+# Completion styling
+zstyle ":completion:*" matcher-list 'm:{a-z}={A-Z}'
+zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"
+zstyle ":completion:*" menu no
+zstyle ":fzf-tab:complete:cd:*" fzf-preview "ls --color $realpath"
+
+# Aliases
+alias ls="ls -GFh --color"
+alias ll="ls -alGFh --color"
+alias ..="cd .."
+alias ...=".. && .."
+alias cat="bat"
+#alias find="fd"
+alias brewup='brew update; brew upgrade; brew cleanup; brew doctor'
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias fabric='fabric-ai'
+alias aero="killall AeroSpace && open /Applications/AeroSpace.app"
+alias reset-aero="aerospace enable off && aerospace enable on"
+alias reset-karabiner="launchctl kickstart -k gui/`id -u`/org.pqrs.service.agent.karabiner_console_user_server"
+alias lg="lazygit"
+
+# Shell integrations
+eval "$(fzf --zsh)"
+
+# export
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/Users/pom/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# deno
+export PATH="/Users/pom/.deno/bin:$PATH"
+
+source /Users/pom/.docker/init-zsh.sh || true # Added by Docker Desktop
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+export EDITOR=nvim
+export GPG_TTY=$(tty)
+
+# bun completions
+[ -s "/Users/pom/.bun/_bun" ] && source "/Users/pom/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="/Users/pom/lab/scripts:$PATH"
+
+export SNYK_TOKEN=0046c05a-08c3-44c3-a744-91b650b841e8
+
+# Yazi call which cd the directory on yazi exit
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
