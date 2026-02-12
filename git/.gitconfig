@@ -1,0 +1,49 @@
+[user]
+	name = Pierre-Olivier Mauguet
+	email = mauguet.po@gmail.com
+	signingkey = A867284C408DA615
+[core]
+	excludesfile = /Users/pom/.gitignore_global
+	editor = nvim
+	ignorecase = false
+	filemode = true
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	unstage = restore --staged
+	last = log -1 HEAD
+	ll = log --oneline
+	sw = switch
+	visual = log --graph --oneline --all
+
+[init]
+	defaultBranch = main
+[pull]
+  default = current
+	rebase = true
+[push]
+	default = current
+	autoSetupRemote = true
+[rerere]
+  enabled = true
+[commit]
+	gpgsign = true
+[tag]
+  gpgsign = true
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[fetch]
+	prune = true
+[rebase]
+	autoStash = true
+[credential]
+	helper = store
+[color]
+	ui = true
+[log]
+	decorate = short
