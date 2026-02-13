@@ -12,7 +12,7 @@ I use stow which is pretty simple.
 - [ ] nvim
 - [ ] Obsidian
 
- 
+
 ### Inspirations
 
 - https://github.com/shakeelmohamed/stow-dotfiles/tree/main
