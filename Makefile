@@ -13,6 +13,7 @@ git:
 	@CRED_HELPER=$$(if [ "$$(uname -s)" = "Darwin" ]; then echo "osxkeychain"; else echo "store"; fi) && \
 	stow -t $(HOME) git && \
 	git config --global credential.helper "$$CRED_HELPER"
+	# utiliser dotfiles-private `stow -t ~git` pour ajouter les informations utilisateur
 
 vscode:
 	@VSCODE_TARGET=$$(if [ "$$(uname -s)" = "Darwin" ]; then echo "$$HOME/Library/Application Support/Code/User"; else echo "$$HOME/.config/Code/User"; fi) && \
