@@ -10,7 +10,7 @@ fi
 source "$XDG_CONFIG_HOME/zsh/zsh-options.sh"
 source "$XDG_CONFIG_HOME/zsh/zinit.sh"
 source "$XDG_CONFIG_HOME/zsh/nvm-autouse.sh"
-source "$XDG_CONFIG_HOME/zsh/snyk.sh" # dans dotfiles-private
+#source "$XDG_CONFIG_HOME/zsh/snyk.sh" # dans dotfiles-private
 
 alias sz="source ~/.zshrc"
 alias ez="nvim ~/.zshrc"
