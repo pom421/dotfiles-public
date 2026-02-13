@@ -1,0 +1,83 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+  {
+    "key": "alt+left",
+    "command": "cursorWordPartLeft"
+  },
+  {
+    "key": "shift+alt+left",
+    "command": "cursorWordPartLeftSelect"
+  },
+  {
+    "key": "alt+right",
+    "command": "cursorWordPartRight"
+  },
+  {
+    "key": "shift+alt+right",
+    "command": "cursorWordPartRightSelect"
+  },
+  {
+    "key": "alt+backspace",
+    "command": "deleteWordPartLeft",
+    "when": "textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+alt+backspace",
+    "command": "-deleteWordPartLeft",
+    "when": "textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "shift+alt+backspace",
+    "command": "deleteWordPartRight",
+    "when": "textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+alt+delete",
+    "command": "-deleteWordPartRight",
+    "when": "textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+[Quote]",
+    "command": "editor.emmet.action.matchTag"
+  },
+  {
+    "key": "shift+cmd+0",
+    "command": "workbench.panel.chat.view.copilot.focus"
+  },
+  {
+    "key": "ctrl+cmd+enter",
+    "command": "markdown.extension.checkTaskList",
+    "when": "editorLangId =~ /^markdown$|^rmd$|^quarto$/"
+  },
+  {
+    "key": "shift+cmd+z",
+    "command": "-extension.vscode-git-automator.addAndCommitCurrentFile"
+  },
+  {
+    "key": "ctrl+shift+cmd+l",
+    "command": "editor.action.insertSnippet",
+    "when": "editorTextFocus",
+    "args": {
+      "snippet": "console.log(${TM_SELECTED_TEXT}$1)$0;"
+    }
+  },
+  {
+    "key": "cmd+shift+j",
+    "command": "editor.action.insertSnippet",
+    "when": "editorTextFocus",
+    "args": {
+      "snippet": "JSON.stringify(${TM_SELECTED_TEXT}$1, null, 2)$0"
+    }
+  },
+  {
+    "key": "cmd+s",
+    "command": "extension.multiCommand.execute",
+    "args": {
+      "sequence": [
+        "workbench.action.files.save",
+        "extension.vim_escape"
+      ]
+    },
+    "when": "editorTextFocus && vim.active && vim.mode != 'Normal'"
+  }
+]

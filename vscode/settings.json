@@ -1,0 +1,101 @@
+{
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.accessibilitySupport": "off",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.cursorBlinking": "phase",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.fontFamily": "Fira Code",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 12,
+  "editor.inlineSuggest.enabled": true,
+  "editor.lineHeight": 20,
+  "editor.lineNumbers": "relative",
+  "editor.linkedEditing": true,
+  "editor.minimap.enabled": false,
+  "editor.occurrencesHighlight": "off",
+  "editor.renderWhitespace": "all",
+  "editor.smoothScrolling": true,
+  "editor.stickyScroll.enabled": true,
+  "editor.suggest.insertMode": "replace",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "editor.suggestSelection": "recentlyUsed",
+  "extensions.ignoreRecommendations": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+    "*.jsx": "${capture}.js",
+    "tsconfig.json": "tsconfig.*.json",
+    "*.mts": "${capture}.typegen.ts",
+    "*.ts": "${capture}.js, ${capture}.typegen.ts",
+    "*.tsx": "${capture}.ts, ${capture}.typegen.ts",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.cts": "${capture}.typegen.ts"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.history": true
+  },
+  "githubPullRequests.pullBranch": "never",
+  "git.suggestSmartCommit": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "security.workspace.trust.untrustedFiles": "open",
+  "githubIssues.queries": [
+    {
+      "label": "My Issues",
+      "query": "default"
+    },
+    {
+      "label": "Created Issues",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+    }
+  ],
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "master"
+  ],
+  "gitlens.hovers.currentLine.over": "annotation",
+  "git.confirmSync": false,
+  "redhat.telemetry.enabled": false,
+  "search.exclude": {
+    "**/.history": true
+  },
+  "terminal.integrated.windowsEnableConpty": false,
+  "typescript.tsserver.log": "verbose",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.iconTheme": "material-icon-theme",
+  "window.commandCenter": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "workbench.editor.enablePreview": false,
+  "remote.SSH.remotePlatform": {
+    "sandbox.6qexid.csb": "linux",
+    "*.gitpod.io": "linux"
+  },
+  "vsicons.dontShowNewVersionMessage": true,
+  "window.zoomLevel": 1,
+  "window.newWindowProfile": null,
+  "vsintellicode.modify.editor.suggestSelection": "disabled",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4",
+  "github.copilot.nextEditSuggestions.enabled": true
+}
