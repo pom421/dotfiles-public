@@ -1,20 +1,8 @@
+#!/bin/sh
+
 # fonction md : mkdir + cd
-md() {
+mkcd() {
     mkdir -p -- "$1" && cd -P -- "$1"
-}
-
-function showFiles() {
-    defaults write com.apple.Finder AppleShowAllFiles true
-    killall Finder
-}
-
-function hideFiles() {
-    defaults write com.apple.Finder AppleShowAllFiles true
-    killall Finder
-}
-
-function remove-dstore() {
-    find . -name '.DS_Store' -type f -delete
 }
 
 # affiche le process qui utilise tel port
@@ -22,11 +10,6 @@ function show-port() {
     echo "Command: lsof -nP -iTCP:$1 | grep LISTEN"
     lsof -nP -iTCP:$1 | grep LISTEN
     echo "Hint: type listening"
-}
-
-function show-process() {
-    echo "Command: ps aux | grep $1"
-    ps aux | grep $1
 }
 
 
@@ -57,7 +40,11 @@ function git-ls() {
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	command yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
+	if [ -n "$ZSH_VERSION" ]; then
+		IFS= read -r -d '' cwd < "$tmp"
+	else
+		IFS= read -r -d '' cwd < "$tmp"
+	fi
 	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
