@@ -4,6 +4,10 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
 
+
+export DOTPUB="$HOME/dotfiles/dotfiles-public/"
+export DOTPRIV="$HOME/dotfiles/dotfiles-private/"
+
 # Options ZSH
 HISTSIZE=5000
 HISTFILE=~/.zsh_history

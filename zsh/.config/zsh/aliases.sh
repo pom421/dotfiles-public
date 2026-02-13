@@ -15,6 +15,7 @@ alias lg="lazygit"
 alias sz="source ~/.zshrc"
 alias ez="nvim ~/.zshrc"
 
-alias dpu="cd ~/dotfiles/dotfiles-public/"
-alias dpr="cd ~/dotfiles/dotfiles-private/"
+
+alias dpu="cd $DOTPUB" 
+alias dpr="cd $DOTPRIV" 
 alias stow="stow -t ~"
