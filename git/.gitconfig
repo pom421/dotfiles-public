@@ -1,9 +1,7 @@
-[user]
-	name = Pierre-Olivier Mauguet
-	email = mauguet.po@gmail.com
-	signingkey = A867284C408DA615
+[include]
+  path = ~/.git-user # from dotfiles-private
 [core]
-	excludesfile = /Users/pom/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	editor = nvim
 	ignorecase = false
 	filemode = true
