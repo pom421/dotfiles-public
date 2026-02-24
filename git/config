@@ -1,0 +1,46 @@
+[include]
+  path = ~/.git-user # from dotfiles-private
+[core]
+	excludesfile = ~/.gitignore_global
+	editor = nvim
+	ignorecase = false
+	filemode = true
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	sw = switch
+	unstage = restore --staged
+	last = log -1 HEAD
+	ll = log --oneline
+	visual = log --graph --oneline --all
+[init]
+	defaultBranch = main
+[pull]
+  default = current
+	rebase = true
+[push]
+	default = current
+	autoSetupRemote = true
+[rerere]
+  enabled = true
+[commit]
+	gpgsign = true
+[tag]
+  gpgsign = true
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[fetch]
+	prune = true
+[rebase]
+	autoStash = true
+[credential]
+	helper = osxkeychain
+[color]
+	ui = true
+[log]
+	decorate = short
