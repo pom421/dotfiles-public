@@ -10,3 +10,5 @@ export DOTPRIV="$HOME/dotfiles/dotfiles-private/"
 export EDITOR=nvim
 export VISUAL=nvim
 export GPG_TTY=$(tty)
+export HOMEBREW_BUNDLE_FILE="$HOME/.config/brew/Brewfile"
+
