@@ -5,6 +5,7 @@
 	editor = nvim
 	ignorecase = false
 	filemode = true
+	pager = delta
 [commit]
 	gpgsign = true
 [color]
