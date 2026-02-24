@@ -11,6 +11,7 @@ alias ...=".. && .."
 
 alias ls="ls -GFh --color"
 alias ll="ls -alGFh --color"
+command -v trash &>/dev/null && alias rm='trash'
 
 # Smart commands
 command -v bat &> /dev/null && alias cat="bat"
