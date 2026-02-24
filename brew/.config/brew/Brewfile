@@ -1,211 +1,141 @@
 tap "cirruslabs/cli"
+tap "felixkratz/formulae"
 tap "getsentry/tools"
 tap "homebrew/bundle"
 tap "libsql/sqld"
 tap "ngrok/ngrok"
 tap "nikitabobko/tap"
 tap "stripe/stripe-cli"
+tap "tobi/try", "https://github.com/tobi/try"
 tap "tursodatabase/tap"
-# Run your GitHub Actions locally
 brew "act"
-# Terminal bandwidth utilization tool
 brew "bandwhich"
-# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-# Yet another cross-platform graphical process/system monitor
 brew "bottom"
-# New way to see and navigate directory trees
 brew "broot"
-# Core application library for C
+brew "btop"
 brew "glib"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.13"
-# Vector graphics library with cross-device output support
 brew "cairo"
-# Manage your dotfiles across multiple diverse machines, securely
 brew "chezmoi"
-# Open source multi-tool for exploring and publishing data
 brew "datasette"
-# Secure runtime for JavaScript and TypeScript
 brew "deno"
-# More intuitive version of du in rust
+brew "duckdb"
 brew "dust"
-# Official Go implementation of the Ethereum protocol
 brew "ethereum"
-# Simple, fast and user-friendly alternative to find
+brew "eza"
+brew "fabric-ai"
+brew "fastfetch"
 brew "fd"
-# OpenType text shaping engine
-brew "harfbuzz"
-# Play, record, convert, and stream audio and video
 brew "ffmpeg"
-# Command-line fuzzy finder written in Go
+brew "ffmpegthumbnailer"
 brew "fzf"
-# GitHub command-line tool
 brew "gh"
-# Distributed revision control system
 brew "git"
-# Quickly rewrite git repository history
+brew "git-delta"
+brew "python@3.13"
 brew "git-filter-repo"
-# Git extension for versioning large files
 brew "git-lfs"
-# Compute various size metrics for a Git repository
 brew "git-sizer"
-# Website copier/offline browser
+brew "glow"
+brew "harfbuzz"
 brew "httrack"
-# Lightweight and flexible command-line JSON processor
+brew "imagemagick"
 brew "jq"
-# Kubernetes CLI To Manage Your Clusters In Style!
 brew "k9s"
-# Kubernetes command-line interface
 brew "kubernetes-cli"
-# Kubernetes controller and tool for one-way encrypted Secrets
 brew "kubeseal"
-# Library for encoding and decoding .avif files
+brew "lazygit"
 brew "libavif"
-# Postgres C API library
 brew "libpq"
-# Access large language models from the command-line
 brew "llm"
-# Utility for directing compilation
 brew "make"
-# Simple tool to make locally trusted development certificates
 brew "mkcert"
-# Ambitious Vim-fork focused on extensibility and agility
+brew "monolith"
 brew "neovim"
-# Platform built on V8 to build network applications
 brew "node"
-# Development kit for the Java programming language
+brew "npq"
 brew "openjdk"
-# Data loading tool for PostgreSQL
 brew "pgloader"
-# Execute binaries from Python packages in isolated environments
 brew "pipx"
-# Fast, disk space efficient package manager
 brew "pnpm"
-# Modern replacement for ps written in Rust
+brew "poppler"
 brew "procs"
-# Interpreted, interactive, object-oriented programming language
 brew "python@3.10"
-# Interpreted, interactive, object-oriented programming language
 brew "python@3.11"
-# Interpreted, interactive, object-oriented programming language
 brew "python@3.12"
-# Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
-# Wrapper around ripgrep that adds multiple rich file types
+brew "qpdf"
+brew "ripgrep"
 brew "ripgrep-all"
-# Command-line deletion tool focused on safety, ergonomics, and performance
 brew "rm-improved"
-# Powerful, clean, object-oriented scripting language
 brew "ruby"
-# Build tool for Scala projects
 brew "sbt"
-# CLI for working with Scalingo's PaaS
 brew "scalingo"
-# CLI utility for manipulating SQLite databases
+brew "sevenzip"
 brew "sqlite-utils"
-# Cross-shell prompt for astronauts
 brew "starship"
-# Open source continuous file synchronization application
+brew "stow"
 brew "syncthing"
-# Simplified and community-driven man pages
+brew "taplo"
 brew "tldr"
-# Display directories as trees (with optional color/HTML output)
+brew "trash"
 brew "tree"
-# Development environment, testing framework and asset pipeline for Ethereum
 brew "truffle"
-# Command-line interface for Vercel
+brew "uv"
 brew "vercel-cli"
-# Internet file retriever
 brew "wget"
-# JavaScript package manager
 brew "yarn"
-# Feature-rich command-line audio/video downloader
+brew "yazi"
 brew "yt-dlp"
-# Pluggable terminal workspace, with terminal multiplexer as the base feature
 brew "zellij"
-# Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Run macOS and Linux VMs on Apple Hardware
 brew "cirruslabs/cli/tart"
-# Sentry command-line client for some generic tasks
+brew "felixkratz/formulae/borders"
 brew "getsentry/tools/sentry-cli"
-# Stripe CLI utility
 brew "stripe/stripe-cli/stripe"
 brew "tursodatabase/tap/turso"
-# AeroSpace is an i3-like tiling window manager for macOS
-cask "aerospace"
-# GPU-accelerated terminal emulator
+cask "nikitabobko/tap/aerospace"
 cask "alacritty"
-# Enable Windows-like alt-tab
-cask "alt-tab"
-# Multi-track audio editor and recorder
 cask "audacity"
-# Databases and SQL IDE
+cask "claude-code"
 cask "datagrip"
-# Trains AIs to understand and translate texts
 cask "deepl"
-# Voice and text chat software
 cask "discord"
-# App to build and share containerised applications and microservices
-cask "docker"
-# Web browser
+cask "docker-desktop"
+cask "figma"
 cask "firefox"
-# Virtual workspace manager
-cask "flashspace"
 cask "font-fira-code"
 cask "font-jetbrains-mono-nerd-font"
-# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "font-symbols-only-nerd-font"
 cask "ghostty"
-# Desktop client for GitHub repositories
 cask "github@beta"
-# Git client focusing on productivity
 cask "gitkraken"
-# Tools to protect your emails and files
+cask "godspeed"
 cask "gpg-suite"
-# Terminal built on web technologies
 cask "hyper"
-# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
-# Wallet desktop application to maintain multiple cryptocurrencies
-cask "ledger-live"
-# Open-source, self-hosted Slack-alternative
+cask "karabiner-elements"
+cask "ledger-wallet"
+cask "libreoffice"
 cask "mattermost"
-# Tool to control external monitor brightness & volume
 cask "monitorcontrol"
-# Free and open-source RSS reader
 cask "netnewswire"
-# Reverse proxy, secure introspectable tunnels to localhost
-cask "ngrok"
-# App to write, plan, collaborate, and get organised
+cask "ngrok/ngrok/ngrok"
 cask "notion"
-# Colour picker for colours onscreen
+cask "obsidian"
 cask "pika"
-# Collaboration platform for API development
 cask "postman"
-# Geographic Information System
 cask "qgis"
-# Keyboard-driven, vim-like browser based on PyQt5
 cask "qutebrowser"
-# Control your tools with a few keystrokes
 cask "raycast"
-# Move and resize windows using keyboard shortcuts or snap areas
-cask "rectangle"
-# Video chat, voice call and instant messaging application
+cask "shortcat"
 cask "skype"
-# Messaging app with a focus on speed and security
 cask "telegram"
-# To-do list
-cask "todoist"
-# Open-source code editor
+cask "todoist-app"
 cask "visual-studio-code"
-# Open-source code editor
 cask "visual-studio-code@insiders"
-# Multimedia player
 cask "vlc"
-# Video communication and virtual meeting platform
 cask "zoom"
-# Collect, organise, cite, and share research sources
 cask "zotero"
 vscode "astro-build.astro-vscode"
 vscode "ban.spellright"
@@ -216,7 +146,6 @@ vscode "bradlc.vscode-tailwindcss"
 vscode "burkeholland.simple-react-snippets"
 vscode "chrmarti.regex"
 vscode "codesandbox-io.codesandbox-projects"
-vscode "cpulvermacher.lgtm"
 vscode "davidanson.vscode-markdownlint"
 vscode "dbaeumer.vscode-eslint"
 vscode "denoland.vscode-deno"
@@ -225,11 +154,11 @@ vscode "donjayamanne.githistory"
 vscode "dotjoshjohnson.xml"
 vscode "eamodio.gitlens"
 vscode "editorconfig.editorconfig"
+vscode "emilerolley.publicodes-language-server"
 vscode "esbenp.prettier-vscode"
 vscode "figma.figma-vscode-extension"
 vscode "foam.foam-vscode"
 vscode "formulahendry.auto-rename-tag"
-vscode "github.copilot"
 vscode "github.copilot-chat"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
@@ -245,10 +174,12 @@ vscode "midnightsyntax.vscode-wrap-console-log"
 vscode "mikestead.dotenv"
 vscode "ms-azuretools.vscode-docker"
 vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
+vscode "ms-ossdata.vscode-pgsql"
 vscode "ms-python.debugpy"
 vscode "ms-python.isort"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
 vscode "ms-toolsai.jupyter"
 vscode "ms-toolsai.jupyter-keymap"
 vscode "ms-toolsai.jupyter-renderers"
@@ -282,6 +213,7 @@ vscode "ryuta46.multi-command"
 vscode "samplavigne.p5-vscode"
 vscode "skn0tt.markdown-link-expander"
 vscode "statelyai.stately-vscode"
+vscode "tamasfe.even-better-toml"
 vscode "thinker.sort-json"
 vscode "tomoki1207.pdf"
 vscode "trufflesuite-csi.truffle-vscode"
