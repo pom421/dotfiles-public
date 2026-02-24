@@ -1,0 +1,53 @@
+[include]
+	path = ~/.config/git/git-user # from dotfiles-private git-perso ou git-dgfip
+[core]
+	excludesfile = ~/.config/git/gitignore_global
+	editor = nvim
+	ignorecase = false
+	filemode = true
+[commit]
+	gpgsign = true
+[color]
+	ui = true
+[delta]
+	navigate = true
+	line-numbers = true
+	hyperlinks = true
+	side-by-side = true
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[fetch]
+	prune = true
+[init]
+	defaultBranch = main
+[interactive]
+	diffFilter = delta --color-only
+[log]
+	decorate = short
+[merge]
+	conflictStyle = zdiff3
+[pull]
+	default = current
+	rebase = true
+[push]
+	default = current
+	autoSetupRemote = true
+[rebase]
+	autoStash = true
+[rerere]
+	enabled = true
+[tag]
+	gpgsign = true
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	sw = switch
+	unstage = restore --staged
+	last = log -1 HEAD
+	ll = log --oneline
+	visual = log --graph --oneline --all
