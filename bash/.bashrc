@@ -13,6 +13,8 @@ eval "$(fzf --bash)"
 
 [ -f /Users/pom/.docker/init-bash.sh ] && source /Users/pom/.docker/init-bash.sh 
 
+# CapsLock = escape
+setxkbmap -option caps:escape
 # ---------------------------------
 # ─── Options ────────────────────────────────────────────────────────────────
 
@@ -31,12 +33,11 @@ HISTCONTROL=ignoreboth # ignore les doublons et les lignes avec espace
 # ─── Prompt ─────────────────────────────────────────────────────────────────
 
 # user@host:dir (branche git si dispo) $
-
 gitbranch() {
   git branch 2>/dev/null | awk '/^*/ { print " ("$2")" }'
 }
 
-PS1='[e[0;32m]\u@\h[\e[0m]:[\e[0;34m]\w[\e[0;33m]$(_git_branch)[\e[0m] $ '
+PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;33m\]$(gitbranch)\[\e[0m\] $ '
 
 # ─── Aliases ─────────────────────────────────────────────────────────────────
 
