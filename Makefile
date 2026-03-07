@@ -20,3 +20,13 @@ vscode:
 	mkdir -p "$$VSCODE_TARGET" && \
 	cd $(HOME)/dotfiles/dotfiles-public && \
 	stow -t "$$VSCODE_TARGET" vscode
+
+brew-mac:
+	stow -t $(HOME) brew-mac
+	brew bundle --cleanup --file=$(XDG_CONFIG_HOME)/Brewfile --force
+
+brew-linux:
+	stow -t $(HOME) brew-linux
+	brew bundle --cleanup --file=$(XDG_CONFIG_HOME)/Brewfile --force
+
+

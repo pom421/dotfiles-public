@@ -1,6 +1,6 @@
 # Source configuration commune
-if [ -d "$HOME/.config/shell" ]; then
-    for f in "$HOME/.config/shell"/*.sh; do source "$f"; done
+if [ -d "$XDG_CONFIG_HOME/shell" ]; then
+    for f in "$XDG_CONFIG_HOME/shell"/*.sh; do source "$f"; done
 else
     echo "Erreur: Le répertoire ~/.config/shell n'existe pas. Utilisez: stow -t \$HOME shell"
     return 1
