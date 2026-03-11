@@ -26,3 +26,4 @@ alias ez="nvim ~/.zshrc"
 
 # Shell integrations
 eval "$(fzf --zsh)"
+source /Users/pom/cli/agent-vm/agent-vm.sh # zsh
