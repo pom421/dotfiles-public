@@ -27,3 +27,8 @@ alias ez="nvim ~/.zshrc"
 # Shell integrations
 eval "$(fzf --zsh)"
 source /Users/pom/cli/agent-vm/agent-vm.sh # zsh
+
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+   alias aero="killall AeroSpace && open /Applications/AeroSpace.app"
+fi
