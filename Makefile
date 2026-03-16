@@ -7,8 +7,12 @@ STOW = stow -t $(HOME)
 shell:
 	$(STOW) shell
 
-bash: shell
+bash: shell devbox
 	$(STOW) bash
+	# Sous Mac OS, il faut que bash 5 (installé par devbox) soit installé auparavant, qu'il fasse partie des shells autorisés (dans /etc/shells) et que son utilisateur l'ai choisir par chsh -s
+	# sudo sh -c 'echo /Users/pom/.local/share/devbox/global/default/.devbox/nix/profile/default/bin/bash >> /etc/shells'
+	# chsh -s /Users/pom/.local/share/devbox/global/default/.devbox/nix/profile/default/bin/bash
+
 
 zsh: shell
 	$(STOW) zsh

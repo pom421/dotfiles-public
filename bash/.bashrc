@@ -6,12 +6,21 @@ else
   return 1
 fi
 
-# Bash-spécifique
-alias sb="source ~/.bashrc"
-alias eb="nvim ~/.bashrc"
-eval "$(fzf --bash)"
+# ─── PATH ────────────────────────────────────────────────────────────────────
 
-[ -f /Users/pom/.docker/init-bash.sh ] && source /Users/pom/.docker/init-bash.sh 
+export PATH="$HOME/.local/bin:$PATH"
+export BUN_INSTALL="$HOME/.bun"
+export ECLIPSE_INSTALL="$HOME/soda/atelierjava/jdk/ide/v2020_06/eclipse"
+export PATH="$BUN_INSTALL/bin:$ECLIPSE_INSTALL:$PATH"
+eval "$(devbox global shellenv)"
+
+
+# Bash-spécifique
+alias refreshb="source ~/.bashrc"
+alias editb="nvim ~/.bashrc"
+
+
+[ -f /Users/pom/.docker/init-bash.sh ] && source /Users/pom/.docker/init-bash.sh
 
 # CapsLock = escape
 setxkbmap -option caps:escape
@@ -41,9 +50,9 @@ PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;33m\]$(gitbranch)\[\e[0m\] 
 
 # ─── Aliases ─────────────────────────────────────────────────────────────────
 
-alias ls='ls --color=auto'
-alias ll='ls -lAh --group-directories-first'
-alias la='ls -A'
+alias ls='eza'
+alias ll='eza -lah --group-directories-first'
+alias la='eza -a'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias grep='grep --color=auto'
@@ -55,19 +64,6 @@ alias mv='mv -iv'
 alias rm='rm -Iv'
 
 
-# ─── PATH ────────────────────────────────────────────────────────────────────
-
-export PATH="$HOME/.local/bin:$PATH"
-
-export BUN_INSTALL="$HOME/.bun"
-export ECLIPSE_INSTALL="$HOME/soda/atelierjava/jdk/ide/v2020_06/eclipse"
-export PATH="$BUN_INSTALL/bin:$ECLIPSE_INSTALL:$PATH"
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# Pour Rust/cargo
-. "$HOME/.cargo/env"
-
 # ─── Fonctions utiles ────────────────────────────────────────────────────────
 
 # Crée un dossier et s'y déplace
@@ -76,8 +72,8 @@ mkcd() { mkdir -p "$1" && cd "$1"; }
 
 
 # Git wrapper
-g(){
-  if "$1"; then 
+g() {
+  if [ -n "$1" ]; then
     git "$1"
   else
     git status
@@ -114,3 +110,6 @@ extract() {
 # Cherche dans l'historique
 
 h() { history | grep "$1"; }
+
+# Remove useless "zsh is default shell in Mac OS"
+export BASH_SILENCE_DEPRECATION_WARNING=1
