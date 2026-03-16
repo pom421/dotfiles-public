@@ -7,49 +7,49 @@ else
 fi
 
 # ─── PATH ────────────────────────────────────────────────────────────────────
-
 export PATH="$HOME/.local/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
-export ECLIPSE_INSTALL="$HOME/soda/atelierjava/jdk/ide/v2020_06/eclipse"
-export PATH="$BUN_INSTALL/bin:$ECLIPSE_INSTALL:$PATH"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# macOS uniquement
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export ECLIPSE_INSTALL="$HOME/soda/atelierjava/jdk/ide/v2020_06/eclipse"
+  export PATH="$ECLIPSE_INSTALL:$PATH"
+fi
+
 eval "$(devbox global shellenv)"
 
+# ─── Docker ──────────────────────────────────────────────────────────────────
+# macOS uniquement
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  [ -f /Users/pom/.docker/init-bash.sh ] && source /Users/pom/.docker/init-bash.sh
+fi
 
-# Bash-spécifique
-alias refreshb="source ~/.bashrc"
-alias editb="nvim ~/.bashrc"
-
-
-[ -f /Users/pom/.docker/init-bash.sh ] && source /Users/pom/.docker/init-bash.sh
-
-# CapsLock = escape
-setxkbmap -option caps:escape
-# ---------------------------------
 # ─── Options ────────────────────────────────────────────────────────────────
+set -o noclobber
+shopt -s checkwinsize
+shopt -s histappend
 
-set -o noclobber # évite d'écraser un fichier avec >
-shopt -s autocd # tape un chemin pour y aller directement
-shopt -s cdspell # corrige les petites fautes de frappe dans cd
-shopt -s checkwinsize # met à jour LINES/COLUMNS après chaque commande
-shopt -s histappend # ajoute à l'historique sans l'écraser
+# bash 4+ uniquement
+if (( BASH_VERSINFO[0] >= 4 )); then
+  shopt -s autocd
+  shopt -s cdspell
+fi
 
 # ─── Historique ─────────────────────────────────────────────────────────────
-
 HISTSIZE=10000
 HISTFILESIZE=20000
-HISTCONTROL=ignoreboth # ignore les doublons et les lignes avec espace
+HISTCONTROL=ignoreboth
 
 # ─── Prompt ─────────────────────────────────────────────────────────────────
-
-# user@host:dir (branche git si dispo) $
 gitbranch() {
   git branch 2>/dev/null | awk '/^*/ { print " ("$2")" }'
 }
-
 PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;33m\]$(gitbranch)\[\e[0m\] $ '
 
-# ─── Aliases ─────────────────────────────────────────────────────────────────
-
+# ─── Aliases ────────────────────────────────────────────────────────────────
+alias refreshb="source ~/.bashrc"
+alias editb="nvim ~/.bashrc"
 alias ls='eza'
 alias ll='eza -lah --group-directories-first'
 alias la='eza -a'
@@ -63,15 +63,9 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -Iv'
 
-
-# ─── Fonctions utiles ────────────────────────────────────────────────────────
-
-# Crée un dossier et s'y déplace
-
+# ─── Fonctions ───────────────────────────────────────────────────────────────
 mkcd() { mkdir -p "$1" && cd "$1"; }
 
-
-# Git wrapper
 g() {
   if [ -n "$1" ]; then
     git "$1"
@@ -80,36 +74,34 @@ g() {
   fi
 }
 
-# Yazi wrapper
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  command yazi "$@" --cwd-file="$tmp"
+  IFS= read -r -d '' cwd < "$tmp"
+  [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+  rm -f -- "$tmp"
 }
-
-
-# Extrait n'importe quelle archive
 
 extract() {
   case "$1" in
-    *.tar.gz|*.tgz) tar xzf "$1" ;;
+    *.tar.gz|*.tgz)  tar xzf "$1" ;;
     *.tar.bz2|*.tbz) tar xjf "$1" ;;
-    *.tar.xz) tar xJf "$1" ;;
-    *.tar) tar xf "$1" ;;
-    *.zip) unzip "$1" ;;
-    *.gz) gunzip "$1" ;;
-    *.bz2) bunzip2 "$1" ;;
-    *.xz) unxz "$1" ;;
-    *.7z) 7z x "$1" ;;
-    *) echo "Format non reconnu : $1" ;;
+    *.tar.xz)        tar xJf "$1" ;;
+    *.tar)           tar xf  "$1" ;;
+    *.zip)           unzip   "$1" ;;
+    *.gz)            gunzip  "$1" ;;
+    *.bz2)           bunzip2 "$1" ;;
+    *.xz)            unxz    "$1" ;;
+    *.7z)            7z x    "$1" ;;
+    *)               echo "Format non reconnu : $1" ;;
   esac
 }
 
-# Cherche dans l'historique
-
 h() { history | grep "$1"; }
 
-# Remove useless "zsh is default shell in Mac OS"
-export BASH_SILENCE_DEPRECATION_WARNING=1
+# ─── Divers ──────────────────────────────────────────────────────────────────
+# macOS uniquement
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export BASH_SILENCE_DEPRECATION_WARNING=1
+fi
+
