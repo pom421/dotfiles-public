@@ -35,7 +35,14 @@ install-brew:
 	@which brew > /dev/null 2>&1 || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 install-stow: install-brew
-	@which stow > /dev/null 2>&1 || brew install stow
+	# Nécessaire car brew n'est pas encore dans le PATH (il faut que bash soit lancé)
+	@if ! which stow > /dev/null 2>&1; then \
+		BREW=$$(which brew 2>/dev/null \
+			|| ls /opt/homebrew/bin/brew \
+			|| ls /home/linuxbrew/.linuxbrew/bin/brew \
+			|| ls /usr/local/bin/brew); \
+		$$BREW install stow; \
+	fi
 
 # ─── Brew (casks + vscode extensions) ───────────────────────────
 brew: install-stow
