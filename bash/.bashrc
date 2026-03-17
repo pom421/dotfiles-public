@@ -17,6 +17,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="$ECLIPSE_INSTALL:$PATH"
 fi
 
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+
 # ─── Docker ──────────────────────────────────────────────────────────────────
 # macOS uniquement
 if [[ "$OSTYPE" == "darwin"* ]]; then

@@ -29,10 +29,10 @@ vscode: stow
 	$(STOW) "$$VSCODE_TARGET" vscode
 
 # ─── Bootstrap ───────────────────────────────────────────────────
-install-brew:
+install-brew: bash
 	@which brew > /dev/null 2>&1 || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-install-stow:
+install-stow: install-brew
 	@which stow > /dev/null 2>&1 || brew install stow
 
 # ─── Brew (casks + vscode extensions) ───────────────────────────
@@ -49,6 +49,4 @@ brew: install-brew
 	brew bundle --cleanup --file=$(XDG_CONFIG_HOME)/Brewfile --force
 
 # ─── Installations complètes ─────────────────────────────────────
-install-all-mac: brew git bash vscode
-
-install-all-linux: brew git bash vscode
+install-all: brew git bash vscode
