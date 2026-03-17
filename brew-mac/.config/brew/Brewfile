@@ -1,7 +1,6 @@
 tap "cirruslabs/cli"
 tap "felixkratz/formulae"
 tap "getsentry/tools"
-tap "homebrew/bundle"
 tap "libsql/sqld"
 tap "ngrok/ngrok"
 tap "nikitabobko/tap"
