@@ -41,7 +41,6 @@ install-brew:
 	fi
 
 install-stow: install-brew
-	# Nécessaire car brew n'est pas encore dans le PATH (il faut que bash soit lancé)
 	@if [ -z "$(STOW_BIN)" ]; then \
 		BREW="$(BREW_BIN)"; \
 		if [ -z "$$BREW" ]; then \
