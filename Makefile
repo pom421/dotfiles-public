@@ -4,7 +4,7 @@ STOW = stow -t $(HOME)
 .PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow
 
 # ─── Shell de base ───────────────────────────────────────────────
-shell: install-stow
+shell:
 	$(STOW) shell
 
 bash: shell
@@ -32,7 +32,13 @@ vscode: install-stow
 
 # ─── Bootstrap ───────────────────────────────────────────────────
 install-brew:
-	@which brew > /dev/null 2>&1 || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	@if [ -x /opt/homebrew/bin/brew ] \
+		|| [ -x /home/linuxbrew/.linuxbrew/bin/brew ] \
+		|| [ -x /usr/local/bin/brew ]; then \
+			echo "brew deja installe"; \
+	else \
+		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+	fi
 
 install-stow: install-brew
 	# Nécessaire car brew n'est pas encore dans le PATH (il faut que bash soit lancé)
