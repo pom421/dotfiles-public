@@ -62,7 +62,7 @@ brew: install-stow
 		echo "OS non supporte: $$OS"; \
 		exit 1; \
 	fi
-	$(BREW_BIN) bundle --cleanup --file=$(XDG_CONFIG_HOME)/Brewfile --force
+	$(BREW_BIN) bundle --cleanup --file=$(XDG_CONFIG_HOME)/brew/Brewfile --force
 
 # ─── Installations complètes ─────────────────────────────────────
 install-all: brew git bash vscode
