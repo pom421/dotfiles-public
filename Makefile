@@ -1,10 +1,12 @@
 XDG_CONFIG_HOME ?= $(HOME)/.config
-STOW = stow -t $(HOME)
+BREW_BIN = $$( if [ -x /opt/homebrew/bin/brew ]; then echo /opt/homebrew/bin/brew; elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then echo /home/linuxbrew/.linuxbrew/bin/brew; elif [ -x /usr/local/bin/brew ]; then echo /usr/local/bin/brew; fi )
+STOW_BIN = $$( if command -v stow >/dev/null 2>&1; then command -v stow; elif [ -x /opt/homebrew/bin/stow ]; then echo /opt/homebrew/bin/stow; elif [ -x /home/linuxbrew/.linuxbrew/bin/stow ]; then echo /home/linuxbrew/.linuxbrew/bin/stow; elif [ -x /usr/local/bin/stow ]; then echo /usr/local/bin/stow; fi )
+STOW = $(STOW_BIN) -t $(HOME)
 
 .PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow
 
 # ─── Shell de base ───────────────────────────────────────────────
-shell:
+shell: install-stow
 	$(STOW) shell
 
 bash: shell
@@ -27,14 +29,12 @@ vscode: install-stow
 	@VSCODE_TARGET=$$(if [ "$$(uname -s)" = "Darwin" ]; then echo "$$HOME/Library/Application Support/Code/User"; else echo "$$HOME/.config/Code/User"; fi) && \
 	mkdir -p "$$VSCODE_TARGET" && \
 	cd $(HOME)/dotfiles/dotfiles-public && \
-	stow -t "$$VSCODE_TARGET" vscode
+	"$(STOW_BIN)" -t "$$VSCODE_TARGET" vscode
 
 
 # ─── Bootstrap ───────────────────────────────────────────────────
 install-brew:
-	@if [ -x /opt/homebrew/bin/brew ] \
-		|| [ -x /home/linuxbrew/.linuxbrew/bin/brew ] \
-		|| [ -x /usr/local/bin/brew ]; then \
+	@if [ -n "$(BREW_BIN)" ]; then \
 			echo "brew deja installe"; \
 	else \
 		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
@@ -42,11 +42,12 @@ install-brew:
 
 install-stow: install-brew
 	# Nécessaire car brew n'est pas encore dans le PATH (il faut que bash soit lancé)
-	@if ! which stow > /dev/null 2>&1; then \
-		BREW=$$(which brew 2>/dev/null \
-			|| ls /opt/homebrew/bin/brew \
-			|| ls /home/linuxbrew/.linuxbrew/bin/brew \
-			|| ls /usr/local/bin/brew); \
+	@if [ -z "$(STOW_BIN)" ]; then \
+		BREW="$(BREW_BIN)"; \
+		if [ -z "$$BREW" ]; then \
+			echo "brew introuvable"; \
+			exit 1; \
+		fi; \
 		$$BREW install stow; \
 	fi
 
@@ -61,7 +62,7 @@ brew: install-stow
 		echo "OS non supporte: $$OS"; \
 		exit 1; \
 	fi
-	brew bundle --cleanup --file=$(XDG_CONFIG_HOME)/Brewfile --force
+	$(BREW_BIN) bundle --cleanup --file=$(XDG_CONFIG_HOME)/Brewfile --force
 
 # ─── Installations complètes ─────────────────────────────────────
 install-all: brew git bash vscode
