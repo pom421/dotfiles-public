@@ -17,8 +17,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="$ECLIPSE_INSTALL:$PATH"
 fi
 
-eval "$(devbox global shellenv)"
-
 # ─── Docker ──────────────────────────────────────────────────────────────────
 # macOS uniquement
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -48,8 +46,9 @@ gitbranch() {
 PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;33m\]$(gitbranch)\[\e[0m\] $ '
 
 # ─── Aliases ────────────────────────────────────────────────────────────────
-alias refreshb="source ~/.bashrc"
-alias editb="nvim ~/.bashrc"
+alias reload="source ~/.bashrc"
+alias edit="nvim ~/.bashrc"
+alias lls='ls'
 alias ls='eza'
 alias ll='eza -lah --group-directories-first'
 alias la='eza -a'
