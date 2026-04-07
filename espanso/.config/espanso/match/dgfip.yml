@@ -1,0 +1,18 @@
+matches:
+  - trigger: "@love"
+    replace: "love.andrieu@dgfip.finances.gouv.fr"
+
+  - trigger: "@sophie"
+    replace: "sophie.benoit@dgfip.finances.gouv.fr"
+
+  - trigger: "@laurent"
+    replace: "laurent.charpentier@dgfip.finances.gouv.fr"
+
+  - trigger: "@seb"
+    replace: "sebastien.guilminot@dgfip.finances.gouv.fr"
+
+  - trigger: "@julien"
+    replace: "julien.ferard@dgfip.finances.gouv.fr"
+
+  - trigger: "@jm"
+    replace: "jean-michel.coste@dgfip.finances.gouv.fr"

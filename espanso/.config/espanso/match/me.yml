@@ -1,0 +1,19 @@
+matches:
+  - trigger: "@mail"
+    replace: "mauguet.po@gmail.com"
+
+  - trigger: "@fip"
+    replace: "pierre-olivier.mauguet@dgfip.finances.gouv.fr"
+
+  - trigger: "@beta"
+    replace: "pierre-olivier.mauguet@beta.gouv.fr"
+
+  - trigger: "@gauche"
+    replace: "pierre-olivier.mauguet"
+
+  - trigger: ":bc"
+    replace: "Bien cordialement,\nPierre-Olivier Mauguet"
+
+  - trigger: ":me"
+    replace: "Pierre-Olivier Mauguet"
+

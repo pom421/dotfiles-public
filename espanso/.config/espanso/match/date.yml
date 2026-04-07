@@ -1,0 +1,18 @@
+matches:
+  - trigger: :isodate
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y-%m-%d"
+
+  - triggers: [:ajd, :today]
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y%m%d "
+
+
