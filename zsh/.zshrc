@@ -1,5 +1,4 @@
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export DEVBOX_GLOBAL_CONFIG="$XDG_CONFIG_HOME/devbox"
 
 # Source configuration commune
 if [ -d "$XDG_CONFIG_HOME/shell" ]; then
@@ -28,7 +27,6 @@ alias ez="nvim ~/.zshrc"
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
-eval "$(devbox global shellenv --config $XDG_CONFIG_HOME/devbox)"
 
 
 source /Users/pom/cli/agent-vm/agent-vm.sh # zsh
