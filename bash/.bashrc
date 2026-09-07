@@ -48,7 +48,7 @@ fi
 # ─── Historique ─────────────────────────────────────────────────────────────
 HISTSIZE=10000
 HISTFILESIZE=20000
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 
 # ─── Prompt ─────────────────────────────────────────────────────────────────
 gitbranch() {
@@ -72,6 +72,8 @@ alias mkdir='mkdir -pv'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -Iv'
+alias lg='lazygit'
+
 
 # ─── Fonctions ───────────────────────────────────────────────────────────────
 mkcd() { mkdir -p "$1" && cd "$1"; }
@@ -80,7 +82,7 @@ g() {
   if [ -n "$1" ]; then
     git "$1"
   else
-    git status
+    git status -s -b
   fi
 }
 
@@ -115,3 +117,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export BASH_SILENCE_DEPRECATION_WARNING=1
 fi
 
+
+export http_proxy="http://proxy.infra.dgfip:3128"
+export https_proxy="http://proxy.infra.dgfip:3128"
+export ftp_proxy="http://proxy.infra.dgfip:3128"
+export no_proxy="localhost,127.0.0.1,172.21.*.*,172.22.*.*,172.23.*.*,172.24.*.*,172.25.*.*,172.26.*.*,172.27.*.*,172.28.*.*,172.29.*.*,172.30.*.*,172.31.*.*,192.168.*.*,194.254.38.54,100.78.200.204,.dgfip,.impots,.aife,.ader.gouv.fr,.spi,.rie.gouv.fr,.din.gouv.fr,pia-exp-back.dev.dgfip"
