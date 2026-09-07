@@ -48,7 +48,7 @@ fi
 # ─── Historique ─────────────────────────────────────────────────────────────
 HISTSIZE=10000
 HISTFILESIZE=20000
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 
 # ─── Prompt ─────────────────────────────────────────────────────────────────
 gitbranch() {
@@ -72,6 +72,8 @@ alias mkdir='mkdir -pv'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -Iv'
+alias lg='lazygit'
+
 
 # ─── Fonctions ───────────────────────────────────────────────────────────────
 mkcd() { mkdir -p "$1" && cd "$1"; }
@@ -80,7 +82,7 @@ g() {
   if [ -n "$1" ]; then
     git "$1"
   else
-    git status
+    git status -s -b
   fi
 }
 
@@ -114,4 +116,9 @@ h() { history | grep "$1"; }
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export BASH_SILENCE_DEPRECATION_WARNING=1
 fi
+
+
+
+
+
 
