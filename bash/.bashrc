@@ -37,7 +37,6 @@ fi
 # ─── Options ────────────────────────────────────────────────────────────────
 set -o noclobber
 shopt -s checkwinsize
-shopt -s histappend
 
 # bash 4+ uniquement
 if (( BASH_VERSINFO[0] >= 4 )); then
@@ -46,16 +45,21 @@ if (( BASH_VERSINFO[0] >= 4 )); then
 fi
 
 # ─── Historique ─────────────────────────────────────────────────────────────
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=5000
+HISTFILESIZE=10000
 HISTCONTROL=ignoreboth:erasedups
+HISTIGNORE="ls:cd:cd -:pwd:exit:clear:history:git status:git st"
+HISTTIMEFORMAT="%F %T "
+shopt -s histappend
+shopt -s cmdhist
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
 
 # ─── Prompt ─────────────────────────────────────────────────────────────────
 gitbranch() {
   git branch 2>/dev/null | awk '/^*/ { print " ("$2")" }'
 }
 PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;33m\]$(gitbranch)\[\e[0m\] $ '
-
 # ─── Aliases ────────────────────────────────────────────────────────────────
 alias reload="source ~/.bashrc"
 alias edit="nvim ~/.bashrc"
@@ -73,7 +77,7 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -Iv'
 alias lg='lazygit'
-
+alias n='nvim'
 
 # ─── Fonctions ───────────────────────────────────────────────────────────────
 mkcd() { mkdir -p "$1" && cd "$1"; }
