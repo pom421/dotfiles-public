@@ -3,7 +3,7 @@
 # (pas de brew, pas d'outils de confort, pas de réseau, pas de repo privé).
 # Lancé dans le conteneur par `make test`. Continue après un échec pour tout lister.
 set -u
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 1
 
 failures=0
 
@@ -43,11 +43,45 @@ git_tty() {
   [ "$rc" -eq 0 ] && ! printf '%s\n' "$out" | grep -qE '^(error|fatal):'
 }
 
-# Échoue si la commande configurée pour git (éditeur, pager) n'existe pas
+# Échoue si la commande que git lancera (éditeur, pager), vue depuis un bash
+# configuré (donc avec $EDITOR des dotfiles), n'existe pas
 git_var_exists() {
   local cmd
-  cmd=$(git var "$1") || return 1
+  cmd=$(in_tty "bash -ic 'git var $1'" | tail -n 1) || return 1
   command -v "${cmd%% *}" >/dev/null || { echo "$1 = $cmd : commande introuvable"; return 1; }
+}
+
+# Échoue si un credential helper configuré n'existe pas
+credential_helpers_exist() {
+  local h
+  while read -r h; do
+    case $h in '' | '!'* | /*) continue ;; esac # vide = remise à zéro ; shell ou chemin : non vérifié
+    [ -x "$(git --exec-path)/git-credential-${h%% *}" ] || command -v "git-credential-${h%% *}" >/dev/null ||
+      { echo "credential.helper = $h : git-credential-${h%% *} introuvable"; return 1; }
+  done < <(git config --get-all credential.helper)
+}
+
+# Sans identité configurée, git doit refuser le commit plutôt que d'en deviner une
+# ($EMAIL, user@hostname). $EMAIL est posé pour que la devinette réussisse sans useConfigOnly.
+commit_refused_without_identity() {
+  local r out
+  r=$(mktemp -d)
+  git -C "$r" init -q
+  out=$(EMAIL=devine@example.com git -C "$r" -c commit.gpgsign=false commit -q --allow-empty -m test 2>&1)
+  printf '%s\n' "$out" | grep -q 'auto-detection is disabled' || { printf '%s\n' "${out:-commit accepté}"; return 1; }
+}
+
+# make git-tools doit activer delta quand il est installé (faux delta = cat)
+delta_activated_when_installed() {
+  local bin pager
+  bin=$(mktemp -d)
+  printf '#!/bin/sh\nexec cat\n' >"$bin/delta"
+  chmod +x "$bin/delta"
+  PATH="$bin:$PATH" make -s git-tools >/dev/null || return 1
+  pager=$(git config core.pager)
+  rm -rf "$bin"
+  make -s git-tools >/dev/null # retour à l'état sans delta
+  [ "$pager" = delta ] || { echo "core.pager = '$pager' (attendu : delta)"; return 1; }
 }
 
 echo "== Installation"
@@ -80,6 +114,9 @@ check "git diff (pager)" git_tty "git -C $repo diff"
 check "git log (pager)" git_tty "git -C $repo log -1"
 check "git add -p" git_tty "printf 'y\n' | script -qec 'git -C $repo add -p' /dev/null"
 check "git commit" git -C "$repo" commit -qam "second"
+check "git : credential helper disponible" credential_helpers_exist
+check "git : commit refusé sans identité" commit_refused_without_identity
+check "git : delta activé s'il est installé" delta_activated_when_installed
 
 echo
 if [ "$failures" -eq 0 ]; then

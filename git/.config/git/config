@@ -1,37 +1,33 @@
-[include]
-	path = ~/.config/git/git-user # profil perso ou pro, depuis dotfiles-private
+# Config git portable : ne dépend que de git.
+# Le reste arrive par des includes, ignorés sans erreur quand le fichier est absent
+# (chemins relatifs à ~/.config/git/) :
+#   tools.inc           généré par `make git-tools` selon les outils installés (delta, git-lfs)
+#   local.inc           propre à la machine (credential helper, proxy…), non versionné
+#   git-user            identité et signature, depuis dotfiles-private (transitoire)
+#   perso.inc, pro.inc  identité et signature par dossier, depuis dotfiles-private
+# L'éditeur n'est pas fixé ici : git prend $VISUAL puis $EDITOR.
 [core]
 	excludesfile = ~/.config/git/gitignore_global
-	editor = nvim
 	ignorecase = false
 	filemode = true
-	pager = delta
-[commit]
-	gpgsign = true
+[user]
+	# Pas d'identité devinée (user@hostname) : sans config, le commit est refusé
+	useConfigOnly = true
+[credential]
+	# Intégré à git, marche partout. Sur Mac, git (Apple ou Homebrew) ajoute déjà
+	# osxkeychain dans sa config système, consulté avant celui-ci.
+	helper = cache --timeout=3600
 [color]
 	ui = true
-[delta]
-	navigate = true
-	line-numbers = true
-	hyperlinks = true
-	side-by-side = true
-[filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
 [fetch]
 	prune = true
 [init]
 	defaultBranch = main
-[interactive]
-	diffFilter = delta --color-only
 [log]
 	decorate = short
 [merge]
 	conflictStyle = zdiff3
 [pull]
-	default = current
 	rebase = true
 [push]
 	default = current
@@ -40,12 +36,10 @@
 	autoStash = true
 [rerere]
 	enabled = true
-[tag]
-	gpgsign = true
 [alias]
 	co = checkout
 	br = branch
-  a = add
+	a = add
 	c = commit
 	st = status -s -b
 	sw = switch
@@ -53,5 +47,15 @@
 	last = log -1 HEAD
 	ll = log --oneline
 	visual = log --graph --oneline --all
-  l = log
-  s = show
+	l = log
+	s = show
+
+# En dernier : ces fichiers surchargent ce qui précède
+[include]
+	path = tools.inc
+	path = local.inc
+	path = git-user
+[includeIf "gitdir:~/perso/"]
+	path = perso.inc
+[includeIf "gitdir:~/pro/"]
+	path = pro.inc

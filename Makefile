@@ -3,7 +3,7 @@ BREW_BIN = $$( if [ -x /opt/homebrew/bin/brew ]; then echo /opt/homebrew/bin/bre
 STOW_BIN = $$( if command -v stow >/dev/null 2>&1; then command -v stow; elif [ -x /opt/homebrew/bin/stow ]; then echo /opt/homebrew/bin/stow; elif [ -x /home/linuxbrew/.linuxbrew/bin/stow ]; then echo /home/linuxbrew/.linuxbrew/bin/stow; elif [ -x /usr/local/bin/stow ]; then echo /usr/local/bin/stow; fi )
 STOW = $(STOW_BIN) -t $(HOME)
 
-.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso minimal test
+.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso minimal test git-tools
 # ─── Shell de base ───────────────────────────────────────────────
 shell: install-stow
 	$(STOW) shell
@@ -15,13 +15,25 @@ zsh: shell
 	$(STOW) zsh
 
 # ─── Git ─────────────────────────────────────────────────────────
+# Identité et signature : dotfiles-private. Credential helper : cf. git/.config/git/config
 git: install-stow
-	# Pour la conservation du mdp, en mac, utilisation de osxkeychain, pour Linux de store
-	@CRED_HELPER=$$(if [ "$$(uname -s)" = "Darwin" ]; then echo "osxkeychain"; else echo "store"; fi) && \
-	$(STOW) git && \
-	git config --global credential.helper "$$CRED_HELPER"
-	# utiliser dotfiles-private `stow -t git` pour ajouter les informations utilisateur
-	git config core.hooksPath .githooks
+	$(STOW) --no-folding git
+	@$(MAKE) --no-print-directory git-tools
+	@# Hook gitleaks, seulement sur un clone git du repo
+	@if git rev-parse --git-dir >/dev/null 2>&1; then git config core.hooksPath .githooks; fi
+
+# Active les compléments git selon les outils présents (à relancer après un brew install)
+GIT_TOOLS = delta git-lfs
+
+git-tools:
+	@out="$(XDG_CONFIG_HOME)/git/tools.inc"; \
+	echo "# Généré par make git-tools : ne pas éditer" > "$$out"; \
+	for t in $(GIT_TOOLS); do \
+		if command -v $$t >/dev/null 2>&1; then \
+			printf '[include]\n\tpath = %s.inc\n' $$t >> "$$out"; \
+			echo "git : $$t activé"; \
+		fi; \
+	done
 
 # ─── VSCode ──────────────────────────────────────────────────────
 vscode: install-stow
@@ -89,6 +101,7 @@ minimal:
 	done
 	stow --no-folding -t $(HOME) $(MINIMAL_PACKAGES)
 	@if command -v zsh >/dev/null 2>&1; then stow --no-folding -t $(HOME) zsh; fi
+	@$(MAKE) --no-print-directory git-tools
 
 # ─── Tests : machine Ubuntu 24.04 nue, sans réseau ───────────────
 test:

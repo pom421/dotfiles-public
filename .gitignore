@@ -19,3 +19,10 @@ PLAN.md
 vscode/profiles/*/extensions.json
 vscode/profiles/builtin/
 **/globalStorage/
+
+# Git : fichiers générés ou fournis par dotfiles-private (au cas où ~/.config/git serait un lien vers le repo)
+git/.config/git/tools.inc
+git/.config/git/local.inc
+git/.config/git/git-user
+git/.config/git/perso.inc
+git/.config/git/pro.inc
