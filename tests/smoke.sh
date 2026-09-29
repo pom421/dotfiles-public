@@ -135,6 +135,31 @@ unfold_replaces_folded_dir() {
     { ls -la "$HOME/.config"; return 1; }
 }
 
+# Un module qui appelle compdef avant compinit voit sa complétion enregistrée
+zsh_module_compdef_replayed() {
+  local rc
+  echo 'compdef _files dotfiles-fakecmd' >"$HOME/.config/shell/local.d/test-compdef.sh"
+  in_tty "zsh -ic '[[ \$_comps[dotfiles-fakecmd] == _files ]]'"
+  rc=$?
+  rm -f "$HOME/.config/shell/local.d/test-compdef.sh"
+  return "$rc"
+}
+
+# zinit.sh ne charge zinit que si make zsh-plugins a posé son marqueur
+# (sinon zinit retenterait les téléchargements à chaque démarrage)
+zinit_gated_by_marker() {
+  local zdir="$HOME/.local/share/zinit" out rc=0
+  mkdir -p "$zdir/zinit.git"
+  printf 'zinit() { :; }\necho zinit-charge\n' >"$zdir/zinit.git/zinit.zsh"
+  out=$(in_tty "zsh -ic true")
+  [ -z "$out" ] || { echo "sans marqueur : $out"; rc=1; }
+  touch "$zdir/.dotfiles-ready"
+  out=$(in_tty "zsh -ic true")
+  [ "$out" = zinit-charge ] || { echo "avec marqueur : '$out'"; rc=1; }
+  rm -rf "$zdir"
+  return "$rc"
+}
+
 base_cmds="mkcd ll la extract h g git-ls"
 
 echo "== Installation"
@@ -159,6 +184,8 @@ check "zsh : commandes de base ($base_cmds)" in_tty "zsh -ic 'type $base_cmds >/
 check "zsh : ls fonctionne" in_tty "zsh -ic 'ls / >/dev/null'"
 check "zsh : aucun alias vers un autre outil" no_tool_swapping_alias zsh
 check "zsh : module actif si l'outil est installé" module_activated_when_installed zsh
+check "zsh : complétion d'un module rejouée après compinit" zsh_module_compdef_replayed
+check "zsh : plugins chargés seulement après make zsh-plugins" zinit_gated_by_marker
 check "zsh : git.sh se charge malgré l'alias g d'OMZ" silent "zsh -fc 'alias g=git; source ~/.config/shell/tools.d/git.sh'"
 
 echo "== Git"

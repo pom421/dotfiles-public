@@ -1,9 +1,10 @@
 XDG_CONFIG_HOME ?= $(HOME)/.config
+XDG_DATA_HOME ?= $(HOME)/.local/share
 BREW_BIN = $$( if [ -x /opt/homebrew/bin/brew ]; then echo /opt/homebrew/bin/brew; elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then echo /home/linuxbrew/.linuxbrew/bin/brew; elif [ -x /usr/local/bin/brew ]; then echo /usr/local/bin/brew; fi )
 STOW_BIN = $$( if command -v stow >/dev/null 2>&1; then command -v stow; elif [ -x /opt/homebrew/bin/stow ]; then echo /opt/homebrew/bin/stow; elif [ -x /home/linuxbrew/.linuxbrew/bin/stow ]; then echo /home/linuxbrew/.linuxbrew/bin/stow; elif [ -x /usr/local/bin/stow ]; then echo /usr/local/bin/stow; fi )
 STOW = $(STOW_BIN) -t $(HOME)
 
-.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso minimal test git-tools unfold
+.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso minimal test git-tools unfold zsh-plugins
 # ─── Shell de base ───────────────────────────────────────────────
 shell: install-stow
 	$(STOW) shell
@@ -13,6 +14,29 @@ bash: shell
 
 zsh: shell
 	$(STOW) zsh
+	@$(MAKE) --no-print-directory zsh-plugins
+
+# Plugins zsh : téléchargés ici (réseau requis), jamais au démarrage du shell.
+# Le marqueur .dotfiles-ready autorise zinit.sh à charger les plugins ; il n'est posé
+# que si un second démarrage ne télécharge plus rien.
+# À relancer après l'ajout d'un plugin dans zsh/.config/zsh/zinit.sh.
+ZINIT_HOME = $(XDG_DATA_HOME)/zinit/zinit.git
+ZINIT_READY = $(XDG_DATA_HOME)/zinit/.dotfiles-ready
+
+zsh-plugins:
+	@command -v curl >/dev/null 2>&1 || command -v wget >/dev/null 2>&1 || \
+		{ echo "zsh-plugins : curl ou wget requis (snippets Oh My Zsh)"; exit 1; }
+	@rm -f "$(ZINIT_READY)"
+	@if [ ! -r "$(ZINIT_HOME)/zinit.zsh" ]; then \
+		git clone --depth=1 https://github.com/zdharma-continuum/zinit.git "$(ZINIT_HOME)"; \
+	fi
+	@# Un zsh interactif charge zinit.sh, qui télécharge les plugins manquants
+	DOTFILES_ZINIT_INSTALL=1 zsh -ic exit
+	@out=$$(DOTFILES_ZINIT_INSTALL=1 zsh -ic exit 2>&1); \
+	if printf '%s' "$$out" | grep -qE 'Downloading|ERROR'; then \
+		printf '%s\n' "$$out"; echo "zsh-plugins : téléchargement incomplet, plugins non activés"; exit 1; \
+	fi
+	@touch "$(ZINIT_READY)" && echo "zsh-plugins : plugins activés"
 
 # ─── Git ─────────────────────────────────────────────────────────
 # Identité et signature : dotfiles-private. Credential helper : cf. git/.config/git/config

@@ -4,6 +4,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# compdef n'existe qu'après compinit, mais les modules (tools.d, brew, docker…) sont
+# chargés avant, pour que leur fpath soit pris en compte. Leurs appels sont
+# mémorisés ici, puis rejoués après compinit.
+typeset -ga _dotfiles_compdefs
+compdef() { _dotfiles_compdefs+=("${(j: :)${(@q)@}}") }
+
 # Config commune bash/zsh
 if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/init.sh" ]]; then
   source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/init.sh"
@@ -14,6 +20,12 @@ fi
 # zsh uniquement
 source "$XDG_CONFIG_HOME/zsh/zsh-options.sh"
 source "$XDG_CONFIG_HOME/zsh/zinit.sh"
+
+# Complétion
+autoload -Uz compinit && compinit
+for _dotfiles_c in "${_dotfiles_compdefs[@]}"; do eval "compdef $_dotfiles_c"; done
+unset _dotfiles_compdefs _dotfiles_c
+(( ${+functions[zinit]} )) && zinit cdreplay -q
 
 alias sz='source ~/.zshrc'
 alias ez='"$EDITOR" ~/.zshrc'

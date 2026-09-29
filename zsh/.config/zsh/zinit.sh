@@ -1,11 +1,17 @@
-export ZSH_CACHE_DIR="${HOME}/.cache/zinit"
-# Zinit is a plugin manager for zsh
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && command mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-[ -n "$ZSH_CACHE_DIR" ] && [ ! -d "$ZSH_CACHE_DIR" ] && command mkdir -p "$ZSH_CACHE_DIR/completions"
+# Plugins zsh (zinit). Téléchargés par `make zsh-plugins`, jamais au démarrage du shell :
+# zinit retente à chaque démarrage un plugin qui manque, ce qui bloque derrière un proxy.
+# Le marqueur .dotfiles-ready n'est posé qu'une fois tous les plugins présents ; sans
+# lui (machine de formation, hors ligne), zsh démarre nu mais propre.
+ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
+if [[ ! -r "$ZINIT_HOME/zinit.zsh" ]] || [[ ! -e "${ZINIT_HOME:h}/.dotfiles-ready" && -z "${DOTFILES_ZINIT_INSTALL-}" ]]; then
+  PROMPT='%F{green}%n@%m%f:%F{blue}%~%f %# '
+  return 0
+fi
 
-source "${ZINIT_HOME}/zinit.zsh"
+export ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zinit"
+[[ -d "$ZSH_CACHE_DIR/completions" ]] || command mkdir -p "$ZSH_CACHE_DIR/completions"
+
+source "$ZINIT_HOME/zinit.zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -38,11 +44,3 @@ zinit snippet OMZP::sudo
 # show tldr doc for command by using Esc + tldr
 zinit snippet OMZP::tldr
 zinit snippet OMZP::chezmoi
-
-# Load completions
-autoload -U compinit && compinit
-# add autocompletion for sqlite-utils (après compinit : le script utilise compdef)
-if command -v sqlite-utils >/dev/null 2>&1; then
-  eval "$(_SQLITE_UTILS_COMPLETE=zsh_source sqlite-utils)"
-fi
-
