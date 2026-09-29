@@ -11,3 +11,11 @@ Package Control.merged-ca-bundle
 Package Control.system-ca-bundle
 Package Control.user-ca-bundle
 PLAN.md
+
+# Historique local des éditeurs (extension Local History, etc.)
+.history/
+
+# VSCode : état géré par l'application, pas de la configuration
+vscode/profiles/*/extensions.json
+vscode/profiles/builtin/
+**/globalStorage/
