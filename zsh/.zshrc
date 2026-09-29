@@ -1,34 +1,24 @@
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-
-# Source configuration commune
-if [ -d "$XDG_CONFIG_HOME/shell" ]; then
-    for f in "$XDG_CONFIG_HOME/shell"/*.sh; do 
-        echo "source $f;"
-        source "$f"; done
-else
-    echo "Erreur: Le répertoire $XDG_CONFIG_HOME/shell n'existe pas. Utilisez: stow -t \$HOME shell"
-    return 1
+# Powerlevel10k instant prompt : doit rester en tête, avant tout ce qui peut
+# écrire à l'écran ou demander une saisie.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# ZSH-spécifique
+# Config commune bash/zsh
+if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/init.sh" ]]; then
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/init.sh"
+else
+  echo "dotfiles : ~/.config/shell/init.sh introuvable (make zsh depuis le repo dotfiles-public)" >&2
+fi
+
+# zsh uniquement
 source "$XDG_CONFIG_HOME/zsh/zsh-options.sh"
 source "$XDG_CONFIG_HOME/zsh/zinit.sh"
-source "$XDG_CONFIG_HOME/zsh/nvm-autouse.sh"
-#source "$XDG_CONFIG_HOME/zsh/snyk.sh" # dans dotfiles-private
 
-alias sz="source ~/.zshrc"
-alias ez="nvim ~/.zshrc"
+alias sz='source ~/.zshrc'
+alias ez='"$EDITOR" ~/.zshrc'
 
 # Keybindings
 #bindkey "^f" autosuggest-accept
 #bindkey "^p" history-search-backward
 #bindkey "^n" history-search-forward
-
-# Shell integrations
-eval "$(fzf --zsh)"
-eval "$(zoxide init zsh)"
-
-
-source /Users/pom/cli/agent-vm/agent-vm.sh # zsh
-source ~/.config/tchap/secrets.env
-

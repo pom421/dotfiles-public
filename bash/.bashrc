@@ -1,45 +1,18 @@
-# Source configuration commune
-if [ -d "$HOME/.config/shell" ]; then
-  for f in "$HOME/.config/shell"/*.sh; do source "$f"; done
+# Bash : seulement ce qui est propre à bash. Le reste est dans ~/.config/shell/ (init.sh)
+case $- in *i*) ;; *) return ;; esac # interactif uniquement
+
+if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/init.sh" ]; then
+  . "${XDG_CONFIG_HOME:-$HOME/.config}/shell/init.sh"
 else
-  echo "Erreur: Le répertoire $HOME/.config/shell n'existe pas. Utilisez: stow -t $HOME shell"
-  return 1
-fi
-
-# ─── PATH ────────────────────────────────────────────────────────────────────
-export PATH="$HOME/.local/bin:$PATH"
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# macOS uniquement
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  export ECLIPSE_INSTALL="$HOME/soda/atelierjava/jdk/ide/v2020_06/eclipse"
-  export PATH="$ECLIPSE_INSTALL:$PATH"
-fi
-
-BREW_BIN=""
-if [ -x /opt/homebrew/bin/brew ]; then
-  BREW_BIN=/opt/homebrew/bin/brew
-elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  BREW_BIN=/home/linuxbrew/.linuxbrew/bin/brew
-elif [ -x /usr/local/bin/brew ]; then
-  BREW_BIN=/usr/local/bin/brew
-fi
-
-[ -n "$BREW_BIN" ] && eval "$($BREW_BIN shellenv bash)"
-
-# ─── Docker ──────────────────────────────────────────────────────────────────
-# macOS uniquement
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  [ -f /Users/pom/.docker/init-bash.sh ] && source /Users/pom/.docker/init-bash.sh
+  echo "dotfiles : ~/.config/shell/init.sh introuvable (make bash depuis le repo dotfiles-public)" >&2
 fi
 
 # ─── Options ────────────────────────────────────────────────────────────────
 set -o noclobber
 shopt -s checkwinsize
 
-# bash 4+ uniquement
-if (( BASH_VERSINFO[0] >= 4 )); then
+# bash 4+ uniquement (macOS fournit bash 3.2)
+if ((BASH_VERSINFO[0] >= 4)); then
   shopt -s autocd
   shopt -s cdspell
 fi
@@ -52,71 +25,17 @@ HISTIGNORE="ls:cd:cd -:pwd:exit:clear:history:git status:git st"
 HISTTIMEFORMAT="%F %T "
 shopt -s histappend
 shopt -s cmdhist
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-
+PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
 # ─── Prompt ─────────────────────────────────────────────────────────────────
 gitbranch() {
-  git branch 2>/dev/null | awk '/^*/ { print " ("$2")" }'
+  git branch 2>/dev/null | awk '/^\*/ { print " ("$2")" }'
 }
 PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;33m\]$(gitbranch)\[\e[0m\] $ '
-# ─── Aliases ────────────────────────────────────────────────────────────────
-alias reload="source ~/.bashrc"
-alias edit="nvim ~/.bashrc"
-alias lls='ls'
-alias ls='eza'
-alias ll='eza -lah --group-directories-first'
-alias la='eza -a'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias grep='grep --color=auto'
-alias df='df -h'
-alias du='du -sh'
-alias mkdir='mkdir -pv'
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias rm='rm -Iv'
-alias lg='lazygit'
-alias n='nvim'
 
-# ─── Fonctions ───────────────────────────────────────────────────────────────
-mkcd() { mkdir -p "$1" && cd "$1"; }
+# ─── Raccourcis ─────────────────────────────────────────────────────────────
+alias reload='. ~/.bashrc'
+alias edit='"$EDITOR" ~/.bashrc'
 
-g() {
-  if [ -n "$1" ]; then
-    git "$1"
-  else
-    git status -s -b
-  fi
-}
-
-function y() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-  command yazi "$@" --cwd-file="$tmp"
-  IFS= read -r -d '' cwd < "$tmp"
-  [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-  rm -f -- "$tmp"
-}
-
-extract() {
-  case "$1" in
-    *.tar.gz|*.tgz)  tar xzf "$1" ;;
-    *.tar.bz2|*.tbz) tar xjf "$1" ;;
-    *.tar.xz)        tar xJf "$1" ;;
-    *.tar)           tar xf  "$1" ;;
-    *.zip)           unzip   "$1" ;;
-    *.gz)            gunzip  "$1" ;;
-    *.bz2)           bunzip2 "$1" ;;
-    *.xz)            unxz    "$1" ;;
-    *.7z)            7z x    "$1" ;;
-    *)               echo "Format non reconnu : $1" ;;
-  esac
-}
-
-h() { history | grep "$1"; }
-
-# ─── Divers ──────────────────────────────────────────────────────────────────
-# macOS uniquement
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  export BASH_SILENCE_DEPRECATION_WARNING=1
-fi
+# macOS : pas de message « le shell par défaut est maintenant zsh »
+case "$OSTYPE" in darwin*) export BASH_SILENCE_DEPRECATION_WARNING=1 ;; esac

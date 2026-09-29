@@ -9,14 +9,6 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source /Users/pom/.docker/init-zsh.sh || true # Added by Docker Desktop
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
 # powerlevel10k is a zsh theme
 zinit ice depth=1; zinit light romkatv/powerlevel10k
@@ -49,12 +41,8 @@ zinit snippet OMZP::chezmoi
 
 # Load completions
 autoload -U compinit && compinit
-# add autocompletion for sqlite-utils
-eval "$(_SQLITE_UTILS_COMPLETE=zsh_source sqlite-utils)"
-
-# Completion styling
-zstyle ":completion:*" matcher-list 'm:{a-z}={A-Z}'
-zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"
-zstyle ":completion:*" menu no
-zstyle ":fzf-tab:complete:cd:*" fzf-preview "ls --color $realpath"
+# add autocompletion for sqlite-utils (après compinit : le script utilise compdef)
+if command -v sqlite-utils >/dev/null 2>&1; then
+  eval "$(_SQLITE_UTILS_COMPLETE=zsh_source sqlite-utils)"
+fi
 

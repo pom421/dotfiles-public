@@ -87,15 +87,40 @@ delta_activated_when_installed() {
 echo "== Installation"
 check "make minimal" make minimal
 
+# Un module de tools.d s'active quand l'outil est présent (faux lazygit dans ~/.local/bin)
+module_activated_when_installed() {
+  local shell=$1 rc
+  mkdir -p "$HOME/.local/bin"
+  printf '#!/bin/sh\n' >"$HOME/.local/bin/lazygit"
+  chmod +x "$HOME/.local/bin/lazygit"
+  in_tty "$shell -ic 'alias lg >/dev/null'"
+  rc=$?
+  rm -f "$HOME/.local/bin/lazygit"
+  return "$rc"
+}
+
+# DOTFILES_DEBUG=1 affiche les fichiers chargés
+debug_lists_files() {
+  in_tty "DOTFILES_DEBUG=1 bash -ic true" | grep -q 'shell/core/nav.sh'
+}
+
+base_cmds="mkcd ll la extract h g git-ls"
+
 echo "== Bash"
 check "bash interactif : démarre sans sortie" silent "bash -ic true"
 check "bash login : démarre sans sortie" silent "bash -lic true"
-check "bash : la config est chargée (mkcd)" in_tty "bash -ic 'type mkcd >/dev/null'"
+check "bash : rechargement sans sortie" silent "bash -ic '. ~/.bashrc'"
+check "bash : commandes de base ($base_cmds)" in_tty "bash -ic 'type $base_cmds >/dev/null'"
 check "bash : ls fonctionne" in_tty "bash -ic 'ls / >/dev/null'"
+check "bash : module actif si l'outil est installé" module_activated_when_installed bash
+check "bash : DOTFILES_DEBUG liste les fichiers" debug_lists_files
 
 echo "== Zsh"
 check "zsh interactif : démarre sans sortie" silent "zsh -ic true"
-check "zsh : la config est chargée (mkcd)" in_tty "zsh -ic 'type mkcd >/dev/null'"
+check "zsh : commandes de base ($base_cmds)" in_tty "zsh -ic 'type $base_cmds >/dev/null'"
+check "zsh : ls fonctionne" in_tty "zsh -ic 'ls / >/dev/null'"
+check "zsh : module actif si l'outil est installé" module_activated_when_installed zsh
+check "zsh : git.sh se charge malgré l'alias g d'OMZ" silent "zsh -fc 'alias g=git; source ~/.config/shell/tools.d/git.sh'"
 
 echo "== Git"
 repo=$(mktemp -d)
