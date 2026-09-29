@@ -1,5 +1,5 @@
 [include]
-	path = ~/.config/git/git-user # from dotfiles-private git-perso ou git-pro
+	path = ~/.config/git/git-user # profil perso ou pro, depuis dotfiles-private
 [core]
 	excludesfile = ~/.config/git/gitignore_global
 	editor = nvim
