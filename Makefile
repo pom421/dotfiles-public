@@ -107,22 +107,35 @@ minimal:
 # Un ancien stow sans --no-folding a pu remplacer un dossier entier par un lien
 # vers le repo (ex. ~/.config/git -> dotfiles-public/git/.config/git) : les
 # outils écrivent alors dans le repo, et stow 2.4 refuse ensuite de le défaire.
-# Retire ces liens (jamais le contenu du repo) puis relance stow sur leurs paquets.
+# Retire ces liens (jamais le contenu du repo), vérifie avec stow -n, puis relance
+# stow sur leurs paquets. En cas de conflit, remet les liens tels quels.
 REPO_NAME = $(notdir $(CURDIR))
 
 unfold:
-	@pkgs=""; \
+	@links=""; pkgs=""; \
 	for l in "$(HOME)"/.[!.]* "$(HOME)"/.config/*; do \
 		[ -L "$$l" ] && [ -d "$$l" ] || continue; \
 		t=$$(readlink "$$l"); \
 		case "$$t" in *"$(REPO_NAME)"/*) ;; *) continue ;; esac; \
-		p=$${t#*$(REPO_NAME)/}; p=$${p%%/*}; \
-		rm "$$l" && echo "dossier replié retiré : $$l ($$p)"; \
-		pkgs="$$pkgs $$p"; \
+		p=$${t#*$(REPO_NAME)/}; \
+		links="$$links $$l=$$t"; pkgs="$$pkgs $${p%%/*}"; \
 	done; \
 	if [ -z "$$pkgs" ]; then echo "rien à déplier"; exit 0; fi; \
 	pkgs=$$(printf '%s\n' $$pkgs | sort -u | tr '\n' ' '); \
-	stow --no-folding -t "$(HOME)" $$pkgs && echo "restow : $$pkgs"
+	restore() { for lt in $$links; do [ -e "$${lt%%=*}" ] || ln -s "$${lt#*=}" "$${lt%%=*}"; done; }; \
+	abort() { \
+		restore; \
+		echo "unfold annulé, rien n'a changé. Déplace les fichiers en conflit ci-dessus"; \
+		echo "(ex. mv ~/.zshrc ~/.zshrc.pre-dotfiles) puis relance make unfold."; \
+		exit 1; \
+	}; \
+	for lt in $$links; do rm "$${lt%%=*}"; done; \
+	if ! out=$$(stow -n --no-folding -t "$(HOME)" $$pkgs 2>&1); then \
+		printf '%s\n' "$$out" | grep -v 'simulation mode' >&2; abort; \
+	fi; \
+	stow --no-folding -t "$(HOME)" $$pkgs || abort; \
+	for lt in $$links; do echo "déplié : $${lt%%=*}"; done; \
+	echo "restow : $$pkgs"
 
 # ─── Tests : machine Ubuntu 24.04 nue, sans réseau ───────────────
 test:

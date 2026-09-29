@@ -112,10 +112,24 @@ no_tool_swapping_alias() {
   [ -z "$bad" ] || { echo "alias vers un autre outil :$bad"; return 1; }
 }
 
-# make unfold remplace un dossier replié (lien vers le repo) par un vrai dossier
-unfold_replaces_folded_dir() {
+# make unfold ne casse rien en cas de conflit : ~/.zshrc réécrit en vrai fichier
+# par un installeur (p10k, Docker…) → échec, et le dossier replié est remis tel quel
+unfold_rolls_back_on_conflict() {
   rm -rf "$HOME/.config/zsh"
   ln -s ../dotfiles/dotfiles-public/zsh/.config/zsh "$HOME/.config/zsh"
+  rm -f "$HOME/.zshrc"
+  echo "# réécrit par un installeur" >"$HOME/.zshrc"
+  if make -s unfold >/dev/null 2>&1; then echo "unfold aurait dû échouer"; return 1; fi
+  [ -L "$HOME/.config/zsh" ] && [ -r "$HOME/.config/zsh/zinit.sh" ] || { echo "lien non remis"; ls -la "$HOME/.config"; return 1; }
+  rm -f "$HOME/.zshrc" # conflit résolu, pour le test suivant
+}
+
+# make unfold remplace un dossier replié (lien vers le repo) par un vrai dossier
+unfold_replaces_folded_dir() {
+  [ -L "$HOME/.config/zsh" ] || {
+    rm -rf "$HOME/.config/zsh"
+    ln -s ../dotfiles/dotfiles-public/zsh/.config/zsh "$HOME/.config/zsh"
+  }
   make -s unfold >/dev/null || return 1
   [ -d "$HOME/.config/zsh" ] && [ ! -L "$HOME/.config/zsh" ] && [ -L "$HOME/.config/zsh/zinit.sh" ] ||
     { ls -la "$HOME/.config"; return 1; }
@@ -125,6 +139,7 @@ base_cmds="mkcd ll la extract h g git-ls"
 
 echo "== Installation"
 check "make minimal" make minimal
+check "make unfold : annule tout en cas de conflit" unfold_rolls_back_on_conflict
 check "make unfold : déplie un dossier replié" unfold_replaces_folded_dir
 
 echo "== Bash"
