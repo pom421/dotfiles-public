@@ -1,0 +1,13 @@
+matches:
+  - trigger: ":réunion"
+    replace:
+        ### Participants
+
+        ### Discussions
+
+        ## Calendrier
+        -
+
+        ### Actions
+
+        * [ ]

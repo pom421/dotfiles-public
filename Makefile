@@ -3,8 +3,7 @@ BREW_BIN = $$( if [ -x /opt/homebrew/bin/brew ]; then echo /opt/homebrew/bin/bre
 STOW_BIN = $$( if command -v stow >/dev/null 2>&1; then command -v stow; elif [ -x /opt/homebrew/bin/stow ]; then echo /opt/homebrew/bin/stow; elif [ -x /home/linuxbrew/.linuxbrew/bin/stow ]; then echo /home/linuxbrew/.linuxbrew/bin/stow; elif [ -x /usr/local/bin/stow ]; then echo /usr/local/bin/stow; fi )
 STOW = $(STOW_BIN) -t $(HOME)
 
-.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow
-
+.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso
 # ─── Shell de base ───────────────────────────────────────────────
 shell: install-stow
 	$(STOW) shell
@@ -62,6 +61,19 @@ brew: install-stow
 		exit 1; \
 	fi
 	$(BREW_BIN) bundle --cleanup --file=$(XDG_CONFIG_HOME)/brew/Brewfile --force
+
+# --- Espanso ------------------------------------------------------
+espanso:
+	@OS=$$(uname -s); \
+	if [ "$$OS" = "Darwin" ]; then \
+	  $(STOW) espanso; \
+	  espanso stop 2>/dev/null || true; \
+	  if [ ! -L "$$HOME/Library/Application Support/espanso" ]; then \
+	    rm -rf "$$HOME/Library/Application Support/espanso"; \
+	    ln -s "$$HOME/.config/espanso" "$$HOME/Library/Application Support/espanso"; \
+	  fi; \
+	  espanso start; \
+	fi
 
 # ─── Installations complètes ─────────────────────────────────────
 install-all: brew git bash vscode

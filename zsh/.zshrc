@@ -32,6 +32,3 @@ eval "$(zoxide init zsh)"
 source /Users/pom/cli/agent-vm/agent-vm.sh # zsh
 source ~/.config/tchap/secrets.env
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-   alias aero="killall AeroSpace && open /Applications/AeroSpace.app"
-fi

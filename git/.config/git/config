@@ -45,10 +45,13 @@
 [alias]
 	co = checkout
 	br = branch
-	ci = commit
-	st = status
+  a = add
+	c = commit
+	st = status -s -b
 	sw = switch
 	unstage = restore --staged
 	last = log -1 HEAD
 	ll = log --oneline
 	visual = log --graph --oneline --all
+  l = log
+  s = show
