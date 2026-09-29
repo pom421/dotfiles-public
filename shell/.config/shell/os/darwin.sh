@@ -1,7 +1,7 @@
 # macOS
 
-# Couleurs de ls (BSD) sans alias
-export CLICOLOR=1
+# ls : -G couleurs (BSD), -F suffixe de type (/ * @)
+alias ls='ls -GF'
 
 # Homebrew en premier : les modules de tools.d trouvent ainsi les outils installés par brew
 if [ -x /opt/homebrew/bin/brew ]; then

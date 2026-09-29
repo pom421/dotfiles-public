@@ -3,7 +3,7 @@ BREW_BIN = $$( if [ -x /opt/homebrew/bin/brew ]; then echo /opt/homebrew/bin/bre
 STOW_BIN = $$( if command -v stow >/dev/null 2>&1; then command -v stow; elif [ -x /opt/homebrew/bin/stow ]; then echo /opt/homebrew/bin/stow; elif [ -x /home/linuxbrew/.linuxbrew/bin/stow ]; then echo /home/linuxbrew/.linuxbrew/bin/stow; elif [ -x /usr/local/bin/stow ]; then echo /usr/local/bin/stow; fi )
 STOW = $(STOW_BIN) -t $(HOME)
 
-.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso minimal test git-tools
+.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso minimal test git-tools unfold
 # ─── Shell de base ───────────────────────────────────────────────
 shell: install-stow
 	$(STOW) shell
@@ -102,6 +102,27 @@ minimal:
 	stow --no-folding -t $(HOME) $(MINIMAL_PACKAGES)
 	@if command -v zsh >/dev/null 2>&1; then stow --no-folding -t $(HOME) zsh; fi
 	@$(MAKE) --no-print-directory git-tools
+
+# ─── Dépliage (migration vers --no-folding) ──────────────────────
+# Un ancien stow sans --no-folding a pu remplacer un dossier entier par un lien
+# vers le repo (ex. ~/.config/git -> dotfiles-public/git/.config/git) : les
+# outils écrivent alors dans le repo, et stow 2.4 refuse ensuite de le défaire.
+# Retire ces liens (jamais le contenu du repo) puis relance stow sur leurs paquets.
+REPO_NAME = $(notdir $(CURDIR))
+
+unfold:
+	@pkgs=""; \
+	for l in "$(HOME)"/.[!.]* "$(HOME)"/.config/*; do \
+		[ -L "$$l" ] && [ -d "$$l" ] || continue; \
+		t=$$(readlink "$$l"); \
+		case "$$t" in *"$(REPO_NAME)"/*) ;; *) continue ;; esac; \
+		p=$${t#*$(REPO_NAME)/}; p=$${p%%/*}; \
+		rm "$$l" && echo "dossier replié retiré : $$l ($$p)"; \
+		pkgs="$$pkgs $$p"; \
+	done; \
+	if [ -z "$$pkgs" ]; then echo "rien à déplier"; exit 0; fi; \
+	pkgs=$$(printf '%s\n' $$pkgs | sort -u | tr '\n' ' '); \
+	stow --no-folding -t "$(HOME)" $$pkgs && echo "restow : $$pkgs"
 
 # ─── Tests : machine Ubuntu 24.04 nue, sans réseau ───────────────
 test:

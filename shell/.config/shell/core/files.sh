@@ -1,7 +1,15 @@
-# Fichiers : commandes standard uniquement (pas d'eza, bat, fd… à la place de ls, cat, find)
+# Fichiers. Alias autorisés : la même commande avec des options par défaut.
+# Interdit : un autre outil à la place (ls=eza, cat=bat, find=fd…).
+# Les fonctions des dotfiles appellent `command rm`, `command mkdir`… pour ne pas hériter de ces options.
 alias ll='ls -alFh'
 alias la='ls -A'
 alias grep='grep --color=auto'
+alias df='df -h'
+alias du='du -sh'
+alias mkdir='mkdir -pv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -Iv'
 
 # Décompresse une archive selon son extension
 extract() {

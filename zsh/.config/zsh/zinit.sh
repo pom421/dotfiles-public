@@ -1,9 +1,9 @@
 export ZSH_CACHE_DIR="${HOME}/.cache/zinit"
 # Zinit is a plugin manager for zsh
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME ] && command mkdir -p "$(dirname $ZINIT_HOME)"
 [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-[ -n "$ZSH_CACHE_DIR" ] && [ ! -d "$ZSH_CACHE_DIR" ] && mkdir -p "$ZSH_CACHE_DIR/completions"
+[ -n "$ZSH_CACHE_DIR" ] && [ ! -d "$ZSH_CACHE_DIR" ] && command mkdir -p "$ZSH_CACHE_DIR/completions"
 
 source "${ZINIT_HOME}/zinit.zsh"
 

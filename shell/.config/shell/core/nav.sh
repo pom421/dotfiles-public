@@ -4,5 +4,5 @@ alias ...='cd ../..'
 
 # mkdir + cd
 mkcd() {
-  mkdir -p -- "$1" && cd -P -- "$1" || return
+  command mkdir -p -- "$1" && cd -P -- "$1" || return
 }

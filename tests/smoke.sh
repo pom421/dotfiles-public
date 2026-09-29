@@ -84,9 +84,6 @@ delta_activated_when_installed() {
   [ "$pager" = delta ] || { echo "core.pager = '$pager' (attendu : delta)"; return 1; }
 }
 
-echo "== Installation"
-check "make minimal" make minimal
-
 # Un module de tools.d s'active quand l'outil est présent (faux lazygit dans ~/.local/bin)
 module_activated_when_installed() {
   local shell=$1 rc
@@ -104,7 +101,31 @@ debug_lists_files() {
   in_tty "DOTFILES_DEBUG=1 bash -ic true" | grep -q 'shell/core/nav.sh'
 }
 
+# Un alias qui porte le nom d'une commande doit lancer cette même commande
+# (ls='ls -F' oui, ls=eza non)
+no_tool_swapping_alias() {
+  local name value bad=""
+  while IFS='=' read -r name value; do
+    command -v "$name" >/dev/null 2>&1 || continue
+    [ "${value%% *}" = "$name" ] || bad="$bad $name=$value"
+  done < <(in_tty "$1 -ic alias" | sed -e 's/^alias //' -e "s/'//g")
+  [ -z "$bad" ] || { echo "alias vers un autre outil :$bad"; return 1; }
+}
+
+# make unfold remplace un dossier replié (lien vers le repo) par un vrai dossier
+unfold_replaces_folded_dir() {
+  rm -rf "$HOME/.config/zsh"
+  ln -s ../dotfiles/dotfiles-public/zsh/.config/zsh "$HOME/.config/zsh"
+  make -s unfold >/dev/null || return 1
+  [ -d "$HOME/.config/zsh" ] && [ ! -L "$HOME/.config/zsh" ] && [ -L "$HOME/.config/zsh/zinit.sh" ] ||
+    { ls -la "$HOME/.config"; return 1; }
+}
+
 base_cmds="mkcd ll la extract h g git-ls"
+
+echo "== Installation"
+check "make minimal" make minimal
+check "make unfold : déplie un dossier replié" unfold_replaces_folded_dir
 
 echo "== Bash"
 check "bash interactif : démarre sans sortie" silent "bash -ic true"
@@ -112,6 +133,8 @@ check "bash login : démarre sans sortie" silent "bash -lic true"
 check "bash : rechargement sans sortie" silent "bash -ic '. ~/.bashrc'"
 check "bash : commandes de base ($base_cmds)" in_tty "bash -ic 'type $base_cmds >/dev/null'"
 check "bash : ls fonctionne" in_tty "bash -ic 'ls / >/dev/null'"
+check "bash : aucun alias vers un autre outil" no_tool_swapping_alias bash
+check "bash : mkcd sans sortie (malgré mkdir -pv)" silent "bash -ic 'mkcd /tmp/mkcd-bash/a'"
 check "bash : module actif si l'outil est installé" module_activated_when_installed bash
 check "bash : DOTFILES_DEBUG liste les fichiers" debug_lists_files
 
@@ -119,6 +142,7 @@ echo "== Zsh"
 check "zsh interactif : démarre sans sortie" silent "zsh -ic true"
 check "zsh : commandes de base ($base_cmds)" in_tty "zsh -ic 'type $base_cmds >/dev/null'"
 check "zsh : ls fonctionne" in_tty "zsh -ic 'ls / >/dev/null'"
+check "zsh : aucun alias vers un autre outil" no_tool_swapping_alias zsh
 check "zsh : module actif si l'outil est installé" module_activated_when_installed zsh
 check "zsh : git.sh se charge malgré l'alias g d'OMZ" silent "zsh -fc 'alias g=git; source ~/.config/shell/tools.d/git.sh'"
 

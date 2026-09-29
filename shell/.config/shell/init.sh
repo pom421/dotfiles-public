@@ -9,7 +9,7 @@
 # Règles pour un module de tools.d :
 #   - 1re ligne : garde `command -v X >/dev/null 2>&1 || return 0`
 #   - aucune sortie, pas de réseau
-#   - pas d'alias qui masque une commande standard (ls, cat, find, rm…)
+#   - un alias peut ajouter des options à sa commande, jamais la remplacer par un autre outil
 #   - pas de setopt/shopt : les options du shell vont dans bash/ et zsh/
 #
 # Diagnostic : DOTFILES_DEBUG=1 zsh -i -c exit   (liste les fichiers chargés)
