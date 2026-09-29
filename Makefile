@@ -21,6 +21,7 @@ git: install-stow
 	$(STOW) git && \
 	git config --global credential.helper "$$CRED_HELPER"
 	# utiliser dotfiles-private `stow -t git` pour ajouter les informations utilisateur
+	git config core.hooksPath .githooks
 
 # ─── VSCode ──────────────────────────────────────────────────────
 vscode: install-stow
