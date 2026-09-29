@@ -3,7 +3,7 @@ BREW_BIN = $$( if [ -x /opt/homebrew/bin/brew ]; then echo /opt/homebrew/bin/bre
 STOW_BIN = $$( if command -v stow >/dev/null 2>&1; then command -v stow; elif [ -x /opt/homebrew/bin/stow ]; then echo /opt/homebrew/bin/stow; elif [ -x /home/linuxbrew/.linuxbrew/bin/stow ]; then echo /home/linuxbrew/.linuxbrew/bin/stow; elif [ -x /usr/local/bin/stow ]; then echo /usr/local/bin/stow; fi )
 STOW = $(STOW_BIN) -t $(HOME)
 
-.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso
+.PHONY: shell bash zsh git vscode brew deps-mac deps-linux install-brew install-stow espanso minimal test
 # ─── Shell de base ───────────────────────────────────────────────
 shell: install-stow
 	$(STOW) shell
@@ -75,6 +75,25 @@ espanso:
 	  fi; \
 	  espanso start; \
 	fi
+
+# ─── Minimal : sans brew ni réseau (formation, CI) ───────────────
+MINIMAL_PACKAGES = shell bash git
+
+minimal:
+	@command -v stow >/dev/null 2>&1 || { echo "stow introuvable : sudo apt install stow (Linux) ou brew install stow (Mac)"; exit 1; }
+	@# Sauvegarde les fichiers existants (ex. squelette Ubuntu) qui bloqueraient stow
+	@for f in .bashrc .bash_profile .zshrc; do \
+		if [ -f "$(HOME)/$$f" ] && [ ! -L "$(HOME)/$$f" ]; then \
+			mv "$(HOME)/$$f" "$(HOME)/$$f.pre-dotfiles" && echo "sauvegarde : ~/$$f -> ~/$$f.pre-dotfiles"; \
+		fi; \
+	done
+	stow --no-folding -t $(HOME) $(MINIMAL_PACKAGES)
+	@if command -v zsh >/dev/null 2>&1; then stow --no-folding -t $(HOME) zsh; fi
+
+# ─── Tests : machine Ubuntu 24.04 nue, sans réseau ───────────────
+test:
+	docker build -q -f tests/Dockerfile -t dotfiles-test . >/dev/null
+	docker run --rm --network none dotfiles-test
 
 # ─── Installations complètes ─────────────────────────────────────
 install-all: brew git bash vscode
