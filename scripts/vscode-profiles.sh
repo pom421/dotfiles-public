@@ -29,7 +29,8 @@ done
 
 export_profiles() {
   [ -r "$storage" ] || { echo "vscode-profiles : $storage introuvable" >&2; exit 1; }
-  jq -c '.userDataProfiles // [] | .[]' "$storage" | while IFS= read -r p; do
+  # builtin/* (ex. Agents) : profils créés et gérés par VSCode lui-même
+  jq -c '.userDataProfiles // [] | .[] | select(.location | startswith("builtin/") | not)' "$storage" | while IFS= read -r p; do
     name=$(printf '%s' "$p" | jq -r .name)
     code --profile "$name" --list-extensions </dev/null |
       jq -R . | jq -s --argjson p "$p" '$p + {extensions: .}'
@@ -44,7 +45,7 @@ import_profiles() {
   [ -s "$storage" ] || echo '{}' >"$storage"
 
   # 1. Registre : ajoute les profils absents, avec leur dossier d'origine
-  jq -c '.[] | del(.extensions)' "$profiles" | while IFS= read -r p; do
+  jq -c '.[] | select(.location | startswith("builtin/") | not) | del(.extensions)' "$profiles" | while IFS= read -r p; do
     loc=$(printf '%s' "$p" | jq -r .location)
     name=$(printf '%s' "$p" | jq -r .name)
     state=$(jq -r --arg l "$loc" --arg n "$name" '
@@ -64,7 +65,7 @@ import_profiles() {
   done
 
   # 2. Extensions manquantes, profil par profil
-  jq -r '.[] | .name as $n | .extensions[] | [$n, .] | @tsv' "$profiles" | while IFS="$(printf '\t')" read -r name ext; do
+  jq -r '.[] | select(.location | startswith("builtin/") | not) | .name as $n | .extensions[] | [$n, .] | @tsv' "$profiles" | while IFS="$(printf '\t')" read -r name ext; do
     if ! code --profile "$name" --list-extensions </dev/null | grep -qix "$ext"; then
       code --profile "$name" --install-extension "$ext" </dev/null >/dev/null && echo "« $name » : $ext installée"
     fi
