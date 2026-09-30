@@ -213,12 +213,26 @@ zsh_compdump_stable() {
   return "$rc"
 }
 
+# Un vrai fichier à la place d'un lien (créé par l'application ou `git config --global`)
+# est sauvegardé en .pre-dotfiles au lieu de bloquer stow
+stow_backs_up_real_file() {
+  local target=$1 file=$2 dir
+  dir=$(dirname "$target/$file")
+  rm -f "$target/$file" && mkdir -p "$dir" && echo '{"local": true}' >"$target/$file"
+  make -s "$3" >/dev/null || return 1
+  [ -L "$target/$file" ] || { echo "$target/$file n'est pas un lien"; return 1; }
+  grep -q local "$target/$file.pre-dotfiles" || { echo "sauvegarde absente"; return 1; }
+  rm -f "$target/$file.pre-dotfiles"
+}
+
 base_cmds="mkcd ll la extract h g git-ls"
 
 echo "== Installation"
 check "make minimal" make minimal
 check "make unfold : annule tout en cas de conflit" unfold_rolls_back_on_conflict
 check "make unfold : déplie un dossier replié" unfold_replaces_folded_dir
+check "make vscode : settings.json existant sauvegardé" stow_backs_up_real_file "$HOME/.config/Code/User" settings.json vscode
+check "make git : ~/.config/git/config existant sauvegardé" stow_backs_up_real_file "$HOME/.config/git" config git
 check "make karabiner : lien de dossier, sauvegarde, idempotent" karabiner_dir_link
 check "make clean-links : seulement les liens morts vers le repo" clean_links_only_repo
 

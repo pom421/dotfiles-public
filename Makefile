@@ -18,7 +18,7 @@ export PATH := $(PATH):/opt/homebrew/bin:/usr/local/bin:/home/linuxbrew/.linuxbr
 
 STOW = stow -d "$(REPO)" -t "$(HOME)" --no-folding
 
-MINIMAL_PACKAGES = shell bash git
+MINIMAL_PACKAGES = shell bash git $(if $(shell command -v zsh 2>/dev/null),zsh)
 ifeq ($(OS),Darwin)
   LOGIN_SHELL = zsh
   APP_TARGETS = aerospace karabiner
@@ -31,7 +31,7 @@ endif
 
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
-	vscode-export vscode-import vscode-closed espanso ghostty aerospace karabiner brew brew-cleanup install-brew backup-rc need-stow \
+	vscode-export vscode-import vscode-closed espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
 	unfold clean-links dry-run uninstall check test bench
 
 help:
@@ -56,9 +56,8 @@ help:
 	@echo "  bench          temps de démarrage de zsh et bash"
 
 # ─── Profils ─────────────────────────────────────────────────────
-minimal: need-stow backup-rc
-	$(STOW) $(MINIMAL_PACKAGES)
-	@if command -v zsh >/dev/null 2>&1; then $(STOW) zsh; fi
+minimal: need-stow
+	$(call stow_pkgs,$(MINIMAL_PACKAGES))
 	@$(MAKE) --no-print-directory git-tools
 
 full: install-brew brew minimal $(LOGIN_SHELL) git nvim vscode espanso ghostty $(APP_TARGETS) clean-links
@@ -68,24 +67,32 @@ need-stow:
 	@command -v stow >/dev/null 2>&1 || \
 		{ echo "stow introuvable : sudo apt install stow (Linux), brew install stow (Mac)"; exit 1; }
 
-# Sauvegarde les fichiers de démarrage existants (squelette Ubuntu, fichier réécrit
-# par un installeur…) qui empêcheraient stow de poser ses liens
-backup-rc:
-	@for f in .bashrc .bash_profile .zshrc .zshenv .p10k.zsh; do \
-		if [ -f "$(HOME)/$$f" ] && [ ! -L "$(HOME)/$$f" ]; then \
-			mv "$(HOME)/$$f" "$(HOME)/$$f.pre-dotfiles" && echo "sauvegarde : ~/$$f -> ~/$$f.pre-dotfiles"; \
-		fi; \
+# Pose les liens des paquets $(1) dans $(2) (défaut : ~). Un vrai fichier qui occupe
+# déjà la place d'un fichier versionné (créé par l'application, un installeur, le
+# squelette Ubuntu…) empêcherait stow d'agir : il est d'abord sauvegardé en
+# .pre-dotfiles. La liste vient de git (jamais un fichier d'état ignoré, comme
+# l'extensions.json de VSCode) ; hors d'un clone git (banc Docker), de find.
+define stow_pkgs
+	@for p in $(1); do \
+		( cd "$(REPO)/$$p" && { git ls-files 2>/dev/null || find . \( -type f -o -type l \) | sed 's|^\./||'; } ) | \
+		while IFS= read -r f; do \
+			case "$${f##*/}" in .stow-local-ignore|profiles.json) continue ;; esac; \
+			t="$(or $(2),$(HOME))/$$f"; \
+			if [ -f "$$t" ] && [ ! -L "$$t" ]; then mv "$$t" "$$t.pre-dotfiles" && echo "sauvegarde : $$t -> $$t.pre-dotfiles"; fi; \
+		done; \
 	done
+	stow -d "$(REPO)" -t "$(or $(2),$(HOME))" --no-folding $(1)
+endef
 
 # ─── Shells ──────────────────────────────────────────────────────
 shell: need-stow
-	$(STOW) shell
+	$(call stow_pkgs,shell)
 
-bash: shell backup-rc
-	$(STOW) bash
+bash: shell
+	$(call stow_pkgs,bash)
 
-zsh: shell backup-rc
-	$(STOW) zsh
+zsh: shell
+	$(call stow_pkgs,zsh)
 	@$(MAKE) --no-print-directory zsh-plugins
 
 # Plugins zsh : téléchargés ici (réseau requis), jamais au démarrage du shell.
@@ -113,7 +120,7 @@ zsh-plugins:
 # ─── Git ─────────────────────────────────────────────────────────
 # Identité et signature : dotfiles-private. Credential helper : cf. git/.config/git/config
 git: need-stow
-	$(STOW) git
+	$(call stow_pkgs,git)
 	@$(MAKE) --no-print-directory git-tools
 	@# Hook gitleaks, seulement sur un clone git du repo
 	@if git -C "$(REPO)" rev-parse --git-dir >/dev/null 2>&1; then git -C "$(REPO)" config core.hooksPath .githooks; fi
@@ -134,16 +141,16 @@ git-tools:
 
 # ─── Applications ────────────────────────────────────────────────
 nvim: need-stow
-	$(STOW) nvim
+	$(call stow_pkgs,nvim)
 
 aerospace: need-stow
-	$(STOW) aerospace
+	$(call stow_pkgs,aerospace)
 
 # Ghostty lit ~/.config/ghostty/config (Mac et Linux), puis sur Mac
 # ~/Library/Application Support/com.mitchellh.ghostty/config, qui a le dernier mot :
 # celui-ci est sauvegardé pour que la config du repo s'applique.
 ghostty: need-stow
-	$(STOW) ghostty
+	$(call stow_pkgs,ghostty)
 	@lib="$(HOME)/Library/Application Support/com.mitchellh.ghostty/config"; \
 	if [ "$(OS)" = Darwin ] && [ -f "$$lib" ] && [ ! -L "$$lib" ]; then \
 		mv "$$lib" "$$lib.pre-dotfiles" && echo "sauvegarde : $$lib -> $$lib.pre-dotfiles (masquait ~/.config/ghostty/config)"; \
@@ -162,7 +169,7 @@ karabiner:
 # Sur Mac, espanso lit ~/Library/Application Support/espanso : lien vers ~/.config/espanso.
 # Un dossier existant est sauvegardé, jamais supprimé.
 espanso: need-stow
-	$(STOW) espanso
+	$(call stow_pkgs,espanso)
 	@if [ "$(OS)" = Darwin ]; then \
 		lib="$(HOME)/Library/Application Support/espanso"; \
 		if [ ! -L "$$lib" ]; then \
@@ -174,7 +181,7 @@ espanso: need-stow
 
 vscode: need-stow
 	@mkdir -p "$(VSCODE_TARGET)"
-	stow -d "$(REPO)" -t "$(VSCODE_TARGET)" --no-folding vscode
+	$(call stow_pkgs,vscode,$(VSCODE_TARGET))
 
 # Profils VSCode : cf. scripts/vscode-profiles.sh (VSCode ne sait pas les exporter)
 vscode-export:
@@ -221,7 +228,7 @@ install-brew:
 # Brewfile public, puis ceux des contextes (~/.config/brew/Brewfile.*, dotfiles-private).
 # Aucune désinstallation : cf. brew-cleanup.
 brew: install-brew
-	$(STOW) brew
+	$(call stow_pkgs,brew)
 	brew bundle --file="$(REPO)/brew/.config/brew/Brewfile"
 	@for f in "$(XDG_CONFIG_HOME)"/brew/Brewfile.*; do \
 		[ -r "$$f" ] || continue; echo "brew bundle : $$f"; brew bundle --file="$$f" || exit 1; \
@@ -236,7 +243,7 @@ brew-cleanup:
 
 # ─── Maintenance ─────────────────────────────────────────────────
 dry-run: need-stow
-	$(STOW) -n -v $(MINIMAL_PACKAGES) zsh nvim espanso ghostty brew $(if $(filter aerospace,$(APP_TARGETS)),aerospace)
+	$(STOW) -n -v $(sort $(MINIMAL_PACKAGES) zsh) nvim espanso ghostty brew $(if $(filter aerospace,$(APP_TARGETS)),aerospace)
 
 # Un ancien stow sans --no-folding a pu remplacer un dossier entier par un lien
 # vers le repo (ex. ~/.config/git -> dotfiles-public/git/.config/git) : les
@@ -282,7 +289,7 @@ clean-links:
 	done
 
 uninstall: need-stow
-	-$(STOW) -D $(MINIMAL_PACKAGES) zsh nvim espanso ghostty brew aerospace
+	-$(STOW) -D $(sort $(MINIMAL_PACKAGES) zsh) nvim espanso ghostty brew aerospace
 	-stow -d "$(REPO)" -t "$(VSCODE_TARGET)" -D vscode 2>/dev/null
 	@l="$(XDG_CONFIG_HOME)/karabiner"; if [ -L "$$l" ] && [ "$$l" -ef "$(REPO)/karabiner/.config/karabiner" ]; then rm "$$l" && echo "retiré : $$l"; fi
 	@echo "Les sauvegardes *.pre-dotfiles sont restées en place."
