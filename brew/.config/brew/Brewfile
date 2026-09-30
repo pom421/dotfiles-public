@@ -3,9 +3,6 @@
 # ~/.config/brew/Brewfile.<contexte>, installé aussi par `make brew`.
 # Compatibilité vérifiée sur formulae.brew.sh : commun = bottles Mac et Linux.
 
-# ─── Taps ──────────────────────────────────────────────
-tap "tobi/try", "https://github.com/tobi/try"
-
 # ─── Outils en ligne de commande (Mac et Linux) ────────
 brew "act"
 brew "bat"
@@ -137,11 +134,8 @@ vscode "yzhang.markdown-all-in-one"
 if OS.mac?
   tap "cirruslabs/cli"
   tap "felixkratz/formulae"
-  tap "getsentry/tools"
-  tap "libsql/sqld"
   tap "ngrok/ngrok"
   tap "nikitabobko/tap"
-  tap "tursodatabase/tap"
   brew "trash"
   brew "cirruslabs/cli/tart"
   brew "felixkratz/formulae/borders"
