@@ -28,15 +28,15 @@ endif
 
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
-	vscode-export vscode-import vscode-closed espanso aerospace karabiner brew brew-cleanup install-brew backup-rc need-stow \
+	vscode-export vscode-import vscode-closed espanso ghostty aerospace karabiner brew brew-cleanup install-brew backup-rc need-stow \
 	unfold clean-links dry-run uninstall check test bench
 
 help:
 	@echo "Profils"
 	@echo "  minimal        shell, bash, git (+ zsh) : sans brew ni réseau (formation, CI)"
-	@echo "  full           minimal + brew, zsh et plugins, nvim, vscode, espanso$(if $(APP_TARGETS), + $(APP_TARGETS))"
+	@echo "  full           minimal + brew, zsh et plugins, nvim, vscode, espanso, ghostty$(if $(APP_TARGETS), + $(APP_TARGETS))"
 	@echo "Paquets"
-	@echo "  shell bash zsh git nvim vscode espanso brew$(if $(APP_TARGETS), $(APP_TARGETS))"
+	@echo "  shell bash zsh git nvim vscode espanso ghostty brew$(if $(APP_TARGETS), $(APP_TARGETS))"
 	@echo "  zsh-plugins    télécharge zinit et les plugins (réseau), puis les active"
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
 	@echo "  brew-cleanup   liste ce qui est installé par brew mais absent des Brewfiles"
@@ -58,7 +58,7 @@ minimal: need-stow backup-rc
 	@if command -v zsh >/dev/null 2>&1; then $(STOW) zsh; fi
 	@$(MAKE) --no-print-directory git-tools
 
-full: install-brew brew minimal zsh git nvim vscode espanso $(APP_TARGETS) clean-links
+full: install-brew brew minimal zsh git nvim vscode espanso ghostty $(APP_TARGETS) clean-links
 
 # ─── Outils communs ──────────────────────────────────────────────
 need-stow:
@@ -135,6 +135,16 @@ nvim: need-stow
 
 aerospace: need-stow
 	$(STOW) aerospace
+
+# Ghostty lit ~/.config/ghostty/config (Mac et Linux), puis sur Mac
+# ~/Library/Application Support/com.mitchellh.ghostty/config, qui a le dernier mot :
+# celui-ci est sauvegardé pour que la config du repo s'applique.
+ghostty: need-stow
+	$(STOW) ghostty
+	@lib="$(HOME)/Library/Application Support/com.mitchellh.ghostty/config"; \
+	if [ "$(OS)" = Darwin ] && [ -f "$$lib" ] && [ ! -L "$$lib" ]; then \
+		mv "$$lib" "$$lib.pre-dotfiles" && echo "sauvegarde : $$lib -> $$lib.pre-dotfiles (masquait ~/.config/ghostty/config)"; \
+	fi
 
 # Karabiner ne suit pas un karabiner.json en lien symbolique : tout le dossier
 # ~/.config/karabiner est un lien vers le repo (d'où le .stow-local-ignore du paquet).
@@ -223,7 +233,7 @@ brew-cleanup:
 
 # ─── Maintenance ─────────────────────────────────────────────────
 dry-run: need-stow
-	$(STOW) -n -v $(MINIMAL_PACKAGES) zsh nvim espanso brew $(if $(filter aerospace,$(APP_TARGETS)),aerospace)
+	$(STOW) -n -v $(MINIMAL_PACKAGES) zsh nvim espanso ghostty brew $(if $(filter aerospace,$(APP_TARGETS)),aerospace)
 
 # Un ancien stow sans --no-folding a pu remplacer un dossier entier par un lien
 # vers le repo (ex. ~/.config/git -> dotfiles-public/git/.config/git) : les
@@ -269,7 +279,7 @@ clean-links:
 	done
 
 uninstall: need-stow
-	-$(STOW) -D $(MINIMAL_PACKAGES) zsh nvim espanso brew aerospace
+	-$(STOW) -D $(MINIMAL_PACKAGES) zsh nvim espanso ghostty brew aerospace
 	-stow -d "$(REPO)" -t "$(VSCODE_TARGET)" -D vscode 2>/dev/null
 	@l="$(XDG_CONFIG_HOME)/karabiner"; if [ -L "$$l" ] && [ "$$l" -ef "$(REPO)/karabiner/.config/karabiner" ]; then rm "$$l" && echo "retiré : $$l"; fi
 	@echo "Les sauvegardes *.pre-dotfiles sont restées en place."
