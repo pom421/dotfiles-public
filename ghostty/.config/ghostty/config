@@ -3,7 +3,7 @@
 # Pas de commentaire en fin de ligne : il ferait partie de la valeur.
 
 font-family="JetBrains Mono"
-keybind = shift+enter=text:\x1b\
+keybind = shift+enter=text:\x1b\r
 
 # Option droite = Alt (nvim : Alt-j / Alt-k déplacent la sélection).
 # Option gauche garde les caractères du clavier AZERTY : | { } [ ] ~ \
