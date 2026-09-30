@@ -24,6 +24,26 @@ make            # liste des cibles
 | Mac ou Ubuntu complet | `make full` (installe brew si besoin, puis tout le reste) |
 | Contexte perso / pro | ensuite, dans dotfiles-private : `stow common perso` ou `stow common pro` |
 
+### Ubuntu : le minimum avec apt, le reste avec brew
+
+Seuls les prérequis de l'installeur Homebrew viennent d'apt (il clone son dépôt avec
+git, avant que brew n'existe), plus `libsecret-tools` pour la fonction `secret`, qui
+doit parler au trousseau de la session. Tout le reste, git et zsh compris, vient du
+Brewfile et passe devant dans le PATH.
+
+```sh
+sudo apt install -y build-essential procps curl file git libsecret-tools
+make full
+```
+
+zsh vient alors de brew. Pour en faire le shell de connexion, il doit être déclaré
+dans `/etc/shells` :
+
+```sh
+echo /home/linuxbrew/.linuxbrew/bin/zsh | sudo tee -a /etc/shells
+chsh -s /home/linuxbrew/.linuxbrew/bin/zsh
+```
+
 Les fichiers existants qui gênent (`~/.bashrc` d'Ubuntu, `~/.zshrc` réécrit par un
 installeur…) sont sauvegardés en `*.pre-dotfiles`, jamais supprimés.
 

@@ -1,14 +1,17 @@
 # Brewfile unique, Mac et Linux (linuxbrew) : `make brew`.
 # Les paquets propres à un contexte (pro…) vont dans dotfiles-private :
 # ~/.config/brew/Brewfile.<contexte>, installé aussi par `make brew`.
+# Compatibilité vérifiée sur formulae.brew.sh : commun = bottles Mac et Linux.
 
 # ─── Taps ──────────────────────────────────────────────
 tap "tobi/try", "https://github.com/tobi/try"
 
-# ─── Outils en ligne de commande ───────────────────────
+# ─── Outils en ligne de commande (Mac et Linux) ────────
 brew "act"
 brew "bat"
+brew "broot"
 brew "btop"
+brew "datasette"
 brew "deno"
 brew "duckdb"
 brew "dust"
@@ -16,39 +19,51 @@ brew "eza"
 brew "fastfetch"
 brew "fd"
 brew "ffmpeg"
+brew "ffmpegthumbnailer"
 brew "fzf"
 brew "gh"
 brew "git"
 brew "git-delta"
-brew "python@3.13"
 brew "git-filter-repo"
 brew "git-lfs"
 brew "git-sizer"
+brew "glow"
 brew "httrack"
 brew "imagemagick"
 brew "jq"
 brew "k9s"
 brew "lazygit"
+brew "llm"
 brew "make"
+brew "mkcert"
 brew "monolith"
 brew "neovim"
 brew "node"
 brew "npq"
+brew "pgloader"
 brew "pipx"
 brew "pnpm"
+brew "poppler"
+brew "procs"
+brew "python@3.13"
+brew "qpdf"
 brew "ripgrep"
 brew "ripgrep-all"
 brew "ruby"
+brew "scalingo"
+brew "sevenzip"
 brew "sqlite-utils"
 brew "stow"
 brew "tldr"
 brew "tree"
 brew "uv"
+brew "vercel"
 brew "wget"
 brew "yazi"
+brew "yt-dlp"
 brew "zoxide"
 
-# ─── Extensions VSCode ─────────────────────────────────
+# ─── Extensions VSCode (profil par défaut) ─────────────
 vscode "astro-build.astro-vscode"
 vscode "ban.spellright"
 vscode "bierner.emojisense"
@@ -118,7 +133,7 @@ vscode "wix.vscode-import-cost"
 vscode "yoavbls.pretty-ts-errors"
 vscode "yzhang.markdown-all-in-one"
 
-# ─── macOS uniquement ────────────────────────────────
+# ─── macOS uniquement ──────────────────────────────────
 if OS.mac?
   tap "cirruslabs/cli"
   tap "felixkratz/formulae"
@@ -127,21 +142,7 @@ if OS.mac?
   tap "ngrok/ngrok"
   tap "nikitabobko/tap"
   tap "tursodatabase/tap"
-  brew "broot"
-  brew "datasette"
-  brew "ffmpegthumbnailer"
-  brew "glow"
-  brew "llm"
-  brew "mkcert"
-  brew "pgloader"
-  brew "poppler"
-  brew "procs"
-  brew "qpdf"
-  brew "scalingo"
-  brew "sevenzip"
   brew "trash"
-  brew "vercel-cli"
-  brew "yt-dlp"
   brew "cirruslabs/cli/tart"
   brew "felixkratz/formulae/borders"
   cask "nikitabobko/tap/aerospace"
@@ -174,4 +175,11 @@ if OS.mac?
   cask "visual-studio-code"
   cask "vlc"
   cask "zoom"
+end
+
+# ─── Linux uniquement ──────────────────────────────────
+# zsh : macOS le fournit déjà ; sous Linux, brew le fournit au lieu d'apt
+# (shell de connexion : cf. README, /etc/shells)
+if OS.linux?
+  brew "zsh"
 end
