@@ -17,22 +17,24 @@ wikidocs() {
     return 1
   fi
 
-  local url=$($clip_read)
-  local uuid=$(echo "$url" | grep -oE '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}')
+  # eval : ces commandes ont des arguments, que zsh ne découpe pas dans une variable
+  local url uuid base api_url title
+  url=$(eval "$clip_read")
+  uuid=$(echo "$url" | grep -oE '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}')
   if [[ -z "$uuid" ]]; then
     echo "Erreur : pas d'UUID dans le presse-papier" >&2
     return 1
   fi
 
-  local base=$(echo "$url" | grep -oE 'https://[^/]+')
-  local api_url="${base}/api/v1.0/documents/${uuid}/content/?content_format=markdown"
-  local title=$(curl -sf "$api_url" | jq -r '.title')
+  base=$(echo "$url" | grep -oE 'https://[^/]+')
+  api_url="${base}/api/v1.0/documents/${uuid}/content/?content_format=markdown"
+  title=$(curl -sf "$api_url" | jq -r '.title')
   if [[ -z "$title" || "$title" == "null" ]]; then
     echo "Erreur : titre introuvable (document privé ou instance non compatible ?)" >&2
     return 1
   fi
 
   local link="[${title}](${url%/}/)"
-  echo -n "$link" | $clip_write
+  printf '%s' "$link" | eval "$clip_write"
   echo "Copié : $link"
 }

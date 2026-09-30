@@ -160,12 +160,46 @@ zinit_gated_by_marker() {
   return "$rc"
 }
 
+# make karabiner : ~/.config/karabiner est un lien de dossier (Karabiner ne suit pas
+# un karabiner.json en lien) ; un dossier existant est sauvegardé ; relance sans effet
+karabiner_dir_link() {
+  local k="$HOME/.config/karabiner" src="$PWD/karabiner/.config/karabiner"
+  mkdir -p "$k" && echo '{}' >"$k/karabiner.json"
+  make -s karabiner >/dev/null || return 1
+  [ -L "$k" ] && [ "$k" -ef "$src" ] || { echo "pas un lien vers le repo"; return 1; }
+  [ -f "$k.pre-dotfiles/karabiner.json" ] || { echo "dossier existant non sauvegardé"; return 1; }
+  make -s karabiner | grep -q 'déjà lié' || { echo "relance non idempotente"; return 1; }
+  rm "$k" && rm -rf "$k.pre-dotfiles"
+}
+
+# make clean-links retire les liens morts vers le repo, et seulement eux
+clean_links_only_repo() {
+  local rc=0
+  ln -s ../../dotfiles/dotfiles-public/shell/.config/shell/tools.d/disparu.sh "$HOME/.config/shell/tools.d/disparu.sh"
+  ln -s /nulle/part "$HOME/.config/lien-etranger"
+  make -s clean-links >/dev/null
+  [ ! -L "$HOME/.config/shell/tools.d/disparu.sh" ] || { echo "lien mort vers le repo conservé"; rc=1; }
+  [ -L "$HOME/.config/lien-etranger" ] || { echo "lien étranger supprimé"; rc=1; }
+  rm -f "$HOME/.config/lien-etranger"
+  return "$rc"
+}
+
+# make uninstall ne laisse aucun lien vers le repo
+uninstall_removes_all_links() {
+  local left
+  make -s uninstall >/dev/null 2>&1
+  left=$(find "$HOME" -type l -lname '*dotfiles-public*' 2>/dev/null)
+  [ -z "$left" ] || { echo "liens restants :"; echo "$left"; return 1; }
+}
+
 base_cmds="mkcd ll la extract h g git-ls"
 
 echo "== Installation"
 check "make minimal" make minimal
 check "make unfold : annule tout en cas de conflit" unfold_rolls_back_on_conflict
 check "make unfold : déplie un dossier replié" unfold_replaces_folded_dir
+check "make karabiner : lien de dossier, sauvegarde, idempotent" karabiner_dir_link
+check "make clean-links : seulement les liens morts vers le repo" clean_links_only_repo
 
 echo "== Bash"
 check "bash interactif : démarre sans sortie" silent "bash -ic true"
@@ -266,6 +300,9 @@ check "proxy on / off / status" proxy_on_off
 check "secret set / get / rm et with_secret" secret_roundtrip
 check "modèle privé : contexte perso" template_context perso prenom.nom@example.org
 check "modèle privé : contexte pro (proxy actif)" template_context pro prenom.nom@entreprise.example
+
+echo "== Désinstallation"
+check "make uninstall : plus aucun lien vers le repo" uninstall_removes_all_links
 
 echo
 if [ "$failures" -eq 0 ]; then

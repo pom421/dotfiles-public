@@ -30,3 +30,6 @@ git/.config/git/pro.inc
 # Shell : local.d est rempli par dotfiles-private ou à la main, jamais versionné ici
 shell/.config/shell/local.d/*
 !shell/.config/shell/local.d/.gitkeep
+
+# Karabiner : sauvegardes automatiques écrites dans ~/.config/karabiner (lien vers le repo)
+karabiner/.config/karabiner/automatic_backups/

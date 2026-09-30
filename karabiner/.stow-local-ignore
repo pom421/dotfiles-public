@@ -1,0 +1,22 @@
+# Ignorés par stow. Ce fichier remplace la liste par défaut de stow, reprise ici.
+RCS
+.+,v
+CVS
+\.\#.+
+\.cvsignore
+\.svn
+_darcs
+\.hg
+\.git
+\.gitignore
+\.gitmodules
+.+~
+\#.*\#
+^/README.*
+^/LICENSE.*
+^/COPYING
+\.stow-local-ignore
+
+# Karabiner ne suit pas un karabiner.json en lien symbolique : tout le dossier
+# ~/.config/karabiner doit être un lien vers le repo (make karabiner), pas stow.
+^/\.config
