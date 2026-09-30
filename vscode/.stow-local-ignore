@@ -21,3 +21,6 @@ _darcs
 extensions\.json
 globalStorage
 ^/profiles/builtin
+
+# Registre des profils, utilisé par scripts/vscode-profiles.sh (pas un fichier de VSCode)
+^/profiles\.json

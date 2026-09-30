@@ -86,6 +86,8 @@ y() { … }
 | Après l'ajout d'un plugin zsh | `make zsh-plugins` (le shell ne télécharge jamais rien) |
 | Fichier supprimé du repo | `make clean-links` |
 | Paquets brew en trop | `make brew-cleanup` (liste seulement) |
+| Profils VSCode modifiés (Mac) | `make vscode-export`, puis commit de `vscode/profiles.json` |
+| Retrouver les profils VSCode ailleurs | `make vscode-import` (VSCode fermé) |
 | Vérifier avant de pousser | `make check` (shellcheck, gitleaks) et `make test` (Docker) |
 
 ## Migration depuis l'ancienne version

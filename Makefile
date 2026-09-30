@@ -28,7 +28,7 @@ endif
 
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
-	espanso aerospace karabiner brew brew-cleanup install-brew backup-rc need-stow \
+	vscode-export vscode-import vscode-closed espanso aerospace karabiner brew brew-cleanup install-brew backup-rc need-stow \
 	unfold clean-links dry-run uninstall check test bench
 
 help:
@@ -40,6 +40,8 @@ help:
 	@echo "  zsh-plugins    télécharge zinit et les plugins (réseau), puis les active"
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
 	@echo "  brew-cleanup   liste ce qui est installé par brew mais absent des Brewfiles"
+	@echo "  vscode-export  versionne les profils VSCode (noms, dossiers, extensions)"
+	@echo "  vscode-import  recrée ces profils ici, avec leurs réglages et extensions (VSCode fermé)"
 	@echo "Maintenance"
 	@echo "  dry-run        montre ce que stow ferait pour le profil full"
 	@echo "  unfold         remplace les dossiers repliés par un ancien stow par de vrais dossiers"
@@ -161,15 +163,25 @@ vscode: need-stow
 	@mkdir -p "$(VSCODE_TARGET)"
 	stow -d "$(REPO)" -t "$(VSCODE_TARGET)" --no-folding vscode
 
+# Profils VSCode : cf. scripts/vscode-profiles.sh (VSCode ne sait pas les exporter)
+vscode-export:
+	@VSCODE_USER="$(VSCODE_TARGET)" REPO="$(REPO)" "$(REPO)/scripts/vscode-profiles.sh" export
+
+vscode-import: vscode-closed
+	@VSCODE_USER="$(VSCODE_TARGET)" REPO="$(REPO)" "$(REPO)/scripts/vscode-profiles.sh" import
+	@$(MAKE) --no-print-directory vscode
+
+vscode-closed:
+	@if pgrep -f 'Visual Studio Code.app/Contents/MacO[S]' >/dev/null 2>&1 || pgrep -x code >/dev/null 2>&1; then \
+		echo "ferme VSCode d'abord"; exit 1; \
+	fi
+
 # Un ancien stow a replié snippets/ et profiles/ de VSCode en liens vers le repo :
 # VSCode écrit alors son état (extensions.json, globalStorage…) dans le repo.
 # Remplace chaque lien par une copie réelle (l'état y reste), retire de la copie les
 # fichiers versionnés, puis stow les relie. En cas d'échec, remet le lien.
 # VSCode doit être fermé.
-vscode-unfold: need-stow
-	@if pgrep -f 'Visual Studio Code.app/Contents/MacO[S]' >/dev/null 2>&1 || pgrep -x code >/dev/null 2>&1; then \
-		echo "vscode-unfold : ferme VSCode d'abord"; exit 1; \
-	fi
+vscode-unfold: need-stow vscode-closed
 	@cd "$(REPO)" && T="$(VSCODE_TARGET)"; links=""; \
 	for d in snippets profiles; do \
 		l="$$T/$$d"; \
