@@ -9,14 +9,14 @@ jobs:
   ubuntu:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: make test
 
   # Mac nu : make minimal, bash 3.2 de macOS, zsh sans plugins, git sans outils de confort
   macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: brew install stow
       - run: make minimal
       - name: Les shells démarrent sans sortie
@@ -28,8 +28,11 @@ jobs:
           done
       - name: git fonctionne sans delta, git-lfs ni gpg
         run: |
+          # Depuis un shell configuré : c'est lui qui fixe EDITOR (sans EDITOR et avec
+          # TERM=dumb, comme dans la CI, git var GIT_EDITOR refuse de répondre)
           for v in GIT_EDITOR GIT_PAGER; do
-            cmd=$(git var $v); command -v "${cmd%% *}" >/dev/null || { echo "$v = $cmd introuvable"; exit 1; }
+            cmd=$(zsh -ic "git var $v" </dev/null 2>/dev/null | tail -n 1)
+            command -v "${cmd%% *}" >/dev/null || { echo "$v = '$cmd' introuvable"; exit 1; }
           done
           repo=$(mktemp -d) && cd "$repo" && git init -q
           git config user.name CI && git config user.email ci@example.com
@@ -38,7 +41,7 @@ jobs:
   lint:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: gitleaks/gitleaks-action@v2

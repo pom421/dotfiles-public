@@ -196,7 +196,8 @@ uninstall_removes_all_links() {
 # /etc/zsh/zshrc lance son compinit avant le nôtre, avec un autre fpath (plugins) :
 # sans skip_global_compinit (~/.zshenv), les deux se renvoient la reconstruction.
 zsh_compdump_stable() {
-  local dump="$HOME/.cache/zsh/zcompdump-$(zsh -fc 'echo $ZSH_VERSION')" before after rc=0
+  local dump before after rc=0
+  dump="$HOME/.cache/zsh/zcompdump-$(zsh -fc 'echo $ZSH_VERSION')"
   rm -f "$HOME/.zcompdump"
   mkdir -p "$HOME/.fake-completions"
   printf '#compdef dotfiles-fake\n_files\n' >"$HOME/.fake-completions/_dotfiles_fake"
