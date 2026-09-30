@@ -215,6 +215,7 @@ y() { … }
 | Paquets brew en trop | `make brew-cleanup` (liste seulement) |
 | Profils VSCode modifiés (Mac) | `make vscode-export`, puis commit de `vscode/profiles.json` |
 | Retrouver les profils VSCode ailleurs | `make vscode-import` (VSCode fermé) |
+| Comparer deux settings.json de VSCode | `node scripts/vscode-settings-diff.mjs <A> <B>` |
 | Vérifier avant de pousser | `make check` (shellcheck, gitleaks) et `make test` (Docker) |
 
 ## Inspirations
