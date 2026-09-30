@@ -1,0 +1,10 @@
+# Ghostty (make ghostty) : lu dans ~/.config/ghostty/config, sur Mac comme sur Linux.
+# Options : `ghostty +show-config --default --docs`, ou https://ghostty.org/docs/config
+# Pas de commentaire en fin de ligne : il ferait partie de la valeur.
+
+font-family="JetBrains Mono"
+keybind = shift+enter=text:\x1b\
+
+# Option droite = Alt (nvim : Alt-j / Alt-k déplacent la sélection).
+# Option gauche garde les caractères du clavier AZERTY : | { } [ ] ~ \
+macos-option-as-alt = right
