@@ -1,9 +1,9 @@
 # Machine "de formation" : Ubuntu 24.04 (comme au boulot), sans brew ni outils de confort.
-# Seulement ce qu'on trouve sur un poste Ubuntu standard (vi, less) + stow pour l'installation.
+# Seulement ce qu'on trouve sur un poste Ubuntu standard (vi, less, bash-completion) + stow.
 FROM ubuntu:24.04
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends bash zsh git make stow ca-certificates vim-tiny less \
+ && apt-get install -y --no-install-recommends bash zsh git make stow ca-certificates vim-tiny less bash-completion \
  && rm -rf /var/lib/apt/lists/*
 
 # Utilisateur normal, avec le squelette Ubuntu (~/.bashrc, ~/.profile…)

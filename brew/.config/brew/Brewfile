@@ -170,10 +170,3 @@ if OS.mac?
   cask "vlc"
   cask "zoom"
 end
-
-# ─── Linux uniquement ──────────────────────────────────
-# zsh : macOS le fournit déjà ; sous Linux, brew le fournit au lieu d'apt
-# (shell de connexion : cf. README, /etc/shells)
-if OS.linux?
-  brew "zsh"
-end

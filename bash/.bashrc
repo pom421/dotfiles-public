@@ -7,6 +7,17 @@ else
   echo "dotfiles : ~/.config/shell/init.sh introuvable (make bash depuis le repo dotfiles-public)" >&2
 fi
 
+# ─── Complétion ─────────────────────────────────────────────────────────────
+# bash-completion (git, make, apt…) : le ~/.bashrc par défaut d'Ubuntu le chargeait,
+# /etc/bash.bashrc ne le fait pas. Version brew d'abord (HOMEBREW_PREFIX vient de init.sh).
+if ! shopt -oq posix; then
+  for _f in "${HOMEBREW_PREFIX:-/nonexistent}/etc/profile.d/bash_completion.sh" \
+    /usr/share/bash-completion/bash_completion /etc/bash_completion; do
+    if [ -r "$_f" ]; then . "$_f"; break; fi
+  done
+  unset _f
+fi
+
 # ─── Options ────────────────────────────────────────────────────────────────
 set -o noclobber
 shopt -s checkwinsize

@@ -227,6 +227,7 @@ check "bash interactif : démarre sans sortie" silent "bash -ic true"
 check "bash login : démarre sans sortie" silent "bash -lic true"
 check "bash : rechargement sans sortie" silent "bash -ic '. ~/.bashrc'"
 check "bash : commandes de base ($base_cmds)" in_tty "bash -ic 'type $base_cmds >/dev/null'"
+check "bash : complétion chargée (bash-completion, comme le .bashrc d'Ubuntu)" in_tty "bash -ic 'type _init_completion >/dev/null'"
 check "bash : ls fonctionne" in_tty "bash -ic 'ls / >/dev/null'"
 check "bash : aucun alias vers un autre outil" no_tool_swapping_alias bash
 check "bash : mkcd sans sortie (malgré mkdir -pv)" silent "bash -ic 'mkcd /tmp/mkcd-bash/a'"

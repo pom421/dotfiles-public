@@ -28,21 +28,16 @@ make            # liste des cibles
 
 Seuls les prérequis de l'installeur Homebrew viennent d'apt (il clone son dépôt avec
 git, avant que brew n'existe), plus `libsecret-tools` pour la fonction `secret`, qui
-doit parler au trousseau de la session. Tout le reste, git et zsh compris, vient du
-Brewfile et passe devant dans le PATH.
+doit parler au trousseau de la session. Tout le reste vient du Brewfile.
 
 ```sh
 sudo apt install -y build-essential procps curl file git libsecret-tools
 make full
 ```
 
-zsh vient alors de brew. Pour en faire le shell de connexion, il doit être déclaré
-dans `/etc/shells` :
-
-```sh
-echo /home/linuxbrew/.linuxbrew/bin/zsh | sudo tee -a /etc/shells
-chsh -s /home/linuxbrew/.linuxbrew/bin/zsh
-```
+Shell : **zsh sur Mac, bash sur Linux** (`make full` installe l'un ou l'autre). La
+config commune (`shell/`) est la même ; bash charge aussi bash-completion, comme le
+`~/.bashrc` d'Ubuntu qu'il remplace.
 
 Les fichiers existants qui gênent (`~/.bashrc` d'Ubuntu, `~/.zshrc` réécrit par un
 installeur…) sont sauvegardés en `*.pre-dotfiles`, jamais supprimés.

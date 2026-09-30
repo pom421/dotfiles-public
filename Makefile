@@ -2,7 +2,8 @@
 #
 # Profils :
 #   make minimal   shell, bash, git (+ zsh s'il est installé) : sans brew, sans réseau, sans sudo
-#   make full      minimal + brew + zsh et ses plugins + nvim, vscode, espanso (+ aerospace, karabiner sur Mac)
+#   make full      minimal + brew + nvim, vscode, espanso, ghostty ; zsh et ses plugins
+#                  (+ aerospace, karabiner) sur Mac, bash sur Linux
 # Le contexte (perso, pro) vient de dotfiles-private, installé ensuite avec son propre stow.
 
 SHELL := /bin/sh
@@ -19,9 +20,11 @@ STOW = stow -d "$(REPO)" -t "$(HOME)" --no-folding
 
 MINIMAL_PACKAGES = shell bash git
 ifeq ($(OS),Darwin)
+  LOGIN_SHELL = zsh
   APP_TARGETS = aerospace karabiner
   VSCODE_TARGET = $(HOME)/Library/Application Support/Code/User
 else
+  LOGIN_SHELL = bash
   APP_TARGETS =
   VSCODE_TARGET = $(XDG_CONFIG_HOME)/Code/User
 endif
@@ -34,7 +37,7 @@ endif
 help:
 	@echo "Profils"
 	@echo "  minimal        shell, bash, git (+ zsh) : sans brew ni réseau (formation, CI)"
-	@echo "  full           minimal + brew, zsh et plugins, nvim, vscode, espanso, ghostty$(if $(APP_TARGETS), + $(APP_TARGETS))"
+	@echo "  full           minimal + brew, $(LOGIN_SHELL), nvim, vscode, espanso, ghostty$(if $(APP_TARGETS), + $(APP_TARGETS))"
 	@echo "Paquets"
 	@echo "  shell bash zsh git nvim vscode espanso ghostty brew$(if $(APP_TARGETS), $(APP_TARGETS))"
 	@echo "  zsh-plugins    télécharge zinit et les plugins (réseau), puis les active"
@@ -58,7 +61,7 @@ minimal: need-stow backup-rc
 	@if command -v zsh >/dev/null 2>&1; then $(STOW) zsh; fi
 	@$(MAKE) --no-print-directory git-tools
 
-full: install-brew brew minimal zsh git nvim vscode espanso ghostty $(APP_TARGETS) clean-links
+full: install-brew brew minimal $(LOGIN_SHELL) git nvim vscode espanso ghostty $(APP_TARGETS) clean-links
 
 # ─── Outils communs ──────────────────────────────────────────────
 need-stow:
