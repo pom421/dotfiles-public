@@ -1,0 +1,24 @@
+// Réglages VSCode du poste pro, appliqués par `make vscode` par-dessus le commun
+// (dotfiles-public/vscode/settings.json). null supprime un réglage commun.
+{
+  // Proxy de l'entreprise (valeurs fictives : à remplacer)
+  "http.proxy": "http://proxy.entreprise.example:3128",
+  // Le proxy inspecte le TLS avec sa propre autorité : sans elle dans le magasin du
+  // système, VSCode refuse les certificats. À ne jamais mettre dans le commun.
+  "http.proxyStrictSSL": false,
+
+  // Mises à jour gérées par le poste
+  "update.mode": "none",
+
+  // Pas d'IA au boulot
+  "chat.disableAIFeatures": true,
+  "editor.aiStats.enabled": false,
+  "workbench.settings.showAISearchToggle": false,
+  "github.copilot.nextEditSuggestions.enabled": false,
+
+  // Gros espaces de travail : git ne scanne que les dépôts ouverts
+  "git.autoRepositoryDetection": "openEditors",
+  "git.autofetch": false,
+  "git.detectSubmodules": false,
+  "git.repositoryScanMaxDepth": 1
+}

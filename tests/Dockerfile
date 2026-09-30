@@ -1,9 +1,10 @@
 # Machine "de formation" : Ubuntu 24.04 (comme au boulot), sans brew ni outils de confort.
-# Seulement ce qu'on trouve sur un poste Ubuntu standard (vi, less, bash-completion) + stow.
+# Seulement ce qu'on trouve sur un poste Ubuntu standard (vi, less, bash-completion) + stow,
+# et node pour tester la génération des réglages VSCode (make vscode).
 FROM ubuntu:24.04
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends bash zsh git make stow ca-certificates vim-tiny less bash-completion \
+ && apt-get install -y --no-install-recommends bash zsh git make stow ca-certificates vim-tiny less bash-completion nodejs \
  && rm -rf /var/lib/apt/lists/*
 
 # Utilisateur normal, avec le squelette Ubuntu (~/.bashrc, ~/.profile…)

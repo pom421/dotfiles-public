@@ -35,6 +35,7 @@ installeur…) sont sauvegardés en `*.pre-dotfiles`, jamais supprimés.
 | Brewfile | outils communs + applications (casks), tart, borders, trash | outils communs |
 | Applications | Ghostty, VSCode, espanso, AeroSpace, Karabiner | Ghostty, VSCode, espanso |
 | Config VSCode | `~/Library/Application Support/Code/User` | `~/.config/Code/User` |
+| Réglages VSCode | commun | commun + couche pro (proxy, IA coupée…) |
 | Profils VSCode | machine source : `make vscode-export` | machine cible : `make vscode-import` |
 | Secrets (`secret`) | trousseau macOS (`security`) | trousseau GNOME (`secret-tool`) |
 | Contexte privé | `stow common perso` | `stow common pro` (identité pro, proxy) |
@@ -175,6 +176,22 @@ tests/             banc Docker : Ubuntu 24.04 nu, sans réseau
 Un paquet qui a sa propre config peut aussi apporter son module shell :
 `git/.config/shell/tools.d/git.sh` atterrit dans `~/.config/shell/tools.d/`.
 
+### Réglages VSCode par couches
+
+`settings.json` n'est pas un lien mais un fichier **généré** par `make vscode`, qui
+fusionne dans l'ordre (la dernière couche l'emporte) :
+
+1. `vscode/settings.json` : commun à toutes les machines ;
+2. `vscode/settings.d/darwin.json` ou `linux.json` : ce qui dépend de l'OS (facultatif) ;
+3. `~/.config/vscode/settings.d/*.json` : le contexte, fourni par dotfiles-private
+   (`50-pro.json` : proxy, IA coupée…), puis la machine (ex. `90-local.json`).
+
+Un objet étend celui de la couche précédente, une autre valeur le remplace, `null` le
+supprime. Un réglage changé depuis l'interface de VSCode n'est pas perdu : `make vscode`
+le sauvegarde en `settings.json.pre-dotfiles`, et `make vscode-settings-drift` le montre
+avant, pour le reporter dans la bonne couche. Raccourcis, snippets et profils restent
+des liens vers le repo.
+
 ### Où mettre quoi ?
 
 1. Ça contient une identité, une adresse interne, un secret ou c'est propre au boulot ?
@@ -215,6 +232,7 @@ y() { … }
 | Paquets brew en trop | `make brew-cleanup` (liste seulement) |
 | Profils VSCode modifiés (Mac) | `make vscode-export`, puis commit de `vscode/profiles.json` |
 | Retrouver les profils VSCode ailleurs | `make vscode-import` (VSCode fermé) |
+| Réglage VSCode changé depuis l'interface | `make vscode-settings-drift`, le reporter dans une couche, puis `make vscode` |
 | Comparer deux settings.json de VSCode | `node scripts/vscode-settings-diff.mjs <A> <B>` |
 | Vérifier avant de pousser | `make check` (shellcheck, gitleaks) et `make test` (Docker) |
 

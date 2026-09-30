@@ -24,3 +24,7 @@ globalStorage
 
 # Registre des profils, utilisé par scripts/vscode-profiles.sh (pas un fichier de VSCode)
 ^/profiles\.json
+
+# settings.json est généré par couches (make vscode-settings), pas relié
+^/settings\.json
+^/settings\.d

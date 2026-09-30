@@ -18,7 +18,8 @@ dotfiles-private/
 │   └── .config/git/git-user     identité + signature perso
 └── pro/             poste Ubuntu du boulot
     ├── .config/git/git-user     identité + signature pro
-    └── .config/shell/local.d/   pro.sh (proxy), eclipse.sh
+    ├── .config/shell/local.d/   pro.sh (proxy), eclipse.sh
+    └── .config/vscode/settings.d/50-pro.json   réglages VSCode pro (proxy, IA coupée…)
 ```
 
 Un seul paquet de contexte par machine : `perso` et `pro` fournissent tous deux `git-user`.
@@ -42,6 +43,7 @@ cd ~/dotfiles/dotfiles-private && stow common pro   # Ubuntu pro
 | `proxy on\|off\|status` | proxy HTTP(S) à partir de `DOTFILES_PROXY_URL` et `DOTFILES_NO_PROXY` |
 | `secret set\|get\|rm NOM` | trousseau du système (macOS : security, Ubuntu : secret-tool) |
 | `with_secret VAR NOM cmd…` | lance `cmd` avec `VAR` = secret, sans l'exporter dans le shell |
+| `~/.config/vscode/settings.d/*.json` | couches de réglages VSCode, fusionnées par-dessus le commun par `make vscode` |
 | `path_prepend DOSSIER` | ajoute au PATH si le dossier existe, sans doublon |
 | `$DOTFILES_SHELL` | `bash` ou `zsh`, pour les outils qui s'initialisent différemment |
 
@@ -70,6 +72,8 @@ Sur Ubuntu, `secret-tool` vient du paquet `libsecret-tools`.
 5. **Espanso** : `dgfip.yml` → `pro/.config/espanso/match/`, `me.yml` → `common/.config/espanso/match/`.
 6. **Brew** (facultatif) : paquets propres au boulot dans `pro/.config/brew/Brewfile.pro`,
    installés par `make brew` du repo public.
-7. Installer (cf. ci-dessus), ouvrir un shell, vérifier : `git config user.email`, `proxy status`.
-8. Supprimer du repo public les modules désormais ici : `tools.d/agent-vm.sh`,
+7. **VSCode** : reporter dans `pro/.config/vscode/settings.d/50-pro.json` les vraies valeurs
+   (proxy…), puis `make vscode` dans le repo public pour régénérer `settings.json`.
+8. Installer (cf. ci-dessus), ouvrir un shell, vérifier : `git config user.email`, `proxy status`.
+9. Supprimer du repo public les modules désormais ici : `tools.d/agent-vm.sh`,
    `tools.d/tchap.sh`, `tools.d/eclipse.sh`.

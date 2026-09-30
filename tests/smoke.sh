@@ -225,13 +225,50 @@ stow_backs_up_real_file() {
   rm -f "$target/$file.pre-dotfiles"
 }
 
+# Valeur d'un réglage du settings.json généré (JSONC : en-tête de commentaires)
+vscode_get() {
+  node -e 'const fs=require("fs"); const s=new Function("return ("+fs.readFileSync(process.argv[1],"utf8")+"\n)")();
+    const v=s[process.argv[2]]; console.log(v===undefined?"<absent>":JSON.stringify(v))' "$HOME/.config/Code/User/settings.json" "$1"
+}
+
+# Couche de contexte : étend un objet, remplace une valeur, supprime avec null
+vscode_settings_layers() {
+  local d="$HOME/.config/vscode/settings.d" rc=0
+  mkdir -p "$d"
+  cat >"$d/50-test.json" <<'LAYER'
+// couche de test
+{ "editor.tabSize": 8, "[typescript]": { "editor.tabSize": 3 }, "files.trimTrailingWhitespace": null, }
+LAYER
+  make -s vscode >/dev/null || return 1
+  [ ! -L "$HOME/.config/Code/User/settings.json" ] || { echo "settings.json est encore un lien"; rc=1; }
+  [ "$(vscode_get editor.tabSize)" = 8 ] || { echo "tabSize = $(vscode_get editor.tabSize)"; rc=1; }
+  [ "$(vscode_get '[typescript]')" = '{"editor.defaultFormatter":"esbenp.prettier-vscode","editor.tabSize":3}' ] ||
+    { echo "[typescript] = $(vscode_get '[typescript]')"; rc=1; }
+  [ "$(vscode_get files.trimTrailingWhitespace)" = "<absent>" ] || { echo "null n'a pas supprimé"; rc=1; }
+  rm -rf "$HOME/.config/vscode"
+  return "$rc"
+}
+
+# Une modification faite depuis l'interface (fichier généré édité) est sauvegardée
+vscode_settings_drift_backup() {
+  local f="$HOME/.config/Code/User/settings.json"
+  make -s vscode >/dev/null || return 1
+  sed -i 's/"editor.tabSize": 2/"editor.tabSize": 4/' "$f"
+  make -s vscode >/dev/null || return 1
+  grep -q '"editor.tabSize": 4' "$f.pre-dotfiles" || { echo "modification non sauvegardée"; return 1; }
+  grep -q '"editor.tabSize": 2' "$f" || { echo "fichier non régénéré"; return 1; }
+  rm -f "$f.pre-dotfiles"
+}
+
 base_cmds="mkcd ll la extract h g git-ls"
 
 echo "== Installation"
 check "make minimal" make minimal
 check "make unfold : annule tout en cas de conflit" unfold_rolls_back_on_conflict
 check "make unfold : déplie un dossier replié" unfold_replaces_folded_dir
-check "make vscode : settings.json existant sauvegardé" stow_backs_up_real_file "$HOME/.config/Code/User" settings.json vscode
+check "make vscode : keybindings.json existant sauvegardé" stow_backs_up_real_file "$HOME/.config/Code/User" keybindings.json vscode
+check "make vscode : settings.json fusionné par couches" vscode_settings_layers
+check "make vscode : réglage modifié depuis l'interface sauvegardé" vscode_settings_drift_backup
 check "make git : ~/.config/git/config existant sauvegardé" stow_backs_up_real_file "$HOME/.config/git" config git
 check "make karabiner : lien de dossier, sauvegarde, idempotent" karabiner_dir_link
 check "make clean-links : seulement les liens morts vers le repo" clean_links_only_repo

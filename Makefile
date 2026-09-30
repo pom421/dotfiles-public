@@ -31,7 +31,7 @@ endif
 
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
-	vscode-export vscode-import vscode-closed espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
+	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
 	unfold clean-links dry-run uninstall check test bench
 
 help:
@@ -44,6 +44,7 @@ help:
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
 	@echo "  brew-cleanup   liste ce qui est installé par brew mais absent des Brewfiles"
 	@echo "  vscode-export  versionne les profils VSCode (noms, dossiers, extensions)"
+	@echo "  vscode-settings-drift  réglages VSCode modifiés depuis l'interface, à reporter dans une couche"
 	@echo "  vscode-import  recrée ces profils ici, avec leurs réglages et extensions (VSCode fermé)"
 	@echo "Maintenance"
 	@echo "  dry-run        montre ce que stow ferait pour le profil full"
@@ -71,12 +72,13 @@ need-stow:
 # déjà la place d'un fichier versionné (créé par l'application, un installeur, le
 # squelette Ubuntu…) empêcherait stow d'agir : il est d'abord sauvegardé en
 # .pre-dotfiles. La liste vient de git (jamais un fichier d'état ignoré, comme
-# l'extensions.json de VSCode) ; hors d'un clone git (banc Docker), de find.
+# l'extensions.json de VSCode) ; hors d'un clone git (banc Docker), de find. Les
+# fichiers que stow ignore (settings.json et settings.d/ de VSCode, générés) sont sautés.
 define stow_pkgs
 	@for p in $(1); do \
 		( cd "$(REPO)/$$p" && { git ls-files 2>/dev/null || find . \( -type f -o -type l \) | sed 's|^\./||'; } ) | \
 		while IFS= read -r f; do \
-			case "$${f##*/}" in .stow-local-ignore|profiles.json) continue ;; esac; \
+			case "$$f" in */.stow-local-ignore|.stow-local-ignore|profiles.json|settings.json|settings.d/*) continue ;; esac; \
 			t="$(or $(2),$(HOME))/$$f"; \
 			if [ -f "$$t" ] && [ ! -L "$$t" ]; then mv "$$t" "$$t.pre-dotfiles" && echo "sauvegarde : $$t -> $$t.pre-dotfiles"; fi; \
 		done; \
@@ -182,6 +184,28 @@ espanso: need-stow
 vscode: need-stow
 	@mkdir -p "$(VSCODE_TARGET)"
 	$(call stow_pkgs,vscode,$(VSCODE_TARGET))
+	@$(MAKE) --no-print-directory vscode-settings
+
+# settings.json de VSCode, généré par couches (cf. scripts/vscode-settings.mjs) : commun,
+# système, puis ~/.config/vscode/settings.d/ (contexte, machine). Un fichier modifié
+# depuis l'interface de VSCode est sauvegardé en .pre-dotfiles avant d'être remplacé.
+vscode-settings:
+	@command -v node >/dev/null 2>&1 || { echo "vscode-settings : node requis (brew install node)"; exit 1; }
+	@out="$(VSCODE_TARGET)/settings.json"; tmp=$$(mktemp); \
+	node "$(REPO)/scripts/vscode-settings.mjs" > "$$tmp" || { rm -f "$$tmp"; exit 1; }; \
+	if [ -L "$$out" ]; then rm "$$out"; \
+	elif [ -f "$$out" ] && ! cmp -s "$$out" "$$tmp"; then \
+		cp "$$out" "$$out.pre-dotfiles"; \
+		echo "vscode : réglages modifiés hors des couches sauvegardés dans $$out.pre-dotfiles"; \
+		echo "         (make vscode-settings-drift avant la prochaine fois pour les voir)"; \
+	fi; \
+	mkdir -p "$(VSCODE_TARGET)" && mv "$$tmp" "$$out" && echo "vscode : settings.json généré"
+
+# Réglages modifiés depuis l'interface de VSCode depuis la dernière génération :
+# à reporter dans la bonne couche (commun, système, contexte) avant `make vscode`
+vscode-settings-drift:
+	@tmp=$$(mktemp); node "$(REPO)/scripts/vscode-settings.mjs" > "$$tmp" && \
+	node "$(REPO)/scripts/vscode-settings-diff.mjs" "$$tmp" "$(VSCODE_TARGET)/settings.json"; rm -f "$$tmp"
 
 # Profils VSCode : cf. scripts/vscode-profiles.sh (VSCode ne sait pas les exporter)
 vscode-export:
