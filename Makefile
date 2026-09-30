@@ -66,7 +66,7 @@ need-stow:
 # Sauvegarde les fichiers de démarrage existants (squelette Ubuntu, fichier réécrit
 # par un installeur…) qui empêcheraient stow de poser ses liens
 backup-rc:
-	@for f in .bashrc .bash_profile .zshrc .p10k.zsh; do \
+	@for f in .bashrc .bash_profile .zshrc .zshenv .p10k.zsh; do \
 		if [ -f "$(HOME)/$$f" ] && [ ! -L "$(HOME)/$$f" ]; then \
 			mv "$(HOME)/$$f" "$(HOME)/$$f.pre-dotfiles" && echo "sauvegarde : ~/$$f -> ~/$$f.pre-dotfiles"; \
 		fi; \
@@ -283,5 +283,5 @@ bench:
 	@for sh in zsh bash; do \
 		command -v $$sh >/dev/null 2>&1 || continue; \
 		echo "$$sh :"; \
-		bash -c "TIMEFORMAT='  %3R s'; for i in 1 2 3 4 5; do time $$sh -i -c exit >/dev/null 2>&1; done"; \
+		bash -c "TIMEFORMAT='  %3R s'; for i in 1 2 3 4 5; do time $$sh -i -c exit >/dev/null 2>&1; done" 2>&1; \
 	done

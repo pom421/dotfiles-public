@@ -22,7 +22,9 @@ source "$XDG_CONFIG_HOME/zsh/zsh-options.sh"
 source "$XDG_CONFIG_HOME/zsh/zinit.sh"
 
 # Complétion
-autoload -Uz compinit && compinit
+# Cache dans ~/.cache/zsh (reconstruit seulement quand les complétions disponibles changent)
+[[ -d "$XDG_CACHE_HOME/zsh" ]] || command mkdir -p "$XDG_CACHE_HOME/zsh"
+autoload -Uz compinit && compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
 for _dotfiles_c in "${_dotfiles_compdefs[@]}"; do eval "compdef $_dotfiles_c"; done
 unset _dotfiles_compdefs _dotfiles_c
 (( ${+functions[zinit]} )) && zinit cdreplay -q

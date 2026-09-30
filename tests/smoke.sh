@@ -192,6 +192,26 @@ uninstall_removes_all_links() {
   [ -z "$left" ] || { echo "liens restants :"; echo "$left"; return 1; }
 }
 
+# Le cache de complétion ne doit pas être reconstruit à chaque démarrage. Sur Ubuntu,
+# /etc/zsh/zshrc lance son compinit avant le nôtre, avec un autre fpath (plugins) :
+# sans skip_global_compinit (~/.zshenv), les deux se renvoient la reconstruction.
+zsh_compdump_stable() {
+  local dump="$HOME/.cache/zsh/zcompdump-$(zsh -fc 'echo $ZSH_VERSION')" before after rc=0
+  rm -f "$HOME/.zcompdump"
+  mkdir -p "$HOME/.fake-completions"
+  printf '#compdef dotfiles-fake\n_files\n' >"$HOME/.fake-completions/_dotfiles_fake"
+  echo 'fpath=("$HOME/.fake-completions" $fpath)' >"$HOME/.config/shell/local.d/test-fpath.sh"
+  in_tty "zsh -ic true" >/dev/null
+  before=$(cksum <"$dump" 2>/dev/null)
+  sleep 1
+  in_tty "zsh -ic true" >/dev/null
+  after=$(cksum <"$dump" 2>/dev/null)
+  [ -n "$before" ] && [ "$before" = "$after" ] || { echo "zcompdump reconstruit au 2e démarrage"; rc=1; }
+  [ ! -e "$HOME/.zcompdump" ] || { echo "compinit global (/etc/zsh/zshrc) lancé en plus du nôtre"; rc=1; }
+  rm -rf "$HOME/.fake-completions" "$HOME/.config/shell/local.d/test-fpath.sh"
+  return "$rc"
+}
+
 base_cmds="mkcd ll la extract h g git-ls"
 
 echo "== Installation"
@@ -220,6 +240,7 @@ check "zsh : aucun alias vers un autre outil" no_tool_swapping_alias zsh
 check "zsh : module actif si l'outil est installé" module_activated_when_installed zsh
 check "zsh : complétion d'un module rejouée après compinit" zsh_module_compdef_replayed
 check "zsh : plugins chargés seulement après make zsh-plugins" zinit_gated_by_marker
+check "zsh : cache de complétion stable entre deux démarrages" zsh_compdump_stable
 check "zsh : git.sh se charge malgré l'alias g d'OMZ" silent "zsh -fc 'alias g=git; source ~/.config/shell/tools.d/git.sh'"
 
 echo "== Git"
