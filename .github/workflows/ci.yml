@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # Banc complet : Ubuntu 24.04 nu, sans réseau (tests/smoke.sh)
+  ubuntu:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: make test
+
+  # Mac nu : make minimal, bash 3.2 de macOS, zsh sans plugins, git sans outils de confort
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install stow
+      - run: make minimal
+      - name: Les shells démarrent sans sortie
+        run: |
+          for sh in /bin/bash zsh; do
+            out=$($sh -ic true 2>&1 </dev/null | grep -vE 'job control|terminal process group|tty pgrp' || true)
+            if [ -n "$out" ]; then echo "$sh :"; echo "$out"; exit 1; fi
+            $sh -ic 'type mkcd ll g >/dev/null' </dev/null 2>/dev/null
+          done
+      - name: git fonctionne sans delta, git-lfs ni gpg
+        run: |
+          for v in GIT_EDITOR GIT_PAGER; do
+            cmd=$(git var $v); command -v "${cmd%% *}" >/dev/null || { echo "$v = $cmd introuvable"; exit 1; }
+          done
+          repo=$(mktemp -d) && cd "$repo" && git init -q
+          git config user.name CI && git config user.email ci@example.com
+          echo a > f && git add f && git commit -qm init && git log --oneline
+
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: make check
