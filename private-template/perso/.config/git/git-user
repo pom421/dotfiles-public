@@ -1,0 +1,10 @@
+# Identité git par défaut de cette machine (contexte perso).
+# Inclus par ~/.config/git/config ; la signature est ici car elle va avec l'identité.
+[user]
+	name = Prénom Nom
+	email = prenom.nom@example.org
+	# signingkey = <ID de ta clé GPG>
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true

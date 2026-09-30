@@ -209,6 +209,64 @@ check "git : credential helper disponible" credential_helpers_exist
 check "git : commit refusé sans identité" commit_refused_without_identity
 check "git : delta activé s'il est installé" delta_activated_when_installed
 
+echo "== Contexte (proxy, secret, modèle de dotfiles-private)"
+
+# Shell non interactif avec la config chargée (pour tester des fonctions)
+with_config() {
+  bash -c ". ~/.config/shell/init.sh; $1"
+}
+
+proxy_on_off() {
+  with_config 'proxy on 2>/dev/null && exit 1
+    DOTFILES_PROXY_URL=http://p.example:3128; proxy on
+    [ "$https_proxy" = http://p.example:3128 ] && [ "$no_proxy" = localhost,127.0.0.1 ] || exit 1
+    proxy off; [ -z "${https_proxy-}" ] && proxy status | grep -q inactif'
+}
+
+# secret / with_secret, avec un faux secret-tool qui range les secrets dans un fichier
+secret_roundtrip() {
+  local rc
+  mkdir -p "$HOME/.local/bin"
+  cat >"$HOME/.local/bin/secret-tool" <<'FAKE'
+#!/bin/sh
+f="$HOME/.fake-secrets"; cmd=$1; name=""
+while [ $# -gt 0 ]; do [ "$1" = name ] && name=$2; shift; done
+case $cmd in
+  store) IFS= read -r v; printf '%s=%s\n' "$name" "$v" >>"$f" ;;
+  lookup) grep "^$name=" "$f" 2>/dev/null | tail -n 1 | cut -d= -f2- | grep . ;;
+  clear) grep -v "^$name=" "$f" >"$f.tmp"; mv "$f.tmp" "$f" ;;
+esac
+FAKE
+  chmod +x "$HOME/.local/bin/secret-tool"
+  with_config 'printf "s3cr3t\n" | secret set jeton
+    [ "$(secret get jeton)" = s3cr3t ] || { echo "secret get"; exit 1; }
+    with_secret MON_JETON jeton sh -c "[ \"\$MON_JETON\" = s3cr3t ]" || { echo "with_secret"; exit 1; }
+    [ -z "${MON_JETON-}" ] || { echo "jeton exporté dans le shell"; exit 1; }
+    secret rm jeton; with_secret X jeton true 2>/dev/null && { echo "secret non supprimé"; exit 1; }
+    exit 0'
+  rc=$?
+  rm -f "$HOME/.local/bin/secret-tool" "$HOME/.fake-secrets"
+  return "$rc"
+}
+
+# Le modèle de dotfiles-private s'installe et remplit les emplacements prévus
+template_context() {
+  local ctx=$1 email=$2 rc=0
+  (cd private-template && stow common "$ctx") || return 1
+  silent "bash -ic true" || rc=1
+  [ "$(git config user.email)" = "$email" ] || { echo "user.email = $(git config user.email)"; rc=1; }
+  if [ "$ctx" = pro ]; then
+    in_tty "bash -ic 'proxy status'" | grep -q 'proxy actif : http://proxy.entreprise.example' || { echo "proxy pro inactif"; rc=1; }
+  fi
+  (cd private-template && stow -D common "$ctx")
+  return "$rc"
+}
+
+check "proxy on / off / status" proxy_on_off
+check "secret set / get / rm et with_secret" secret_roundtrip
+check "modèle privé : contexte perso" template_context perso prenom.nom@example.org
+check "modèle privé : contexte pro (proxy actif)" template_context pro prenom.nom@entreprise.example
+
 echo
 if [ "$failures" -eq 0 ]; then
   echo "Tout est vert."
