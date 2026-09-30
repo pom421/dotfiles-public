@@ -3,11 +3,13 @@
 // divergé entre deux machines :
 //   node vscode-settings-diff.mjs <A> <B>
 // Les fichiers peuvent contenir des commentaires et des virgules finales (JSONC).
-// Un réglage d'extension (préfixe « vim. », « prettier. »…) dont aucune extension
-// installée ne porte le nom est signalé « extension absente ? » : souvent un vestige.
-import { readFileSync } from "node:fs";
+// Un réglage qu'aucune extension installée ne déclare (contributes.configuration de
+// son package.json, extensions intégrées comprises) est signalé « aucune extension
+// installée ne le déclare » : c'est un vestige d'extension désinstallée.
+import { readFileSync, readdirSync, realpathSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { basename } from "node:path";
+import { basename, dirname, join } from "node:path";
+import { homedir } from "node:os";
 
 const [fileA, fileB] = process.argv.slice(2);
 if (!fileA || !fileB) {
@@ -20,27 +22,38 @@ const load = (f) => new Function(`return (${readFileSync(f, "utf8")}\n)`)();
 const a = load(fileA);
 const b = load(fileB);
 
-// Préfixes des réglages intégrés à VSCode (pas d'extension à rechercher)
-const builtin = new Set(("breadcrumbs chat css debug diffEditor editor emmet explorer extensions files " +
-  "git github github.copilot html http javascript json markdown merge-conflict notebook npm " +
-  "outline problems remote scm search security settingsSync telemetry terminal testing " +
-  "typescript update window workbench zenMode accessibility audioCues").split(" "));
+// Réglages du cœur de VSCode (déclarés par l'application, pas par une extension)
+const core = new Set(("accessibility audioCues breadcrumbs chat comments debug diffEditor editor " +
+  "explorer extensions files http inlineChat issueReporter js/ts keyboard mcp merge-editor notebook " +
+  "outline problems remote " +
+  "scm search security settingsSync telemetry terminal testing timeline update window workbench " +
+  "zenMode").split(" "));
 
-let extensions = [];
+// Réglages déclarés par les extensions installées (utilisateur et intégrées)
+const declared = new Set();
+const extensionDirs = [join(homedir(), ".vscode", "extensions")];
 try {
-  extensions = execFileSync("code", ["--list-extensions"], { encoding: "utf8", env: { ...process.env, NODE_NO_WARNINGS: "1" } })
-    .toLowerCase().split("\n").filter(Boolean);
+  const app = dirname(dirname(realpathSync(execFileSync("sh", ["-c", "command -v code"], { encoding: "utf8" }).trim())));
+  extensionDirs.push(join(app, "extensions"), join(app, "resources", "app", "extensions"));
 } catch {
-  console.error("(commande code absente : pas de détection des extensions absentes)\n");
+  console.error("(commande code absente : extensions intégrées non lues)\n");
+}
+for (const dir of extensionDirs.filter(existsSync)) {
+  for (const ext of readdirSync(dir)) {
+    try {
+      const pkg = JSON.parse(readFileSync(join(dir, ext, "package.json"), "utf8"));
+      const conf = pkg.contributes?.configuration;
+      for (const c of Array.isArray(conf) ? conf : conf ? [conf] : []) {
+        for (const key of Object.keys(c.properties ?? {})) declared.add(key);
+      }
+    } catch {}
+  }
 }
 
-const namespace = (key) => (key.startsWith("[") ? "" : key.split(".")[0]);
 const note = (key) => {
-  const ns = namespace(key);
-  if (!ns || builtin.has(ns) || extensions.length === 0) return "";
-  const n = ns.toLowerCase().replace(/[^a-z0-9]/g, "");
-  const found = extensions.some((e) => e.replace(/[^a-z0-9.]/g, "").includes(n));
-  return found ? "" : "   ← extension absente ?";
+  if (key.startsWith("[") || declared.size === 0) return "";
+  if (core.has(key.split(".")[0]) || declared.has(key)) return "";
+  return "   ← aucune extension installée ne le déclare";
 };
 
 const sortKeys = (v) =>
