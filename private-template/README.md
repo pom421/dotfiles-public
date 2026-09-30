@@ -15,7 +15,8 @@ dotfiles-private/
 ├── common/          toutes les machines
 │   └── .config/shell/local.d/   secrets.sh (wrappers with_secret), agent-vm.sh, tchap.sh
 ├── perso/           Mac perso
-│   └── .config/git/git-user     identité + signature perso
+│   ├── .config/git/git-user     identité + signature perso
+│   └── .config/vscode/settings.d/50-perso.json   réglages VSCode perso (IA, GitHub…)
 └── pro/             poste Ubuntu du boulot
     ├── .config/git/git-user     identité + signature pro
     ├── .config/shell/local.d/   pro.sh (proxy), eclipse.sh
@@ -73,7 +74,9 @@ Sur Ubuntu, `secret-tool` vient du paquet `libsecret-tools`.
 6. **Brew** (facultatif) : paquets propres au boulot dans `pro/.config/brew/Brewfile.pro`,
    installés par `make brew` du repo public.
 7. **VSCode** : reporter dans `pro/.config/vscode/settings.d/50-pro.json` les vraies valeurs
-   (proxy…), puis `make vscode` dans le repo public pour régénérer `settings.json`.
+   (proxy…). `perso/…/50-perso.json` contient déjà les réglages perso sortis du commun
+   (IA, GitHub, sécurité). Puis `make vscode` dans le repo public pour régénérer
+   `settings.json`.
 8. Installer (cf. ci-dessus), ouvrir un shell, vérifier : `git config user.email`, `proxy status`.
 9. Supprimer du repo public les modules désormais ici : `tools.d/agent-vm.sh`,
    `tools.d/tchap.sh`, `tools.d/eclipse.sh`.

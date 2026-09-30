@@ -23,51 +23,37 @@
   "editor.suggestSelection": "recentlyUsed",
   "extensions.ignoreRecommendations": true,
   "explorer.fileNesting.enabled": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
   "explorer.fileNesting.patterns": {
-    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
     "*.jsx": "${capture}.js",
     "tsconfig.json": "tsconfig.*.json",
-    "*.mts": "${capture}.typegen.ts",
-    "*.ts": "${capture}.js, ${capture}.typegen.ts",
-    "*.tsx": "${capture}.ts, ${capture}.typegen.ts",
-    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
-    "*.cts": "${capture}.typegen.ts"
+    "*.ts": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts"
   },
   "files.trimTrailingWhitespace": true,
   "files.exclude": {
     "**/.history": true
   },
-  "githubPullRequests.pullBranch": "never",
   "git.suggestSmartCommit": false,
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "security.workspace.trust.untrustedFiles": "open",
-  "githubIssues.queries": [
-    {
-      "label": "My Issues",
-      "query": "default"
-    },
-    {
-      "label": "Created Issues",
-      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
-    }
-  ],
-  "githubPullRequests.ignoredPullRequestBranches": [
-    "master"
-  ],
   "gitlens.hovers.currentLine.over": "annotation",
   "git.confirmSync": false,
-  "redhat.telemetry.enabled": false,
   "search.exclude": {
     "**/.history": true
   },
-  "terminal.integrated.windowsEnableConpty": false,
-  "typescript.tsserver.log": "verbose",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "workbench.iconTheme": "material-icon-theme",
   "window.commandCenter": true,
+  "workbench.startupEditor": "none",
+  "telemetry.telemetryLevel": "off",
+  "redhat.telemetry.enabled": false,
+  "update.showReleaseNotes": false,
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
@@ -87,39 +73,13 @@
     "editor.defaultFormatter": "vscode.html-language-features"
   },
   "workbench.editor.enablePreview": false,
-  "remote.SSH.remotePlatform": {
-    "sandbox.6qexid.csb": "linux",
-    "*.gitpod.io": "linux"
-  },
   "vsicons.dontShowNewVersionMessage": true,
   "window.zoomLevel": 1,
-  "window.newWindowProfile": null,
   "vsintellicode.modify.editor.suggestSelection": "disabled",
-  "github.copilot.nextEditSuggestions.enabled": true,
   "[markdown]": {
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
-  "multicoder.agentServers": {
-    "Claude Agent": {
-      "type": "registry",
-      "command": "npx",
-      "args": [
-        "@zed-industries/claude-agent-acp@0.21.0"
-      ],
-      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/claude-acp.svg"
-    }
-  },
   "js/ts.tsserver.log": "off",
-  "json.schemaDownload.trustedDomains": {
-    "https://schemastore.azurewebsites.net/": true,
-    "https://raw.githubusercontent.com/microsoft/vscode/": true,
-    "https://raw.githubusercontent.com/devcontainers/spec/": true,
-    "https://www.schemastore.org/": true,
-    "https://json.schemastore.org/": true,
-    "https://json-schema.org/": true,
-    "https://developer.microsoft.com/json-schemas/": true,
-    "https://biomejs.dev": true
-  },
   "yaml.disableSchemaDetection": [
     "**/.github/workflows/*.yml",
     "**/.github/workflows/*.yaml",
@@ -128,5 +88,6 @@
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml"
   ],
-  "docker.extension.enableComposeLanguageServer": false
+  "docker.extension.enableComposeLanguageServer": false,
+  "biome.suggestInstallingGlobally": false
 }

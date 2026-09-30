@@ -10,11 +10,14 @@
   // Mises à jour gérées par le poste
   "update.mode": "none",
 
-  // Pas d'IA au boulot
+  // IA : pas d'IA au boulot (ou d'autres modèles : les déclarer ici)
   "chat.disableAIFeatures": true,
   "editor.aiStats.enabled": false,
   "workbench.settings.showAISearchToggle": false,
   "github.copilot.nextEditSuggestions.enabled": false,
+
+  // Sécurité : fichiers hors espace de travail de confiance (à ajuster)
+  "security.workspace.trust.untrustedFiles": "prompt",
 
   // Gros espaces de travail : git ne scanne que les dépôts ouverts
   "git.autoRepositoryDetection": "openEditors",

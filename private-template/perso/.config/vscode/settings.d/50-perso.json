@@ -1,0 +1,45 @@
+// Réglages VSCode du Mac perso, appliqués par `make vscode` par-dessus le commun
+// (dotfiles-public/vscode/settings.json). null supprime un réglage commun.
+{
+  // IA : Copilot (suggestions de modification) et agent Claude via multicoder
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "multicoder.agentServers": {
+    "Claude Agent": {
+      "type": "registry",
+      "command": "npx",
+      "args": [
+        "@zed-industries/claude-agent-acp@0.21.0"
+      ],
+      "icon": "https://cdn.agentclientprotocol.com/registry/v1/latest/claude-acp.svg"
+    }
+  },
+
+  // Forge : GitHub perso
+  "githubPullRequests.pullBranch": "never",
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "master"
+  ],
+  "githubIssues.queries": [
+    {
+      "label": "My Issues",
+      "query": "default"
+    },
+    {
+      "label": "Created Issues",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+    }
+  ],
+
+  // Sécurité : fichiers hors espace de travail de confiance, domaines de schémas JSON
+  "security.workspace.trust.untrustedFiles": "open",
+  "json.schemaDownload.trustedDomains": {
+    "https://schemastore.azurewebsites.net/": true,
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
+    "https://raw.githubusercontent.com/devcontainers/spec/": true,
+    "https://www.schemastore.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://json-schema.org/": true,
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://biomejs.dev": true
+  }
+}
