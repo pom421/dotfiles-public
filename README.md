@@ -85,7 +85,19 @@ echo /opt/homebrew/bin/bash | sudo tee -a /etc/shells
 chsh -s /opt/homebrew/bin/bash
 ```
 
-Retour à zsh : `chsh -s /bin/zsh` ; les deux configs coexistent.
+Le changement ne vaut que pour les **nouvelles sessions** : Ghostty lance le shell indiqué
+par la variable `SHELL` de la session macOS, mise à jour seulement à la prochaine
+connexion. Il faut donc se déconnecter (menu  › Fermer la session) puis se reconnecter.
+Pour vérifier :
+
+- `dscl . -read ~ UserShell` : le shell enregistré pour le compte (`/opt/homebrew/bin/bash`) ;
+- `echo "$0 $BASH_VERSION"` : le shell **en cours** (`-bash 5.x` ; `-/bin/zsh` tant que la
+  session n'a pas été rouverte). `$SHELL` ne sert à rien ici : il garde l'ancienne valeur.
+
+Pour essayer sans attendre, dans un onglet : `exec /opt/homebrew/bin/bash -l`.
+`chsh` répond « no changes made » si le shell est déjà celui demandé.
+
+Retour à zsh : `chsh -s /bin/zsh`, puis nouvelle session ; les deux configs coexistent.
 
 ### Linux (Ubuntu)
 
