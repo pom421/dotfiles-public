@@ -160,7 +160,8 @@ exec bash
 **Particularités**
 
 - bash reste le shell de connexion. bash-completion est chargé par notre config
-  (`~/.config/bash/pre-tools.bash`), comme le faisait le `~/.bashrc` d'Ubuntu qu'il remplace.
+  (`~/.config/bash/pre-tools.bash`), comme le faisait le `~/.bashrc` d'Ubuntu qu'il remplace :
+  celui de brew (même version que sur le Mac), sinon celui du système.
 - Gros dépôt où le prompt ralentit : `git config bash.showDirtyState false` dans ce
   dépôt n'affiche plus que la branche (`DOTFILES_PROMPT_GIT=off` coupe git partout).
 - Sans session graphique (ssh), `secret-tool` n'a pas de trousseau : `secret` ne
