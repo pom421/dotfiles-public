@@ -132,6 +132,9 @@ vscode "yzhang.markdown-all-in-one"
 
 # ─── macOS uniquement ──────────────────────────────────
 if OS.mac?
+  # bash 5 (macOS fournit bash 3.2, figé depuis 2007) et sa complétion
+  brew "bash"
+  brew "bash-completion@2"
   tap "cirruslabs/cli"
   tap "felixkratz/formulae"
   tap "ngrok/ngrok"

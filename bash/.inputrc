@@ -1,0 +1,15 @@
+# Readline (bash, et tout programme qui l'utilise : psql, python…)
+# Réglages du système d'abord (Ubuntu : touches Début/Fin…) ; absent sur macOS, ignoré.
+$include /etc/inputrc
+
+# Complétion (Tab)
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set colored-stats on
+set colored-completion-prefix on
+set mark-symlinked-directories on
+
+# Historique par préfixe : taper « git c » puis ↑ ne parcourt que les commandes
+# qui commencent ainsi (l'équivalent sobre des suggestions automatiques de zsh)
+"\e[A": history-search-backward
+"\e[B": history-search-forward

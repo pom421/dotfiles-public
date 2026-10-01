@@ -29,7 +29,7 @@ installeur…) sont sauvegardés en `*.pre-dotfiles`, jamais supprimés.
 
 | | macOS (perso) | Ubuntu (boulot) |
 |---|---|---|
-| Shell | zsh, avec zinit, Powerlevel10k et plugins | bash, avec bash-completion |
+| Shell | zsh (zinit, Powerlevel10k, plugins) ; bash 5 de brew possible | bash, avec bash-completion |
 | Avant brew | outils en ligne de commande Xcode (git, make) | quelques paquets apt (cf. plus bas) |
 | Homebrew | `/opt/homebrew` | `/home/linuxbrew/.linuxbrew` |
 | Brewfile | outils communs + applications (casks), tart, borders, trash | outils communs |
@@ -75,6 +75,17 @@ exec zsh
   aurait le dernier mot. L'Option **droite** sert d'Alt (Alt-j / Alt-k dans nvim),
   l'Option gauche garde les caractères AZERTY (`| { } [ ] ~ \`).
 - VSCode : cf. la section [VSCode](#vscode) pour le travail entre les deux machines.
+
+**Utiliser bash plutôt que zsh** : la config `shell/` est commune, tout fonctionne
+pareil. Le Brewfile installe bash 5 et `bash-completion@2` (le `/bin/bash` de macOS
+est figé en 3.2 : pas de complétion git/make). Pour en faire le shell de connexion :
+
+```sh
+echo /opt/homebrew/bin/bash | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/bash
+```
+
+Retour à zsh : `chsh -s /bin/zsh` ; les deux configs coexistent.
 
 ### Linux (Ubuntu)
 
@@ -138,6 +149,8 @@ exec bash
 
 - bash reste le shell de connexion. bash-completion est chargé par notre `.bashrc`,
   comme le faisait le `~/.bashrc` d'Ubuntu qu'il remplace.
+- Gros dépôt où le prompt ralentit : `git config bash.showDirtyState false` dans ce
+  dépôt n'affiche plus que la branche (`DOTFILES_PROMPT_GIT=off` coupe git partout).
 - Sans session graphique (ssh), `secret-tool` n'a pas de trousseau : `secret` ne
   fonctionne alors pas.
 
@@ -165,7 +178,8 @@ shell/.config/shell/
 ├── os/            darwin.sh, linux.sh (dont Homebrew, avant les outils)
 ├── tools.d/       un fichier par outil : fzf.sh, zoxide.sh, nvm.sh, secret.sh…
 └── local.d/       vide ici, rempli par dotfiles-private (chargé en dernier)
-bash/  zsh/        ce qui est propre à chaque shell (options, prompt, plugins zsh)
+bash/  zsh/        ce qui est propre à chaque shell : options, prompt (bash : prompt.bash,
+                   style « pure » comme p10k), .inputrc, plugins zsh
 git/               config git portable + includes (tools.inc, git-user, perso.inc, pro.inc)
 nvim/ vscode/ espanso/ aerospace/ karabiner/ brew/
 private-template/  modèle du repo privé, avec la marche à suivre
@@ -205,6 +219,7 @@ y() { … }
 
 | Besoin | Commande |
 |---|---|
+| Dans bash, retrouver une commande | taper son début puis ↑ (historique par préfixe), ou Ctrl-R (fzf) |
 | Quels fichiers sont chargés ? | `DOTFILES_DEBUG=1 zsh -i -c exit` (ou `bash`) |
 | Temps de démarrage | `make bench` |
 | Proxy du boulot | `proxy on`, `proxy off`, `proxy status` |

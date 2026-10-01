@@ -39,10 +39,9 @@ shopt -s cmdhist
 PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
 # ─── Prompt ─────────────────────────────────────────────────────────────────
-gitbranch() {
-  git branch 2>/dev/null | awk '/^\*/ { print " ("$2")" }'
-}
-PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0;33m\]$(gitbranch)\[\e[0m\] $ '
+# Style « pure », comme le prompt zsh (cf. ~/.config/bash/prompt.bash). En dernier
+# avant les raccourcis : il se place en tête de PROMPT_COMMAND pour lire le code de retour.
+[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/bash/prompt.bash" ] && . "${XDG_CONFIG_HOME:-$HOME/.config}/bash/prompt.bash"
 
 # ─── Raccourcis ─────────────────────────────────────────────────────────────
 alias reload='. ~/.bashrc'

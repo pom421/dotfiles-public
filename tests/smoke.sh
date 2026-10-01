@@ -260,6 +260,47 @@ vscode_settings_drift_backup() {
   rm -f "$f.pre-dotfiles"
 }
 
+# Session bash interactive réelle (pseudo-terminal), commandes lues sur l'entrée ;
+# sortie sans couleurs ni marqueurs \001 \002
+bash_session() {
+  printf '%s\n' "$@" exit | LANG=C.UTF-8 script -qec "bash -i" /dev/null |
+    tr -d '\r\001\002' | sed 's/\x1b\[[0-9;?]*[a-zA-Z]//g'
+}
+
+# Prompt : branche, *, ⇡ (en avance sur la branche distante), seulement git via _prompt_git
+prompt_git_info() {
+  local r out rc=0
+  r=$(mktemp -d)
+  git init -q --bare "$r/remote.git"
+  git clone -q "$r/remote.git" "$r/w" 2>/dev/null
+  cd "$r/w" || return 1
+  git config user.email t@example.com && git config user.name t
+  git commit -q --allow-empty -m 1 && git push -q origin HEAD 2>/dev/null
+  git commit -q --allow-empty -m 2 && echo x >f
+  out=$(LANG=C.UTF-8 bash -c '. ~/.config/bash/prompt.bash; _prompt_git' | tr -d '\001\002' | sed 's/\x1b\[[0-9;]*m//g')
+  [ "$out" = " main* ⇡1" ] || { echo "_prompt_git = '$out'"; rc=1; }
+  git config bash.showDirtyState false
+  out=$(bash -c '. ~/.config/bash/prompt.bash; _prompt_git' | tr -d '\001\002' | sed 's/\x1b\[[0-9;]*m//g')
+  [ "$out" = " main" ] || { echo "showDirtyState=false : '$out'"; rc=1; }
+  cd - >/dev/null || return 1
+  return "$rc"
+}
+
+# Une branche nommée « $(commande) » s'affiche, n'est pas exécutée
+prompt_branch_not_executed() {
+  local r
+  r=$(mktemp -d) && cd "$r" && git init -q && git -c user.email=t@e -c user.name=t commit -q --allow-empty -m i
+  git checkout -q -b '$(touch${IFS}/tmp/prompt-pwned)' || { echo "git refuse le nom"; return 1; }
+  cd - >/dev/null || return 1
+  bash_session "cd $r" | grep -qF '$(touch${IFS}/tmp/prompt-pwned)' || { echo "branche non affichée"; return 1; }
+  [ ! -e /tmp/prompt-pwned ] || { echo "commande du nom de branche exécutée"; return 1; }
+}
+
+# Durée d'une commande longue, ❯ après une réussite ou un échec
+prompt_duration() {
+  bash_session "sleep 5" | grep -qE ' [56]s$' || { echo "durée absente"; return 1; }
+}
+
 base_cmds="mkcd ll la extract h g git-ls"
 
 echo "== Installation"
@@ -282,6 +323,9 @@ check "bash : complétion chargée (bash-completion, comme le .bashrc d'Ubuntu)"
 check "bash : ls fonctionne" in_tty "bash -ic 'ls / >/dev/null'"
 check "bash : aucun alias vers un autre outil" no_tool_swapping_alias bash
 check "bash : mkcd sans sortie (malgré mkdir -pv)" silent "bash -ic 'mkcd /tmp/mkcd-bash/a'"
+check "bash : prompt (branche, *, ⇡, showDirtyState)" prompt_git_info
+check "bash : prompt, nom de branche piégé non exécuté" prompt_branch_not_executed
+check "bash : prompt, durée d'une commande longue" prompt_duration
 check "bash : module actif si l'outil est installé" module_activated_when_installed bash
 check "bash : DOTFILES_DEBUG liste les fichiers" debug_lists_files
 
