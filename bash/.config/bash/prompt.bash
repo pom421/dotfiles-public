@@ -72,14 +72,22 @@ _prompt() {
 }
 PS1='\n${_prompt_who}\[\e[34m\]\w\[\e[0m\]${_prompt_gitinfo}${_prompt_took}\n${_prompt_sym} '
 
-# Début de commande : le piège DEBUG s'exécute avant chaque commande, mais ne note
-# l'heure que pour la première après un prompt (_prompt_ready, posé en toute fin de
-# PROMPT_COMMAND, après les commandes du prompt lui-même). Marche aussi en bash 3.2.
-_prompt_preexec() {
-  [ -n "${_prompt_ready-}" ] || return 0
-  _prompt_ready=""
-  _prompt_t0=$SECONDS
-}
-trap '_prompt_preexec' DEBUG
-
-PROMPT_COMMAND="_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}; _prompt_ready=1"
+# Début de commande. Bash 4.4+ : PS0 s'affiche une fois la ligne lue, juste avant de
+# l'exécuter ; l'indice d'un tableau vide y est évalué comme une expression
+# arithmétique, ce qui note l'heure sans rien afficher. Insensible à ce que d'autres
+# (intégration shell de Ghostty…) ajoutent ensuite à PROMPT_COMMAND.
+if ((BASH_VERSINFO[0] * 100 + BASH_VERSINFO[1] >= 404)); then
+  PS0='${_prompt_nil[_prompt_t0=SECONDS,0]}'"${PS0-}"
+  PROMPT_COMMAND="_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+else
+  # bash 3.2 (macOS) : le piège DEBUG s'exécute avant chaque commande, mais ne note
+  # l'heure que pour la première après un prompt (_prompt_ready, posé en toute fin de
+  # PROMPT_COMMAND). Un hook ajouté après nous à PROMPT_COMMAND fausse la mesure.
+  _prompt_preexec() {
+    [ -n "${_prompt_ready-}" ] || return 0
+    _prompt_ready=""
+    _prompt_t0=$SECONDS
+  }
+  trap '_prompt_preexec' DEBUG
+  PROMPT_COMMAND="_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}; _prompt_ready=1"
+fi
