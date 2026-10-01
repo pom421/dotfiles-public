@@ -3,6 +3,8 @@
 # Ordre de chargement :
 #   core/*.sh     socle sans dépendance, identique partout
 #   os/<os>.sh    darwin ou linux (dont Homebrew, pour que tools.d trouve ses outils)
+#   ~/.config/<shell>/pre-tools.<shell>   si présent : propre au shell, après le PATH
+#                 mais avant les outils (bash : bash-completion, que fzf enrobe ensuite)
 #   tools.d/*.sh  un fichier par outil, qui ne fait rien si l'outil est absent
 #   local.d/*.sh  propre à la machine ou au contexte (perso/pro), fourni par dotfiles-private
 #
@@ -42,6 +44,7 @@ _dotfiles_dir="$XDG_CONFIG_HOME/shell"
 for _dotfiles_f in \
   "$_dotfiles_dir"/core/*.sh \
   "$_dotfiles_dir/os/$_dotfiles_os.sh" \
+  "$XDG_CONFIG_HOME/$DOTFILES_SHELL/pre-tools.$DOTFILES_SHELL" \
   "$_dotfiles_dir"/tools.d/*.sh \
   "$_dotfiles_dir"/local.d/*.sh; do
   [ -r "$_dotfiles_f" ] || continue

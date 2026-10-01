@@ -159,8 +159,8 @@ exec bash
 
 **Particularités**
 
-- bash reste le shell de connexion. bash-completion est chargé par notre `.bashrc`,
-  comme le faisait le `~/.bashrc` d'Ubuntu qu'il remplace.
+- bash reste le shell de connexion. bash-completion est chargé par notre config
+  (`~/.config/bash/pre-tools.bash`), comme le faisait le `~/.bashrc` d'Ubuntu qu'il remplace.
 - Gros dépôt où le prompt ralentit : `git config bash.showDirtyState false` dans ce
   dépôt n'affiche plus que la branche (`DOTFILES_PROMPT_GIT=off` coupe git partout).
 - Sans session graphique (ssh), `secret-tool` n'a pas de trousseau : `secret` ne
@@ -191,7 +191,8 @@ shell/.config/shell/
 ├── tools.d/       un fichier par outil : fzf.sh, zoxide.sh, nvm.sh, secret.sh…
 └── local.d/       vide ici, rempli par dotfiles-private (chargé en dernier)
 bash/  zsh/        ce qui est propre à chaque shell : options, prompt (bash : prompt.bash,
-                   style « pure » comme p10k), .inputrc, plugins zsh
+                   style « pure » comme p10k), .inputrc, plugins zsh ; bash : pre-tools.bash
+                   (bash-completion), chargé par init.sh avant tools.d pour que fzf l'enrobe
 git/               config git portable + includes (tools.inc, git-user, perso.inc, pro.inc)
 nvim/ vscode/ espanso/ aerospace/ karabiner/ brew/
 private-template/  modèle du repo privé, avec la marche à suivre
@@ -225,7 +226,9 @@ y() { … }
   jamais la remplacer par un autre outil (`ls=eza`, `cat=bat`) — vérifié par `make test` ;
 - les fonctions appellent `command rm`, `command mkdir`… pour ne pas hériter de ces options ;
 - `$DOTFILES_SHELL` (`bash` ou `zsh`) pour les outils qui s'initialisent différemment ;
-- `compdef` peut être appelé librement en zsh : il est rejoué après `compinit`.
+- `compdef` peut être appelé librement en zsh : il est rejoué après `compinit` ;
+- en bash, bash-completion est déjà chargé quand tools.d passe : un outil qui enrobe
+  les complétions existantes (fzf : `cd **<Tab>`, `ps **<Tab>`) les trouve en place.
 
 ## Au quotidien
 
