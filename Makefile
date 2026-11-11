@@ -32,7 +32,7 @@ endif
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
 	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
-	unfold clean-links dry-run uninstall check test bench cheatsheets
+	unfold clean-links dry-run uninstall check test test-full bench cheatsheets
 
 help:
 	@echo "Profils"
@@ -54,6 +54,7 @@ help:
 	@echo "  uninstall      retire tous les liens posés par ce repo"
 	@echo "  check          shellcheck + gitleaks (s'ils sont installés)"
 	@echo "  test           banc Docker Ubuntu 24.04 nu, sans réseau"
+	@echo "  test-full      banc Docker Ubuntu 24.04 + make full (réseau, plusieurs minutes)"
 	@echo "  bench          temps de démarrage de zsh et bash"
 	@echo "Fiches"
 	@echo "  cheatsheets    régénère les PDF et Markdown de cheatsheets/ (Chrome requis)"
@@ -335,6 +336,11 @@ check:
 test:
 	docker build -q -f tests/Dockerfile -t dotfiles-test "$(REPO)" >/dev/null
 	docker run --rm --network none dotfiles-test
+
+# Banc complet : Ubuntu neuve, linuxbrew, tout le Brewfile, puis vérifications par outil
+test-full:
+	docker build -q -f tests/Dockerfile.full -t dotfiles-test-full "$(REPO)" >/dev/null
+	docker run --rm dotfiles-test-full
 
 # Fiches : PDF (non versionnés) et Markdown générés depuis le HTML
 cheatsheets:

@@ -1,0 +1,20 @@
+# Banc complet : Ubuntu 24.04 neuve + `make full` (linuxbrew, Brewfile, tous les paquets).
+# Réseau requis, plusieurs minutes, image de plusieurs Go : à lancer à la main
+# (make test-full) après un changement du Brewfile ou de la config d'un outil.
+FROM ubuntu:24.04
+
+# Prérequis de linuxbrew (compilateur, curl, git…) + sudo pour son installeur
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends build-essential curl git file procps ca-certificates make sudo zsh \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV TERM=xterm-256color LANG=C.UTF-8 NONINTERACTIVE=1 HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_ENV_HINTS=1
+
+RUN useradd --create-home --shell /bin/bash tester \
+ && echo 'tester ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/tester
+USER tester
+WORKDIR /home/tester/dotfiles/dotfiles-public
+
+COPY --chown=tester:tester . .
+
+CMD ["bash", "tests/full.sh"]
