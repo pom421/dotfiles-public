@@ -1,6 +1,7 @@
 # Dotfiles publics — règles
 
 Repo public (Mac + Ubuntu 24.04) : jamais de contenu de `dotfiles-private` (contexte perso/pro, identités, chemins).
+Fiches (cheatsheets) : voir `cheatsheets/CLAUDE.md`.
 
 ## Installation des outils
 - **Toujours via brew** (`brew/.config/brew/Brewfile`), Mac et Linux, si la formule existe avec un bottle Linux

@@ -33,3 +33,7 @@ shell/.config/shell/local.d/*
 
 # Karabiner : sauvegardes automatiques écrites dans ~/.config/karabiner (lien vers le repo)
 karabiner/.config/karabiner/automatic_backups/
+
+# Fiches : PDF générés par `make cheatsheets`, polices mises en cache par build.py
+cheatsheets/**/*.pdf
+cheatsheets/outils/.cache/

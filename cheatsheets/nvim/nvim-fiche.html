@@ -1,0 +1,348 @@
+<title>Fiche Neovim</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap">
+<style>
+/* Layout: 2 feuilles A4, 3 colonnes de sections qui coulent, touches en capsules mono */
+:root{
+  --bg:#e9ece8; --paper:#ffffff; --ink:#1d2320; --muted:#5d6762;
+  --line:#cfd6d1; --key:#eef2ef; --accent:#2f7d4f; --star:#b0661a;
+  --f-body:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --star:#e0a35a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --star:#e0a35a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:13px;line-height:1.3;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.sheet{background:var(--paper);max-width:297mm;margin:0 auto 24px;padding:9mm 9mm 8mm;box-shadow:0 1px 6px rgba(0,0,0,.12);
+  display:flex;flex-direction:column;gap:6px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.head h1{font-family:var(--f-mono);font-size:20px;margin:0;font-weight:600;letter-spacing:-.02em}
+.head h1 span{color:var(--accent)}
+.legend{font-size:11px;color:var(--muted)}
+.legend .ver{margin-left:10px;font-family:var(--f-mono);font-size:9px;opacity:.75}
+.legend b{color:var(--star)}
+.cols{column-count:3;column-gap:5mm}
+section{break-inside:avoid;margin:0 0 9px}
+h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;color:var(--accent);
+  border-bottom:1px solid var(--line);padding-bottom:1px;font-weight:700}
+h3{font-size:10.5px;margin:5px 0 1px;color:var(--muted);font-weight:600}
+table{border-collapse:collapse;width:100%}
+td{padding:1px 0;vertical-align:top}
+td:first-child{white-space:nowrap;padding-right:6px;width:1%}
+tr+tr td{border-top:1px dotted var(--line)}
+kbd,code{font-family:var(--f-mono);font-size:.88em}
+kbd{background:var(--key);border:1px solid var(--line);border-radius:3px;padding:0 3px;font-weight:600;white-space:nowrap}
+
+p.note{margin:3px 0 0;font-size:11.5px;color:var(--muted)}
+p.note b{color:var(--ink)}
+.formula{font-family:var(--f-mono);font-size:12px;background:var(--key);padding:3px 5px;border-left:3px solid var(--accent);margin:2px 0 3px}
+.rep td{font-family:var(--f-mono);font-size:11.5px}
+.rep th{font-size:10px;text-align:left;color:var(--muted);font-weight:600}
+.rep td:first-child{font-family:var(--f-body);font-size:12px}
+.wrap{overflow-x:auto}
+
+@media (max-width:640px){.cols{column-count:1}.sheet{padding:16px}}
+@media (min-width:641px) and (max-width:820px){.cols{column-count:2}}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#000;--muted:#444;--line:#bbb;--key:#f0f0f0;--accent:#1f6a3e;--star:#9a5410;color-scheme:light}
+  body{padding:0;font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{box-shadow:none;margin:0;max-width:none;width:297mm;height:209mm;box-sizing:border-box;padding:7mm 8mm 6mm;break-after:page;overflow:hidden}
+  .sheet:last-child{break-after:auto}
+  .cols{column-count:4;column-gap:5mm}
+  .head h1{font-size:17pt}
+}
+</style>
+
+<!-- ============ PAGE 1 ============ -->
+<div class="sheet">
+  <div class="head">
+    <h1><span>nvim</span> · mode normal</h1>
+    <div class="legend">Page 1/2 · <kbd>C-x</kbd> = Ctrl+x<span class="ver">v2 · 2026-11-11</span></div>
+  </div>
+  <div class="cols">
+
+  <section>
+    <h2>Grammaire</h2>
+    <div class="formula">[n] opérateur [n] mouvement|objet</div>
+    <h3>Opérateurs</h3>
+    <table>
+      <tr><td><kbd>d</kbd> <kbd>c</kbd> <kbd>y</kbd></td><td>supprimer · changer · copier</td></tr>
+      <tr><td><kbd>&gt;</kbd> <kbd>&lt;</kbd> <kbd>=</kbd></td><td class="s">indenter · désindenter · réindenter</td></tr>
+      <tr><td><kbd>gu</kbd> <kbd>gU</kbd> <kbd>g~</kbd></td><td class="s">minusc. · majusc. · inverser casse</td></tr>
+    </table>
+    <p class="note"><b>Doublé = ligne entière</b> : <kbd>dd</kbd> <kbd>cc</kbd> <kbd>yy</kbd> <kbd>&gt;&gt;</kbd> <kbd>g~~</kbd></p>
+    <h3>Objets texte (i = dedans, a = autour)</h3>
+    <table>
+      <tr><td><kbd>iw</kbd> <kbd>aw</kbd></td><td>mot</td></tr>
+      <tr><td><kbd>i(</kbd> <kbd>i{</kbd> <kbd>i[</kbd></td><td>contenu des parenthèses, accolades…</td></tr>
+      <tr><td><kbd>i"</kbd> <kbd>i'</kbd> <kbd>i`</kbd></td><td class="s">contenu des guillemets</td></tr>
+      <tr><td><kbd>it</kbd> <kbd>at</kbd></td><td>contenu d'une balise HTML</td></tr>
+      <tr><td><kbd>ip</kbd> <kbd>ap</kbd></td><td class="s">paragraphe</td></tr>
+    </table>
+    <p class="note">Marche <b>n'importe où dans l'objet</b> : pas besoin d'être au début.</p>
+  </section>
+
+  <section>
+    <h2>Enregistrer · quitter</h2>
+    <table>
+      <tr><td><kbd>:w</kbd> <kbd>:wa</kbd></td><td>enregistrer · tout enregistrer</td></tr>
+      <tr><td><kbd>:q</kbd></td><td>fermer la fenêtre courante</td></tr>
+      <tr><td><kbd>:qa</kbd></td><td>tout quitter (arbre compris)</td></tr>
+      <tr><td><kbd>:wqa</kbd></td><td>enregistrer puis tout quitter</td></tr>
+      <tr><td><kbd>:qa!</kbd></td><td>quitter sans enregistrer</td></tr>
+      <tr><td><kbd>ZZ</kbd> <kbd>ZQ</kbd></td><td><code>:wq</code> · <code>:q!</code> (fenêtre courante)</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Exemples</h2>
+    <table>
+      <tr><td><kbd>ciw</kbd></td><td>changer le mot courant</td></tr>
+      <tr><td><kbd>cw</kbd></td><td>changer du curseur à fin du mot</td></tr>
+      <tr><td><kbd>ci"</kbd></td><td class="s">changer le texte entre guillemets</td></tr>
+      <tr><td><kbd>di(</kbd></td><td>vider les parenthèses</td></tr>
+      <tr><td><kbd>da(</kbd></td><td class="s">supprimer parenthèses comprises</td></tr>
+      <tr><td><kbd>cit</kbd></td><td>changer le contenu de la balise</td></tr>
+      <tr><td><kbd>yi{</kbd></td><td>copier le contenu d'un bloc</td></tr>
+      <tr><td><kbd>d$</kbd> <kbd>y0</kbd></td><td>suppr. jusqu'à fin · copier jusqu'au début</td></tr>
+      <tr><td><kbd>d/hello⏎</kbd></td><td>supprimer jusqu'à « hello »</td></tr>
+      <tr><td><kbd>8dd</kbd> <kbd>32j</kbd></td><td>8 lignes · descendre de 32</td></tr>
+      <tr><td><kbd>ggdG</kbd></td><td>vider le fichier</td></tr>
+      <tr><td><kbd>v%y</kbd></td><td>sur ( ou { : copier jusqu'à la paire</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Mouvements dans la ligne</h2>
+    <table>
+      <tr><td><kbd>w</kbd> <kbd>b</kbd> <kbd>e</kbd></td><td class="s">mot suivant · précédent · fin de mot</td></tr>
+      <tr><td><kbd>W</kbd> <kbd>B</kbd> <kbd>E</kbd></td><td class="s">idem, mots séparés par espaces seulement</td></tr>
+      <tr><td><kbd>0</kbd> <kbd>^</kbd> <kbd>$</kbd></td><td class="s">début · 1er caractère · fin</td></tr>
+      <tr><td><kbd>f</kbd><code>c</code> <kbd>F</kbd><code>c</code></td><td>sauter sur <code>c</code> → / ←</td></tr>
+      <tr><td><kbd>t</kbd><code>c</code> <kbd>T</kbd><code>c</code></td><td>sauter juste avant <code>c</code> → / ←</td></tr>
+      <tr><td><kbd>;</kbd> <kbd>,</kbd></td><td>répéter f/t même sens · sens inverse</td></tr>
+      <tr><td><kbd>%</kbd></td><td>parenthèse / accolade correspondante</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Écran et fichier</h2>
+    <table>
+      <tr><td><kbd>C-d</kbd> <kbd>C-u</kbd></td><td>½ page ↓ / ↑</td></tr>
+      <tr><td><kbd>C-f</kbd> <kbd>C-b</kbd></td><td>page entière ↓ / ↑</td></tr>
+      <tr><td><kbd>C-e</kbd> <kbd>C-y</kbd></td><td>défiler 1 ligne, curseur fixe</td></tr>
+      <tr><td><kbd>zz</kbd> <kbd>zt</kbd> <kbd>zb</kbd></td><td>ligne au milieu · <span class="s">en haut · en bas</span></td></tr>
+      <tr><td><kbd>gg</kbd> <kbd>G</kbd> <kbd>42G</kbd></td><td>début · fin · ligne 42</td></tr>
+      <tr><td><kbd>{</kbd> <kbd>}</kbd></td><td>paragraphe précédent / suivant</td></tr>
+      <tr><td><kbd>*</kbd> <kbd>#</kbd></td><td>mot sous curseur, suivant / précédent</td></tr>
+    </table>
+    <h3>Marques et sauts</h3>
+    <table>
+      <tr><td><kbd>ma</kbd></td><td class="s">poser la marque <code>a</code></td></tr>
+      <tr><td><kbd>`a</kbd> <kbd>'a</kbd></td><td class="s">aller à la marque (position · ligne)</td></tr>
+      <tr><td><kbd>``</kbd></td><td class="s">revenir avant le dernier saut</td></tr>
+      <tr><td><kbd>C-o</kbd> <kbd>C-i</kbd></td><td class="s">saut précédent / suivant (mode normal)</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Répéter · annuler</h2>
+    <div class="wrap"><table class="rep">
+      <tr><th>Action</th><th>Faire</th><th>Rép.</th><th>Inv.</th></tr>
+      <tr><td>Modification</td><td>{édit}</td><td>.</td><td>u</td></tr>
+      <tr><td>Caract. ligne</td><td>f t F T</td><td>;</td><td>,</td></tr>
+      <tr><td>Recherche →</td><td>/motif⏎</td><td>n</td><td>N</td></tr>
+      <tr><td>Recherche ←</td><td>?motif⏎</td><td>n</td><td>N</td></tr>
+      <tr><td>Substitution</td><td>:s/a/b</td><td>&amp;</td><td>u</td></tr>
+      <tr><td>Macro</td><td>qx…q</td><td>@x</td><td>u</td></tr>
+    </table></div>
+    <table>
+      <tr><td><kbd>u</kbd> <kbd>C-r</kbd></td><td>annuler · refaire</td></tr>
+      <tr><td><kbd>@@</kbd></td><td class="s">rejouer la dernière macro</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Raccourcis = version longue</h2>
+    <table>
+      <tr><td><kbd>D</kbd> = <code>d$</code></td><td>supprimer jusqu'à fin de ligne</td></tr>
+      <tr><td><kbd>C</kbd> = <code>c$</code></td><td>changer jusqu'à fin de ligne</td></tr>
+      <tr><td><kbd>s</kbd> = <code>cl</code></td><td>changer le caractère</td></tr>
+      <tr><td><kbd>S</kbd> = <code>cc</code></td><td>changer toute la ligne</td></tr>
+      <tr><td><kbd>x</kbd> = <code>dl</code></td><td class="s">supprimer le caractère</td></tr>
+      <tr><td><kbd>Y</kbd> = <code>y$</code></td><td class="s">copier jusqu'à fin (défaut nvim)</td></tr>
+      <tr><td><kbd>I</kbd> = <code>^i</code></td><td>insérer en début de ligne</td></tr>
+      <tr><td><kbd>A</kbd> = <code>$a</code></td><td>insérer en fin de ligne</td></tr>
+      <tr><td><kbd>o</kbd> = <code>A⏎</code></td><td>nouvelle ligne dessous</td></tr>
+      <tr><td><kbd>O</kbd> = <code>ko</code></td><td>nouvelle ligne dessus</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Petites éditions</h2>
+    <table>
+      <tr><td><kbd>J</kbd></td><td>joindre la ligne suivante</td></tr>
+      <tr><td><kbd>gJ</kbd></td><td class="s">joindre sans espace</td></tr>
+      <tr><td><kbd>r</kbd><code>c</code></td><td class="s">remplacer 1 caractère par <code>c</code></td></tr>
+      <tr><td><kbd>R</kbd></td><td>mode remplacement (écrase)</td></tr>
+      <tr><td><kbd>~</kbd></td><td>inverser la casse du caractère</td></tr>
+      <tr><td><kbd>&gt;&gt;</kbd> <kbd>&lt;&lt;</kbd></td><td class="s">indenter / désindenter la ligne</td></tr>
+    </table>
+  </section>
+
+  </div>
+</div>
+
+<!-- ============ PAGE 2 ============ -->
+<div class="sheet">
+  <div class="head">
+    <h1><span>nvim</span> · visuel, insertion, buffers</h1>
+    <div class="legend">Page 2/2<span class="ver">v2 · 2026-11-11</span></div>
+  </div>
+  <div class="cols">
+
+  <section>
+    <h2>Mode visuel</h2>
+    <table>
+      <tr><td><kbd>v</kbd></td><td>sélection par caractères</td></tr>
+      <tr><td><kbd>V</kbd></td><td>sélection par lignes</td></tr>
+      <tr><td><kbd>C-v</kbd></td><td>sélection en bloc (rectangle)</td></tr>
+      <tr><td><kbd>gv</kbd></td><td>reprendre la dernière sélection</td></tr>
+      <tr><td><kbd>o</kbd> <kbd>O</kbd></td><td>aller à l'autre bout (O : coins du bloc)</td></tr>
+      <tr><td><kbd>vi{</kbd> <kbd>vap</kbd></td><td>sélectionner un objet texte</td></tr>
+    </table>
+    <p class="note">Puis : <kbd>d</kbd> <kbd>c</kbd> <kbd>y</kbd> <kbd>&gt;</kbd> <kbd>U</kbd> <kbd>u</kbd> <kbd>~</kbd> <kbd>:</kbd></p>
+  </section>
+
+  <section>
+    <h2>Visuel : coller, bloc</h2>
+    <h3>Coller sur une sélection</h3>
+    <table>
+      <tr><td><kbd>p</kbd></td><td>remplace ; la sélection part dans le registre</td></tr>
+      <tr><td><kbd>P</kbd></td><td class="s">remplace sans toucher au registre : coller N fois le même mot</td></tr>
+    </table>
+    <h3>Bloc : même texte sur N lignes</h3>
+    <table>
+      <tr><td><kbd>C-v</kbd> <kbd>j…</kbd> <kbd>I</kbd></td><td class="s">tape, puis <kbd>Esc</kbd> : insertion en début de bloc sur toutes les lignes</td></tr>
+      <tr><td><kbd>C-v</kbd> <kbd>j…</kbd> <kbd>$A</kbd></td><td class="s">idem, en fin de chaque ligne</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Substitution</h2>
+    <table>
+      <tr><td><kbd>:s/a/b/</kbd></td><td>1re de la ligne</td></tr>
+      <tr><td><kbd>:s/a/b/g</kbd></td><td class="s">toute la ligne</td></tr>
+      <tr><td><kbd>:%s/a/b/g</kbd></td><td class="s">tout le fichier</td></tr>
+      <tr><td><kbd>:%s/a/b/gc</kbd></td><td class="s">tout, en confirmant</td></tr>
+      <tr><td><kbd>:'&lt;,'&gt;s/a/b/g</kbd></td><td class="s">dans la sélection</td></tr>
+      <tr><td><kbd>:noh</kbd></td><td class="s">effacer surlignage</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Mode insertion</h2>
+    <h3>Supprimer avant le curseur</h3>
+    <table>
+      <tr><td><kbd>C-h</kbd></td><td>caractère (= Backspace)</td></tr>
+      <tr><td><kbd>C-w</kbd></td><td>mot</td></tr>
+      <tr><td><kbd>C-u</kbd></td><td>jusqu'au début de ligne</td></tr>
+    </table>
+    <p class="note">Ces 3 marchent aussi dans bash.</p>
+    <h3><kbd>C-o</kbd> + commande : 1 action normale, retour en insertion</h3>
+    <table>
+      <tr><td><kbd>C-o 0</kbd> <kbd>C-o $</kbd></td><td>début · fin de ligne</td></tr>
+      <tr><td><kbd>C-o w</kbd> <kbd>C-o b</kbd></td><td>mot suivant · précédent</td></tr>
+      <tr><td><kbd>C-o x</kbd></td><td>suppr. caractère après</td></tr>
+      <tr><td><kbd>C-o dw</kbd></td><td>suppr. mot après</td></tr>
+      <tr><td><kbd>C-o D</kbd></td><td>suppr. jusqu'à fin de ligne</td></tr>
+      <tr><td><kbd>C-o zz</kbd></td><td class="s">recentrer l'écran</td></tr>
+    </table>
+    <h3>Déplacer sans sortir</h3>
+    <table>
+      <tr><td><kbd>Shift ←→</kbd></td><td class="s">mot précédent / suivant</td></tr>
+      <tr><td><kbd>C-g j</kbd> <kbd>C-g k</kbd></td><td class="s">ligne ↓ / ↑, colonne de départ de la saisie</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Insertion : coller, compléter</h2>
+    <h3>Coller, compléter, indenter</h3>
+    <table>
+      <tr><td><kbd>C-r "</kbd></td><td>coller registre par défaut</td></tr>
+      <tr><td><kbd>C-r 0</kbd></td><td>coller dernier yank</td></tr>
+      <tr><td><kbd>C-r +</kbd></td><td>coller presse-papier système</td></tr>
+      <tr><td><kbd>C-n</kbd> <kbd>C-p</kbd></td><td>complétion suivante / précédente</td></tr>
+      <tr><td><kbd>C-t</kbd> <kbd>C-d</kbd></td><td>indenter / désindenter la ligne</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Registres</h2>
+    <table>
+      <tr><td><kbd>:reg</kbd></td><td>lister les registres</td></tr>
+      <tr><td><kbd>""</kbd></td><td>défaut (yank, d, c) : <code>""p</code> = <code>p</code></td></tr>
+      <tr><td><kbd>"ayy</kbd></td><td>copier dans <code>a</code></td></tr>
+      <tr><td><kbd>"Ayy</kbd></td><td>ajouter à la fin de <code>a</code></td></tr>
+      <tr><td><kbd>"ap</kbd></td><td>coller <code>a</code></td></tr>
+      <tr><td><kbd>"0p</kbd></td><td><b>dernier yank</b>, même après un <code>d</code></td></tr>
+      <tr><td><kbd>"+y</kbd> <kbd>"+p</kbd></td><td class="s">presse-papier système</td></tr>
+      <tr><td><kbd>"_d</kbd></td><td class="s">supprimer sans rien écraser (trou noir)</td></tr>
+    </table>
+    <p class="note">Cas type : <kbd>yiw</kbd>, aller sur un autre mot, <kbd>ciw</kbd> puis <kbd>C-r 0</kbd>.</p>
+  </section>
+
+  <section>
+    <h2>Buffers</h2>
+    <div class="formula">Buffer (mémoire) → Window (vue) → Tab (groupe)</div>
+        <table>
+      <tr><td><kbd>:ls</kbd></td><td>lister</td></tr>
+      <tr><td><kbd>:e fichier</kbd></td><td>ouvrir dans la fenêtre courante</td></tr>
+      <tr><td><kbd>:b N</kbd> <kbd>:b nom</kbd></td><td>aller au buffer (Tab complète)</td></tr>
+      <tr><td><kbd>:bn</kbd> <kbd>:bp</kbd></td><td>suivant / précédent</td></tr>
+      <tr><td><kbd>C-^</kbd></td><td>basculer vers le buffer alternatif <code>#</code></td></tr>
+      <tr><td><kbd>:bd N</kbd></td><td>fermer le buffer</td></tr>
+      <tr><td><kbd>:bwipeout N</kbd></td><td>effacer tout (historique, marques)</td></tr>
+      <tr><td><kbd>:w nom</kbd></td><td>sauver un buffer sans nom</td></tr>
+      <tr><td><kbd>:saveas nom</kbd></td><td>sauver et renommer</td></tr>
+    </table>
+    <p class="note">Flags <code>:ls</code> : <code>%</code> courant · <code>#</code> alternatif · <code>a</code> actif · <code>h</code> caché · <code>+</code> modifié</p>
+  </section>
+
+  <section>
+    <h2>Fenêtres · onglets</h2>
+    <h3>Fenêtres</h3>
+    <table>
+      <tr><td><kbd>:sp</kbd> <kbd>:vsp</kbd></td><td>split horizontal / vertical</td></tr>
+      <tr><td><kbd>C-w w</kbd></td><td>fenêtre suivante</td></tr>
+      <tr><td><kbd>C-w h/j/k/l</kbd></td><td>aller à gauche / bas / haut / droite</td></tr>
+      <tr><td><kbd>C-w q</kbd></td><td>fermer la fenêtre (pas le buffer)</td></tr>
+      <tr><td><kbd>C-w o</kbd></td><td class="s">garder seulement celle-ci</td></tr>
+      <tr><td><kbd>C-w =</kbd></td><td class="s">tailles égales</td></tr>
+    </table>
+    <h3>Onglets</h3>
+    <table>
+      <tr><td><kbd>:tabnew</kbd></td><td>nouvel onglet</td></tr>
+      <tr><td><kbd>:tabc</kbd> <kbd>:tabc!</kbd></td><td>fermer · forcer</td></tr>
+      <tr><td><kbd>gt</kbd> <kbd>gT</kbd> <kbd>3gt</kbd></td><td>suivant · précédent · n°3</td></tr>
+      <tr><td><kbd>:tabs</kbd></td><td>lister (<code>&gt;</code> = fenêtre courante)</td></tr>
+    </table>
+    <h3>Pièges</h3>
+    <table>
+      <tr><td><kbd>:q</kbd></td><td>ferme la fenêtre, pas le buffer → <kbd>:bd</kbd></td></tr>
+      <tr><td><kbd>:bn</kbd></td><td>change seulement la fenêtre courante</td></tr>
+      <tr><td>Onglet fermé</td><td>buffers toujours en mémoire</td></tr>
+    </table>
+    <p class="note">Naviguer entre buffers plutôt qu'abuser des onglets.</p>
+  </section>
+
+
+  </div>
+</div>

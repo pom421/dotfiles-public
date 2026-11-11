@@ -1,0 +1,263 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neovim explorateur</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap">
+<style>
+/* Même charte que nvim-presse-papier.html : A4 paysage, sections en colonnes, touches en capsules mono */
+:root{
+  --bg:#e9ece8; --paper:#ffffff; --ink:#1d2320; --muted:#5d6762;
+  --line:#cfd6d1; --key:#eef2ef; --accent:#2f7d4f; --ex:#fbf5e8; --exline:#c9a35c;
+  --f-body:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:13px;line-height:1.3;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.sheet{background:var(--paper);max-width:297mm;margin:0 auto 24px;padding:9mm 9mm 8mm;box-shadow:0 1px 6px rgba(0,0,0,.12);
+  display:flex;flex-direction:column;gap:6px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.head h1{font-family:var(--f-mono);font-size:20px;margin:0;font-weight:600;letter-spacing:-.02em}
+.head h1 span{color:var(--accent)}
+.legend{font-size:11px;color:var(--muted)}
+.legend .ver{margin-left:10px;font-family:var(--f-mono);font-size:9px;opacity:.75}
+.cols{column-count:4;column-gap:5mm}
+section{break-inside:avoid;margin:0 0 9px}
+h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;color:var(--accent);
+  border-bottom:1px solid var(--line);padding-bottom:1px;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:inherit}
+td{padding:1px 0;vertical-align:top;text-align:left}
+td:first-child{white-space:nowrap;padding-right:6px;width:1%}
+tr+tr td{border-top:1px dotted var(--line)}
+kbd,code{font-family:var(--f-mono);font-size:.88em}
+kbd{background:var(--key);border:1px solid var(--line);border-radius:3px;padding:0 3px;font-weight:600;white-space:nowrap}
+p.note{margin:3px 0 0;font-size:11.5px;color:var(--muted)}
+p.note b{color:var(--ink)}
+.ex{background:var(--ex);border:1px dashed var(--exline);border-radius:4px;padding:3px 6px;margin:4px 0 0;font-size:11.5px}
+.ex b{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--exline);display:block}
+pre{font-family:var(--f-mono);font-size:10.5px;background:var(--key);border-left:3px solid var(--accent);padding:3px 6px;margin:3px 0;white-space:pre-wrap;line-height:1.3}
+pre.cfg{font-size:9px}
+.glyph td:first-child{font-family:var(--f-mono);text-align:center}
+
+@media (max-width:640px){.cols{column-count:1}.sheet{padding:16px}}
+@media (min-width:641px) and (max-width:900px){.cols{column-count:2}}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#000;--muted:#444;--line:#bbb;--key:#f0f0f0;--accent:#1f6a3e;--ex:#fbf3e2;--exline:#9a7330;color-scheme:light}
+  body{padding:0;font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{box-shadow:none;margin:0;max-width:none;width:297mm;height:209mm;box-sizing:border-box;padding:7mm 8mm 6mm;break-after:page;overflow:hidden}
+  .sheet:last-child{break-after:auto}
+  .cols{column-count:4;column-gap:5mm;column-fill:balance}
+  .head h1{font-size:17pt}
+  section{margin-bottom:7px}
+}
+</style>
+
+<div class="sheet">
+  <div class="head">
+    <h1><span>nvim</span> · explorateur (nvim-tree)</h1>
+    <div class="legend"><kbd>␣</kbd> = leader (Espace) · <kbd>C-x</kbd> = Ctrl+x · touches valables dans l'arbre · <kbd>g?</kbd> = aide intégrée<span class="ver">v2 · 2026-11-11</span></div>
+  </div>
+
+  <div class="cols">
+
+    <section>
+      <h2>Ouvrir · fermer · focus</h2>
+      <table>
+        <tr><td><kbd>␣e</kbd></td><td>basculer + révéler</td></tr>
+        <tr><td><kbd>:NvimTreeToggle</kbd></td><td>basculer sans révéler</td></tr>
+        <tr><td><kbd>:NvimTreeFocus</kbd></td><td>ouvrir et y aller</td></tr>
+        <tr><td><kbd>:NvimTreeFindFile</kbd></td><td>révéler fichier actif</td></tr>
+        <tr><td><kbd>q</kbd></td><td>fermer l'arbre</td></tr>
+        <tr><td><kbd>g?</kbd></td><td>aide intégrée</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Fenêtres gauche ↔ droite</h2>
+      <table>
+        <tr><td><kbd>C-h</kbd></td><td>aller dans l'arbre</td></tr>
+        <tr><td><kbd>C-l</kbd></td><td>revenir au fichier</td></tr>
+        <tr><td><kbd>C-w w</kbd></td><td>fenêtre suivante</td></tr>
+        <tr><td><kbd>C-w p</kbd></td><td>fenêtre précédente</td></tr>
+        <tr><td><kbd>:NvimTreeResize 40</kbd></td><td>largeur 40</td></tr>
+        <tr><td><kbd>:NvimTreeResize +5</kbd></td><td>élargir de 5</td></tr>
+        <tr><td><kbd>C-w =</kbd></td><td>égaliser les splits</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Se déplacer dans l'arbre</h2>
+      <table>
+        <tr><td><kbd>j</kbd> <kbd>k</kbd></td><td>ligne suivante / précédente</td></tr>
+        <tr><td><kbd>l</kbd> <kbd>Entrée</kbd> <kbd>o</kbd></td><td>déplier / ouvrir</td></tr>
+        <tr><td><kbd>h</kbd> <kbd>BS</kbd></td><td>replier le dossier parent</td></tr>
+        <tr><td><kbd>P</kbd></td><td>aller au dossier parent</td></tr>
+        <tr><td><kbd>&lt;</kbd> <kbd>&gt;</kbd></td><td>frère précédent / suivant</td></tr>
+        <tr><td><kbd>K</kbd> <kbd>J</kbd></td><td>premier / dernier frère</td></tr>
+        <tr><td><kbd>W</kbd></td><td>tout replier</td></tr>
+        <tr><td><kbd>E</kbd></td><td>tout déplier</td></tr>
+        <tr><td><kbd>L</kbd></td><td>grouper dossiers vides</td></tr>
+        <tr><td><kbd>[c</kbd> <kbd>]c</kbd></td><td>fichier git modifié</td></tr>
+        <tr><td><kbd>[e</kbd> <kbd>]e</kbd></td><td>fichier avec diagnostic</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Chercher</h2>
+      <table>
+        <tr><td><kbd>f</kbd></td><td>filtrer l'arbre en direct</td></tr>
+        <tr><td><kbd>F</kbd></td><td>effacer le filtre</td></tr>
+        <tr><td><kbd>S</kbd></td><td>chercher un chemin</td></tr>
+        <tr><td><kbd>/</kbd></td><td>recherche vim classique</td></tr>
+      </table>
+      <p class="note"><b>Fichier loin dans l'arbre</b> : <kbd>␣ff</kbd> (Telescope) est plus rapide.</p>
+    </section>
+
+    <section>
+      <h2>Ouvrir un fichier</h2>
+      <table>
+        <tr><td><kbd>Entrée</kbd></td><td>ouvrir, focus sur fichier</td></tr>
+        <tr><td><kbd>Tab</kbd></td><td>aperçu, focus reste arbre</td></tr>
+        <tr><td><kbd>C-v</kbd></td><td>split vertical</td></tr>
+        <tr><td><kbd>C-x</kbd></td><td>split horizontal</td></tr>
+        <tr><td><kbd>C-t</kbd></td><td>nouvel onglet</td></tr>
+        <tr><td><kbd>C-e</kbd></td><td>à la place de l'arbre</td></tr>
+        <tr><td><kbd>O</kbd></td><td>ouvrir sans choisir fenêtre</td></tr>
+        <tr><td><kbd>s</kbd></td><td>ouvrir avec appli macOS</td></tr>
+        <tr><td><kbd>double-clic</kbd></td><td>ouvrir à la souris</td></tr>
+      </table>
+      <div class="ex"><b>Exemple</b>Parcourir des fichiers : <kbd>j</kbd> <kbd>Tab</kbd> <kbd>j</kbd> <kbd>Tab</kbd>… puis <kbd>Entrée</kbd> sur le bon.</div>
+    </section>
+
+    <section>
+      <h2>Racine de l'arbre</h2>
+      <table>
+        <tr><td><kbd>=</kbd></td><td>dossier sous curseur = racine</td></tr>
+        <tr><td><kbd>-</kbd></td><td>remonter la racine d'un cran</td></tr>
+        <tr><td><kbd>R</kbd></td><td>rafraîchir l'arbre</td></tr>
+      </table>
+      <p class="note"><b><kbd>=</kbd> remplace <kbd>C-]</kbd></b> (inaccessible en AZERTY Mac). Souris : double clic droit. Chemin précis : <code>:NvimTreeOpen ~/x</code></p>
+    </section>
+
+    <section>
+      <h2>Créer · renommer · supprimer</h2>
+      <table>
+        <tr><td><kbd>a</kbd></td><td>créer fichier</td></tr>
+        <tr><td><kbd>a</kbd> <code>nom/</code></td><td>créer dossier (finir par <code>/</code>)</td></tr>
+        <tr><td><kbd>r</kbd></td><td>renommer (nom complet)</td></tr>
+        <tr><td><kbd>e</kbd></td><td>renommer, garde l'extension</td></tr>
+        <tr><td><kbd>u</kbd></td><td>renommer chemin complet</td></tr>
+        <tr><td><kbd>C-r</kbd></td><td>renommer, nom effacé</td></tr>
+        <tr><td><kbd>d</kbd></td><td>supprimer (définitif)</td></tr>
+        <tr><td><kbd>D</kbd></td><td>mettre à la corbeille</td></tr>
+      </table>
+      <div class="ex"><b>Exemple</b><kbd>a</kbd> → <code>src/utils/date.lua</code> → <kbd>Entrée</kbd> : crée les dossiers manquants et le fichier.</div>
+    </section>
+
+    <section>
+      <h2>Copier · couper · coller</h2>
+      <table>
+        <tr><td><kbd>c</kbd></td><td>copier fichier / dossier</td></tr>
+        <tr><td><kbd>x</kbd></td><td>couper (pour déplacer)</td></tr>
+        <tr><td><kbd>p</kbd></td><td>coller sous le curseur</td></tr>
+      </table>
+      <p class="note"><b>Où colle <kbd>p</kbd></b> : dans le dossier sous le curseur, ou à côté si c'est un fichier.</p>
+    </section>
+
+    <section>
+      <h2>Copier un chemin</h2>
+      <table>
+        <tr><td><kbd>y</kbd></td><td>nom du fichier</td></tr>
+        <tr><td><kbd>ge</kbd></td><td>nom sans extension</td></tr>
+        <tr><td><kbd>Y</kbd></td><td>chemin relatif</td></tr>
+        <tr><td><kbd>gy</kbd></td><td>chemin absolu</td></tr>
+      </table>
+      <p class="note">Copié dans <code>"+</code> → <kbd>Cmd+V</kbd> ailleurs, <kbd>"+p</kbd> dans nvim.</p>
+    </section>
+
+    <section>
+      <h2>Sélection multiple (marques)</h2>
+      <table>
+        <tr><td><kbd>m</kbd></td><td>marquer / démarquer</td></tr>
+        <tr><td><kbd>bmv</kbd></td><td>déplacer les marqués</td></tr>
+        <tr><td><kbd>bd</kbd></td><td>supprimer les marqués</td></tr>
+        <tr><td><kbd>bt</kbd></td><td>marqués à la corbeille</td></tr>
+        <tr><td><kbd>M</kbd></td><td>n'afficher que les marqués</td></tr>
+      </table>
+      <div class="ex"><b>Exemple</b><kbd>m</kbd> <kbd>j</kbd> <kbd>m</kbd> <kbd>j</kbd> <kbd>m</kbd> → <kbd>bmv</kbd> → <code>archive/</code> : 3 fichiers déplacés.</div>
+    </section>
+
+    <section>
+      <h2>Afficher · masquer</h2>
+      <table>
+        <tr><td><kbd>H</kbd></td><td>fichiers cachés (dotfiles)</td></tr>
+        <tr><td><kbd>I</kbd></td><td>fichiers ignorés par git</td></tr>
+        <tr><td><kbd>U</kbd></td><td>filtres personnalisés</td></tr>
+        <tr><td><kbd>B</kbd></td><td>seulement buffers ouverts</td></tr>
+        <tr><td><kbd>C</kbd></td><td>seulement fichiers modifiés</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Infos · commandes</h2>
+      <table>
+        <tr><td><kbd>C-k</kbd></td><td>infos fichier (taille, date)</td></tr>
+        <tr><td><kbd>.</kbd></td><td>commande vim sur le fichier</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Icônes git</h2>
+      <table class="glyph">
+        <tr><td>✗</td><td>modifié, non indexé</td></tr>
+        <tr><td>✓</td><td>indexé (<code>git add</code>)</td></tr>
+        <tr><td>★</td><td>nouveau, non suivi</td></tr>
+        <tr><td>➜</td><td>renommé</td></tr>
+        <tr><td>◌</td><td>ignoré par git</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Pièges</h2>
+      <p class="note" style="margin-top:0"><b>LazyVim ≠ lazy.nvim</b> : ici nvim-tree, pas neo-tree.</p>
+      <p class="note"><b><kbd>C-k</kbd> dans l'arbre</b> = infos, pas « fenêtre du haut » : la touche locale masque ton raccourci.</p>
+      <p class="note"><b><kbd>Tab</kbd> / <kbd>Entrée</kbd> sur la 1<sup>re</sup> ligne</b> (racine) : remonte la racine d'un cran. Annuler : <kbd>=</kbd> sur l'ancien dossier.</p>
+      <p class="note"><b><kbd>d</kbd> est définitif</b> : préférer <kbd>D</kbd> (corbeille).</p>
+      <p class="note"><b>macOS : <code>/home</code> est vide</b> (montage réseau). Ton dossier : <code>/Users/&lt;nom&gt;</code> = <code>~</code>.</p>
+      <p class="note"><b><kbd>[</kbd> <kbd>]</kbd> en AZERTY</b> : Option gauche + Maj + <kbd>(</kbd> <kbd>)</kbd>. Avec Ctrl, ça ne passe pas.</p>
+      <p class="note"><b><kbd>␣e</kbd> ferme l'arbre</b> s'il est ouvert ; pour juste y aller : <kbd>C-h</kbd>.</p>
+    </section>
+
+    <section>
+      <h2>Personnaliser (nvim-tree.lua)</h2>
+<pre class="cfg">require("nvim-tree").setup({
+  actions = { remove_file =
+    { close_window = false } },
+  on_attach = function(b)
+    local api = require("nvim-tree.api")
+    api.config.mappings
+      .default_on_attach(b)
+    local t, n = api.tree, api.node
+    local map = function(k, f)
+      vim.keymap.set("n", k, f,
+        { buffer = b })
+    end
+    map("=", t.change_root_to_node)
+    map("h", n.navigate.parent_close)
+    map("l", n.open.edit)
+  end,
+})</pre>
+      <p class="note"><b><code>close_window = false</code></b> : après <kbd>d</kbd>, on passe au fichier suivant au lieu de fermer la fenêtre.</p>
+      <p class="note"><b>Sans <code>default_on_attach</code></b>, tous les raccourcis par défaut disparaissent.</p>
+    </section>
+
+  </div>
+</div>

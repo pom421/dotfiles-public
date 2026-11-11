@@ -32,7 +32,7 @@ endif
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
 	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
-	unfold clean-links dry-run uninstall check test bench
+	unfold clean-links dry-run uninstall check test bench cheatsheets
 
 help:
 	@echo "Profils"
@@ -55,6 +55,8 @@ help:
 	@echo "  check          shellcheck + gitleaks (s'ils sont installés)"
 	@echo "  test           banc Docker Ubuntu 24.04 nu, sans réseau"
 	@echo "  bench          temps de démarrage de zsh et bash"
+	@echo "Fiches"
+	@echo "  cheatsheets    régénère les PDF et Markdown de cheatsheets/ (Chrome requis)"
 
 # ─── Profils ─────────────────────────────────────────────────────
 minimal: need-stow
@@ -333,6 +335,11 @@ check:
 test:
 	docker build -q -f tests/Dockerfile -t dotfiles-test "$(REPO)" >/dev/null
 	docker run --rm --network none dotfiles-test
+
+# Fiches : PDF (non versionnés) et Markdown générés depuis le HTML
+cheatsheets:
+	@command -v node >/dev/null 2>&1 || { echo "node introuvable (>= 23.6 pour exécuter du TypeScript)"; exit 1; }
+	@node "$(REPO)/cheatsheets/outils/build.ts"
 
 # Temps de démarrage (objectif : < 300 ms)
 bench:
