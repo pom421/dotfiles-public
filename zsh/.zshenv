@@ -4,5 +4,5 @@
 # complétion à chaque démarrage (≈ 0,5 s). ~/.zshrc lance compinit lui-même.
 skip_global_compinit=1
 
-# Vite+ bin (https://viteplus.dev)
-. "/Users/pom/.config/vite-plus/env"
+# Vite+ bin (https://viteplus.dev), seulement s’il est installé (absent sous Linux)
+[ -r "$HOME/.config/vite-plus/env" ] && . "$HOME/.config/vite-plus/env"
