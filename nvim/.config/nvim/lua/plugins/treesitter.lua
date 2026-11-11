@@ -2,7 +2,7 @@
 -- (erreur « attempt to call method 'range' » dans les blocs de code markdown).
 -- Prérequis : tree-sitter-cli (brew install tree-sitter-cli) et un compilateur C.
 local languages = {
-  "java", "c", "lua", "vim", "vimdoc", "query", "elixir", "heex",
+  "java", "c", "lua", "luadoc", "printf", "vim", "vimdoc", "query", "elixir", "heex",
   "javascript", "typescript", "tsx", "html", "yaml",
   "markdown", "markdown_inline", "bash", "json",
 }

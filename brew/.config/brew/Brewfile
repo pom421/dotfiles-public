@@ -56,6 +56,8 @@ brew "sqlite-utils"
 brew "stow"
 brew "tldr"
 brew "tree"
+# Requis par nvim-treesitter (branche main) pour compiler les parsers
+brew "tree-sitter-cli"
 brew "uv"
 brew "vercel"
 brew "wget"
@@ -174,4 +176,11 @@ if OS.mac?
   cask "visual-studio-code"
   cask "vlc"
   cask "zoom"
+end
+
+# ─── Linux uniquement ──────────────────────────────────
+if OS.linux?
+  # Presse-papier système (X11) pour nvim (clipboard=unnamedplus) et le shell ;
+  # sous Wayland, ce serait wl-clipboard
+  brew "xclip"
 end

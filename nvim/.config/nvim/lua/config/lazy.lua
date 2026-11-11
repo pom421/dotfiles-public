@@ -30,5 +30,8 @@ require("lazy").setup({ { import = "plugins" } }, {
   change_detection = {
     notify = false,
   },
+
+  -- aucun plugin n'a besoin de luarocks : évite l'erreur dans :checkhealth
+  rocks = { enabled = false },
 })
 

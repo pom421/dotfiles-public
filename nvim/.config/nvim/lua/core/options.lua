@@ -44,3 +44,10 @@ opt.iskeyword:append("-") -- on traite les mots avec des - comme un seul mot
 -- affichage des caractères spéciaux
 opt.list = true
 opt.listchars:append({ nbsp = "␣", trail = "•", precedes = "«", extends = "»", tab = "> " })
+
+-- providers inutiles : tous les plugins sont en Lua (évite les alertes de :checkhealth
+-- et la recherche de node, python, perl, ruby au démarrage)
+vim.g.loaded_node_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
