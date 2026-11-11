@@ -12,7 +12,8 @@ keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Effacer le surlignage de la rec
 
 -- Alt-k / Alt-j déplacent la sélection vers le haut / le bas (mode visuel, v ou V).
 -- Pas <S-i>/<S-k> : ils masqueraient I (insertion en bloc) et K (aide) de Vim.
--- Sur Mac, le terminal doit envoyer Option comme Alt (Ghostty : macos-option-as-alt = true).
+-- Sur Mac, le terminal doit envoyer Option comme Alt (Ghostty : macos-option-as-alt = right,
+-- donc seulement avec Option droite ; Option gauche garde les caractères AZERTY [ ] { } …).
 keymap("x", "<A-k>", ":move '<-2<CR>gv=gv", { desc = "Déplace la sélection vers le haut", silent = true })
 keymap("x", "<A-j>", ":move '>+1<CR>gv=gv", { desc = "Déplace la sélection vers le bas", silent = true })
 
@@ -23,6 +24,9 @@ keymap("n", "<C-k>", "<C-w>k", { desc = "Déplace le curseur dans la fenêtre du
 keymap("n", "<C-l>", "<C-w>l", { desc = "Déplace le curseur dans la fenêtre droite" })
 
 -- Navigation entre les buffers (plugin bufferline)
-keymap("n", "<S-l>", ":bnext<CR>", { desc = "Buffer suivant", silent = true })
-keymap("n", "<S-h>", ":bprevious<CR>", { desc = "Buffer précédent", silent = true })
+-- BufferLineCycle* suit l'ordre affiché dans la barre (:bnext suit le numéro des buffers)
+keymap("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { desc = "Buffer suivant" })
+keymap("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Buffer précédent" })
 
+keymap("n", "<leader>bd", ":bp | bd #<CR>", { desc = "Fermer le buffer", silent = true })
+keymap("n", "<leader>bo", ":BufferLineCloseOthers<CR>", { desc = "Fermer les autres", silent = true })

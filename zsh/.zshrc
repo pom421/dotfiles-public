@@ -36,3 +36,6 @@ alias ez='"$EDITOR" ~/.zshrc'
 #bindkey "^f" autosuggest-accept
 #bindkey "^p" history-search-backward
 #bindkey "^n" history-search-forward
+
+# Vite+ bin (https://viteplus.dev)
+. "/Users/pom/.config/vite-plus/env"

@@ -3,3 +3,6 @@
 # les plugins ; les deux compinit se renvoyaient la reconstruction du cache de
 # complétion à chaque démarrage (≈ 0,5 s). ~/.zshrc lance compinit lui-même.
 skip_global_compinit=1
+
+# Vite+ bin (https://viteplus.dev)
+. "/Users/pom/.config/vite-plus/env"
