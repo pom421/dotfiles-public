@@ -3,7 +3,6 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
     local lualine = require("lualine")
-    local lazy_status = require("lazy.status") -- affiche le nombre de mise à jour plugins lazy dans la barre
 
     -- configuration de lualine
     lualine.setup({
@@ -30,11 +29,8 @@ return {
         lualine_b = { "branch", "diff", "diagnostics" },
         lualine_c = { { "filename", path = 1 } },
         lualine_x = {
-          {
-            lazy_status.updates,
-            cond = lazy_status.has_updates,
-            color = { fg = "#ff9e64" },
-          },
+          -- serveurs LSP actifs pour le buffer (les mises à jour passent par make nvim-update)
+          "lsp_status",
           { "encoding" },
           { "fileformat" },
           { "filetype" },
@@ -57,4 +53,3 @@ return {
     })
   end,
 }
-

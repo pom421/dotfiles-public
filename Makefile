@@ -32,7 +32,7 @@ endif
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
 	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
-	unfold clean-links dry-run uninstall check test test-full bench cheatsheets
+	unfold clean-links dry-run uninstall check test test-full test-nvim nvim-update bench cheatsheets
 
 help:
 	@echo "Profils"
@@ -42,6 +42,7 @@ help:
 	@echo "  shell bash zsh git nvim vscode espanso ghostty brew$(if $(APP_TARGETS), $(APP_TARGETS))"
 	@echo "  zsh-plugins    télécharge zinit et les plugins (réseau), puis les active"
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
+	@echo "  nvim-update    met à jour plugins et outils nvim, avec un cooldown de 7 jours"
 	@echo "  brew-cleanup   liste ce qui est installé par brew mais absent des Brewfiles"
 	@echo "  vscode-export  versionne les profils VSCode (noms, dossiers, extensions)"
 	@echo "  vscode-settings-drift  réglages VSCode modifiés depuis l'interface, à reporter dans une couche"
@@ -55,6 +56,7 @@ help:
 	@echo "  check          shellcheck + gitleaks (s'ils sont installés)"
 	@echo "  test           banc Docker Ubuntu 24.04 nu, sans réseau"
 	@echo "  test-full      banc Docker Ubuntu 24.04 + make full (réseau, plusieurs minutes)"
+	@echo "  test-nvim      banc Docker Ubuntu 24.04 + nvim seul (réseau, quelques minutes)"
 	@echo "  bench          temps de démarrage de zsh et bash"
 	@echo "Fiches"
 	@echo "  cheatsheets    régénère les PDF et Markdown de cheatsheets/ (Chrome requis)"
@@ -147,6 +149,11 @@ git-tools:
 # ─── Applications ────────────────────────────────────────────────
 nvim: need-stow
 	$(call stow_pkgs,nvim)
+
+# Plugins (lazy-lock.json) et outils Mason publiés depuis au moins 7 jours.
+# Correctif de sécurité urgent : make nvim-update NOW=plugin1,plugin2
+nvim-update:
+	@node "$(REPO)/scripts/nvim-cooldown.ts" $(if $(NOW),--now $(NOW))
 
 aerospace: need-stow
 	$(call stow_pkgs,aerospace)
@@ -341,6 +348,11 @@ test:
 test-full:
 	docker build -q -f tests/Dockerfile.full -t dotfiles-test-full "$(REPO)" >/dev/null
 	docker run --rm dotfiles-test-full
+
+# Banc nvim : Ubuntu neuve, linuxbrew, seulement les formules dont nvim dépend (itération rapide)
+test-nvim:
+	docker build -q -f tests/Dockerfile.nvim -t dotfiles-test-nvim "$(REPO)" >/dev/null
+	docker run --rm dotfiles-test-nvim
 
 # Fiches : PDF (non versionnés) et Markdown générés depuis le HTML
 cheatsheets:

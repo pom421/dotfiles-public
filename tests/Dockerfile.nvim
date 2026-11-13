@@ -1,0 +1,27 @@
+# Banc nvim : Ubuntu 24.04 neuve + linuxbrew + seulement les formules du Brewfile dont nvim
+# dépend, puis `make nvim` et tests/nvim.sh. Réseau requis (plugins, parsers, outils Mason).
+# L'installation de brew est en cache Docker : seuls la config et les téléchargements de nvim
+# sont refaits à chaque `make test-nvim`. Vérification finale : make test-full (tout le Brewfile).
+FROM ubuntu:24.04
+
+# Prérequis de linuxbrew (compilateur, curl, git…) + sudo pour son installeur
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends build-essential curl git file procps ca-certificates make sudo \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV TERM=xterm-256color LANG=C.UTF-8 NONINTERACTIVE=1 HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_ENV_HINTS=1 \
+    PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
+
+RUN useradd --create-home --shell /bin/bash tester \
+ && echo 'tester ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/tester
+USER tester
+
+RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Formules dont nvim dépend : doit rester un sous-ensemble du Brewfile (vérifié par tests/nvim.sh)
+COPY --chown=tester:tester tests/nvim-formulas.txt /tmp/
+RUN brew install $(grep -v '^#' /tmp/nvim-formulas.txt) && brew cleanup --prune=all
+
+WORKDIR /home/tester/dotfiles/dotfiles-public
+COPY --chown=tester:tester . .
+
+CMD ["bash", "-c", "make nvim >/dev/null && bash tests/nvim.sh"]

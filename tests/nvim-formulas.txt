@@ -1,0 +1,18 @@
+# Formules brew dont nvim dépend (installées par tests/Dockerfile.nvim, qui les met en cache).
+# Toutes doivent figurer dans brew/.config/brew/Brewfile : vérifié par tests/nvim.sh.
+git
+make
+stow
+neovim
+tree-sitter-cli
+ripgrep
+fd
+node
+python@3.13
+lazygit
+xclip
+imagemagick
+unzip
+mermaid-cli
+tectonic
+wget
