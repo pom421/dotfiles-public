@@ -15,6 +15,8 @@ local tools = {
   "rust-analyzer",
   "yaml-language-server",
   "json-lsp",
+  "html-lsp",
+  "css-lsp", -- CSS, SCSS, Less
   "lua-language-server",
   "bash-language-server",
   -- linters (shellcheck est utilisé par bash-language-server ; hadolint, actionlint : nvim-lint)

@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v2 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v3 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -24,7 +24,7 @@
 | `␣uh` | types inférés on/off |
 | `C-o` `C-i` | revenir / repartir après un saut |
 
-**Serveurs** : TS/JS `tsc` (TS 7) + `oxlint` · Python `ty` + `ruff` · Rust `rust-analyzer` · YAML, JSON (schémas) · Lua · Bash. Les autres occurrences du symbole sont surlignées.
+**Serveurs** : TS/JS `tsc` (TS 7) + `oxlint` · Python `ty` + `ruff` · Rust `rust-analyzer` · HTML, CSS · YAML, JSON (schémas) · Lua · Bash. React (TSX/JSX) : par `tsc`, avec `@types/react` dans le projet. Les autres occurrences du symbole sont surlignées.
 
 ## Diagnostics
 

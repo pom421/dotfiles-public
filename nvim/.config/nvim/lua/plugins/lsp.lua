@@ -9,6 +9,8 @@ local servers = {
   "ruff",
   "yamlls",
   "jsonls",
+  "html",
+  "cssls",
   "lua_ls",
   "bashls",
   -- Rust : rust-analyzer est lancé par rustaceanvim (plus bas)

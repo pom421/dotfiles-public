@@ -150,13 +150,18 @@ check "LSP Python : ty + ruff" lsp_attached t.py ty ruff
 check "LSP YAML : yamlls + schéma GitHub Actions" lsp_attached .github/workflows/ci.yml yamlls
 check "LSP Lua : lua_ls" lsp_attached t.lua lua_ls
 check "LSP Bash : bashls + shellcheck" lsp_attached t.sh bashls
-# jsonls : pas de diagnostic sur un JSON valide, on vérifie seulement l'attache
-json_attached() {
+# jsonls, html : pas de diagnostic sur un fichier valide, on vérifie seulement l'attache
+# attached <fichier> <serveur>
+attached() {
   local out
-  out=$(cd $P && nvim --headless package.json "+lua vim.wait(30000, function() return #vim.lsp.get_clients({ bufnr = 0 }) > 0 end, 200); io.stdout:write(vim.lsp.get_clients({ bufnr = 0 })[1].name)" +qa 2>&1)
-  [ "$out" = jsonls ] || { echo "$out"; return 1; }
+  out=$(cd $P && nvim --headless "$1" "+lua vim.wait(30000, function() return #vim.lsp.get_clients({ bufnr = 0 }) > 0 end, 200); io.stdout:write(vim.lsp.get_clients({ bufnr = 0 })[1].name)" +qa 2>&1)
+  [ "$out" = "$2" ] || { echo "$out"; return 1; }
 }
-check "LSP JSON : jsonls" json_attached
+check "LSP JSON : jsonls" attached package.json jsonls
+printf '<div>\n  <p>x</p>\n</div>\n' > $P/t.html
+check "LSP HTML : html" attached t.html html
+printf '.a {\n  colr: red;\n}\n' > $P/t.css
+check "LSP CSS : cssls" lsp_attached t.css cssls
 # ─── Complétion ──────────────────────────────────────────────────
 # Tape « mess » sous `const message = …` (via la boucle principale de nvim : un feedkeys bloquant
 # ne laisserait pas le LSP répondre) ; blink.cmp doit proposer `message`, venu du LSP
