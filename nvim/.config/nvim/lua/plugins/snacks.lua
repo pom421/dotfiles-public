@@ -5,6 +5,7 @@
 --   bigfile  : désactive treesitter et LSP sur les très gros fichiers
 --   bufdelete : ferme un buffer sans fermer sa fenêtre
 --   lazygit, terminal, gitbrowse : lazygit et un terminal en fenêtre flottante, fichier ouvert sur GitHub
+--   gh       : issues et pull requests GitHub (lecture, commentaires, revue, fusion), via la commande gh
 --   image    : images et formules LaTeX affichées dans le markdown (Ghostty, kitty…)
 local function pick(name, opts)
   return function() Snacks.picker[name](opts) end
@@ -32,6 +33,7 @@ return {
     input = { enabled = true },
     bigfile = { enabled = true },
     image = { enabled = true },
+    gh = {},
   },
   keys = {
     -- Recherche
@@ -67,6 +69,11 @@ return {
     { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Historique (lazygit)" },
     { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Historique du fichier (lazygit)" },
     { "<leader>go", function() Snacks.gitbrowse() end, desc = "Ouvrir sur GitHub / GitLab", mode = { "n", "x" } },
+    -- GitHub (gh auth login au préalable)
+    { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "Issues GitHub (ouvertes)" },
+    { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "Issues GitHub (toutes)" },
+    { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "Pull requests (ouvertes)" },
+    { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "Pull requests (toutes)" },
     -- Terminal flottant (Échap Échap : mode normal, puis q ou <leader>tt pour le masquer)
     { "<leader>tt", function() Snacks.terminal.toggle() end, desc = "Terminal" },
     -- Notifications

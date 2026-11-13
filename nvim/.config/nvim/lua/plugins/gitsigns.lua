@@ -12,7 +12,7 @@ return {
       map("n", "[h", function() gs.nav_hunk("prev") end, "Bloc modifié précédent")
       map("n", "<leader>gn", function() gs.nav_hunk("next") end, "Bloc modifié suivant")
       map("n", "<leader>gN", function() gs.nav_hunk("prev") end, "Bloc modifié précédent")
-      map("n", "<leader>gp", gs.preview_hunk_inline, "Aperçu du bloc (avant / après)")
+      map("n", "<leader>gv", gs.preview_hunk_inline, "Voir le bloc (avant / après)")
       map({ "n", "x" }, "<leader>gs", ":Gitsigns stage_hunk<cr>", "Indexer (stage) le bloc ou la sélection")
       map({ "n", "x" }, "<leader>gr", ":Gitsigns reset_hunk<cr>", "Annuler le bloc ou la sélection")
       map("n", "<leader>gS", gs.stage_buffer, "Indexer tout le fichier")

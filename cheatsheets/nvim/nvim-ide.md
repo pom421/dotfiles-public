@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v3 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v4 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -147,14 +147,16 @@ Blocs calculés par treesitter, tout déplié à l'ouverture.
 | `␣gl` `␣gf` | historique : dépôt / fichier |
 | `␣gn` `␣gN` | bloc modifié suivant / précédent |
 | `]h` `[h` | idem (AZERTY) |
-| `␣gp` | aperçu du bloc (avant / après) |
+| `␣gv` | voir le bloc (avant / après) |
 | `␣gs` `␣gr` | indexer / annuler le bloc |
 | `␣gS` `␣gR` | indexer / annuler le fichier |
 | `␣gb` `␣gB` | blame : ligne / fichier |
 | `␣ub` | blame en fin de ligne on/off |
 | `␣go` | ouvrir sur GitHub / GitLab |
+| `␣gi` `␣gI` | issues GitHub : ouvertes / toutes |
+| `␣gp` `␣gP` | pull requests : ouvertes / toutes |
 
-En visuel, `␣gs` `␣gr` ne traitent que la sélection.
+En visuel, `␣gs` `␣gr` ne traitent que la sélection. Issue ou PR ouverte : commenter, revue, fusion, checkout (`g?`).
 
 ## Diff (façon VS Code)
 
