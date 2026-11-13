@@ -1,6 +1,6 @@
 # Neovim mes raccourcis
 
-*v2 · 2026-11-11* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
+*v3 · 2026-11-13* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
 
 ---
 
@@ -10,16 +10,19 @@
 
 | Extension | Rôle | Commandes |
 |---|---|---|
-| `lazy.nvim` | gère les plugins | `:Lazy` `:Lazy sync` |
-| `telescope` | recherche floue (+ fzf en C) | `␣ff` `␣fg` `:Telescope` |
+| `lazy.nvim` | gère les plugins | `:Lazy` `make nvim-update` |
+| `snacks` | recherche, terminal, lazygit | `␣ff` `␣fg` `␣tt` |
+| `telescope` | recherche (essai) | `␣Ff` `␣Fg` |
 | `nvim-tree` | explorateur de fichiers | `␣e` → fiche explorateur |
 | `bufferline` | buffers en onglets | `S-h` `S-l` `:BufferLinePick` |
 | `lualine` | barre d'état | — |
 | `treesitter` | coloration, indentation | `:TSInstall rust` `:TSUpdate` |
 | `tokyonight` | thème de couleurs | `:colorscheme` |
-| `devicons` `plenary` | dépendances (icônes, Lua) | — |
+| `which-key` | popup des raccourcis | `␣?` |
 
-**lualine** : mode · branche git · chemin relatif · mises à jour de plugins en orange.
+**LSP, complétion, git, débogage, tests…** : fiche **Neovim IDE**.
+
+**lualine** : mode · branche git · chemin relatif · serveurs LSP actifs.
 
 **Diagnostic général** : `:checkhealth`.
 
@@ -36,6 +39,7 @@ Leader par défaut : `\`. Perte sans gravité : `l` fait la même chose.
 | Touche | Chez moi | Défaut |
 |---|---|---|
 | `;;` | sortir (= `Échap`) | ⚠ écrit `;;` |
+| `C-j` `C-k` | menu de complétion : suivant / précédent | hors menu, inchangés |
 
 **Effet de bord** : après `;`, nvim attend 1 s une 2e touche.
 
@@ -58,12 +62,12 @@ Défaut équivalent : `C-w h` `C-w j`… (toujours actif).
 |---|---|---|
 | `S-l` | buffer suivant (ordre de la barre) | ⚠ `L` : bas de l'écran |
 | `S-h` | buffer précédent | ⚠ `H` : haut de l'écran |
-| `␣bd` | fermer le buffer | — |
+| `␣bd` | fermer le buffer, garder la fenêtre | `:bd` ferme aussi la fenêtre |
 | `␣bo` | fermer les autres | — |
 
 Défaut équivalent : `:bn` `:bp` `:bd`. Haut / bas de l'écran : `zt` `zb` déplacent la vue, pas le curseur.
 
-## Recherche
+## Recherche (snacks)
 
 | Touche | Chez moi | Défaut |
 |---|---|---|
@@ -73,7 +77,7 @@ Défaut équivalent : `:bn` `:bp` `:bd`. Haut / bas de l'écran : `zt` `zb` dép
 | `␣fb` | liste des buffers | `:ls` |
 | `␣fx` | chercher le mot sous curseur | `*` (fichier courant) |
 
-## Dans Telescope
+## Dans les listes (snacks, Telescope)
 
 | Touche | Chez moi | Défaut |
 |---|---|---|
@@ -118,6 +122,11 @@ Défaut équivalent : `:m '>+1` ou `d` puis `p`.
 
 > **Exemple** : `iskeyword` : sur `font-size`, `ciw` remplace tout ; `w` saute le mot entier.
 
-## Limite connue
+## Touches natives redéfinies
 
-**`␣bd` avec un seul buffer** : ne ferme rien de propre, utiliser `:bd`.
+| Touche | Chez moi | Défaut |
+|---|---|---|
+| `gd` `gD` | définition, déclaration (LSP) | déclaration locale / globale (texte) |
+| `grr` `gri` `grt` | idem, en liste avec aperçu | liste quickfix |
+| `gq` | formateur du langage | coupe les lignes à `textwidth` |
+| `s` | entourer : `sa` `sd` `sr` | ⚠ retardé (sinon `cl`) |

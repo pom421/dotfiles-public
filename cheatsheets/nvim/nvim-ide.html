@@ -1,0 +1,327 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neovim IDE</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap">
+<style>
+/* Même charte que nvim-mes-raccourcis.html : A4 paysage, 4 colonnes, touches en capsules mono */
+:root{
+  --bg:#e9ece8; --paper:#ffffff; --ink:#1d2320; --muted:#5d6762;
+  --line:#cfd6d1; --key:#eef2ef; --accent:#2f7d4f; --ex:#fbf5e8; --exline:#c9a35c; --warn:#a23b2a;
+  --f-body:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; --warn:#e08a7a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; --warn:#e08a7a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:13px;line-height:1.28;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.sheet{background:var(--paper);max-width:297mm;margin:0 auto 24px;padding:9mm 9mm 8mm;box-shadow:0 1px 6px rgba(0,0,0,.12);
+  display:flex;flex-direction:column;gap:6px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.head h1{font-family:var(--f-mono);font-size:20px;margin:0;font-weight:600;letter-spacing:-.02em}
+.head h1 span{color:var(--accent)}
+.legend{font-size:11px;color:var(--muted)}
+.legend .ver{margin-left:10px;font-family:var(--f-mono);font-size:9px;opacity:.75}
+.cols{column-count:4;column-gap:5mm}
+section{break-inside:avoid;margin:0 0 8px}
+h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;color:var(--accent);
+  border-bottom:1px solid var(--line);padding-bottom:1px;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:inherit}
+td{padding:1px 5px 1px 0;vertical-align:top;text-align:left}
+td:first-child{white-space:nowrap;width:1%}
+tr+tr td{border-top:1px dotted var(--line)}
+kbd,code{font-family:var(--f-mono);font-size:.88em}
+kbd{background:var(--key);border:1px solid var(--line);border-radius:3px;padding:0 3px;font-weight:600;white-space:nowrap}
+p.note{margin:3px 0 0;font-size:11px;color:var(--muted)}
+p.note b{color:var(--ink)}
+.warn{color:var(--warn)}
+.ex{background:var(--ex);border:1px dashed var(--exline);border-radius:4px;padding:3px 6px;margin:4px 0 0;font-size:11px}
+.ex b{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--exline);display:block}
+
+@media (max-width:640px){.cols{column-count:1}.sheet{padding:16px}}
+@media (min-width:641px) and (max-width:1000px){.cols{column-count:2}}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#000;--muted:#444;--line:#bbb;--key:#f0f0f0;--accent:#1f6a3e;--ex:#fbf3e2;--exline:#9a7330;--warn:#9b2c1c;color-scheme:light}
+  body{padding:0;font-size:9.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{box-shadow:none;margin:0;max-width:none;width:297mm;height:209mm;box-sizing:border-box;padding:7mm 8mm 6mm;break-after:page;overflow:hidden}
+  .sheet:last-child{break-after:auto}
+  .cols{column-count:4;column-gap:5mm;column-fill:balance}
+  .head h1{font-size:16pt}
+  section{margin-bottom:6px}
+}
+</style>
+
+<div class="sheet">
+  <div class="head">
+    <h1><span>nvim</span> · IDE</h1>
+    <div class="legend">Page 1/2 · <kbd>␣</kbd> = leader (Espace) · <kbd>C-x</kbd> = Ctrl+x · <kbd>␣?</kbd> = raccourcis du buffer · which-key s'ouvre après <kbd>␣</kbd><span class="ver">v1 · 2026-11-13</span></div>
+  </div>
+
+  <div class="cols">
+
+    <section>
+      <h2>Code (LSP)</h2>
+      <table>
+        <tr><td><kbd>K</kbd></td><td>documentation au survol</td></tr>
+        <tr><td><kbd>gd</kbd></td><td>aller à la définition</td></tr>
+        <tr><td><kbd>gD</kbd></td><td>aller à la déclaration</td></tr>
+        <tr><td><kbd>grr</kbd></td><td>références</td></tr>
+        <tr><td><kbd>gri</kbd></td><td>implémentations</td></tr>
+        <tr><td><kbd>grt</kbd></td><td>définition du type</td></tr>
+        <tr><td><kbd>gai</kbd> <kbd>gao</kbd></td><td>appels entrants / sortants</td></tr>
+        <tr><td><kbd>grn</kbd> <kbd>␣cr</kbd></td><td>renommer partout</td></tr>
+        <tr><td><kbd>gra</kbd> <kbd>␣ca</kbd></td><td>actions (import, correctif…)</td></tr>
+        <tr><td><kbd>gO</kbd></td><td>symboles du fichier</td></tr>
+        <tr><td><kbd>C-s</kbd></td><td>signature (insertion)</td></tr>
+        <tr><td><kbd>␣uh</kbd></td><td>types inférés on/off</td></tr>
+        <tr><td><kbd>C-o</kbd> <kbd>C-i</kbd></td><td>revenir / repartir après un saut</td></tr>
+      </table>
+      <p class="note"><b>Serveurs</b> : TS/JS <code>tsc</code> (TS 7) + <code>oxlint</code> · Python <code>ty</code> + <code>ruff</code> · Rust <code>rust-analyzer</code> · YAML, JSON (schémas) · Lua · Bash. Les autres occurrences du symbole sont surlignées.</p>
+    </section>
+
+    <section>
+      <h2>Diagnostics</h2>
+      <table>
+        <tr><td><kbd>␣cd</kbd></td><td>message complet de la ligne</td></tr>
+        <tr><td><kbd>]d</kbd> <kbd>[d</kbd></td><td>suivant / précédent <span class="warn">(AZERTY)</span></td></tr>
+        <tr><td><kbd>␣xx</kbd></td><td>panneau, tout le projet</td></tr>
+        <tr><td><kbd>␣xX</kbd></td><td>panneau, fichier courant</td></tr>
+        <tr><td><kbd>␣fd</kbd> <kbd>␣fD</kbd></td><td>liste fichier / projet</td></tr>
+        <tr><td><kbd>␣xl</kbd></td><td>définitions, références (panneau)</td></tr>
+        <tr><td><kbd>␣xq</kbd> <kbd>␣xL</kbd></td><td>quickfix / liste locale</td></tr>
+        <tr><td><kbd>␣xt</kbd> <kbd>␣st</kbd></td><td>TODO, FIXME du projet</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Complétion (insertion)</h2>
+      <table>
+        <tr><td><kbd>C-espace</kbd></td><td>ouvrir le menu</td></tr>
+        <tr><td><kbd>C-j</kbd> <kbd>C-k</kbd></td><td>proposition suivante / précédente</td></tr>
+        <tr><td><kbd>Entrée</kbd></td><td>valider</td></tr>
+        <tr><td><kbd>C-e</kbd></td><td>fermer le menu</td></tr>
+        <tr><td><kbd>Tab</kbd> <kbd>S-Tab</kbd></td><td>champ de snippet suivant / précédent</td></tr>
+      </table>
+      <p class="note">Sources : LSP, chemins, snippets, mots du buffer ; aussi après <kbd>:</kbd>. La doc de la proposition s'affiche à côté.</p>
+    </section>
+
+    <section>
+      <h2>Rechercher (snacks)</h2>
+      <table>
+        <tr><td><kbd>␣ff</kbd></td><td>fichier par nom</td></tr>
+        <tr><td><kbd>␣fg</kbd></td><td>texte dans le projet</td></tr>
+        <tr><td><kbd>␣fx</kbd></td><td>mot sous le curseur / sélection</td></tr>
+        <tr><td><kbd>␣fb</kbd> <kbd>␣fr</kbd></td><td>buffers / fichiers récents</td></tr>
+        <tr><td><kbd>␣f/</kbd></td><td>lignes du buffer</td></tr>
+        <tr><td><kbd>␣fs</kbd> <kbd>␣fS</kbd></td><td>symboles fichier / projet</td></tr>
+        <tr><td><kbd>␣fh</kbd> <kbd>␣fk</kbd> <kbd>␣fc</kbd></td><td>aide, raccourcis, commandes</td></tr>
+        <tr><td><kbd>␣fR</kbd></td><td>reprendre la dernière recherche</td></tr>
+        <tr><td><kbd>␣fp</kbd></td><td>toutes les recherches</td></tr>
+      </table>
+      <p class="note"><b>Dans la liste</b> : <kbd>C-j</kbd> <kbd>C-k</kbd> naviguer · <kbd>Tab</kbd> sélection multiple · <kbd>C-v</kbd> <kbd>C-s</kbd> ouvrir en split vertical / horizontal · <kbd>C-q</kbd> vers la quickfix.</p>
+      <p class="note"><b>Essai</b> : mêmes recherches avec Telescope sous <kbd>␣F…</kbd> (<kbd>␣Ff</kbd> <kbd>␣Fg</kbd> <kbd>␣Fb</kbd> <kbd>␣Fx</kbd> <kbd>␣Fr</kbd> <kbd>␣Fs</kbd> <kbd>␣FR</kbd>).</p>
+    </section>
+
+    <section>
+      <h2>Remplacer dans le projet</h2>
+      <table>
+        <tr><td><kbd>␣sr</kbd></td><td>panneau rechercher / remplacer</td></tr>
+        <tr><td><kbd>\r</kbd></td><td>appliquer le remplacement</td></tr>
+        <tr><td><kbd>\s</kbd></td><td>reporter les lignes éditées</td></tr>
+        <tr><td><kbd>g?</kbd></td><td>aide du panneau</td></tr>
+      </table>
+      <p class="note">Prérempli avec le mot sous le curseur (ou la sélection), limité aux fichiers du même type. <kbd>\</kbd> = localleader <span class="warn">(AZERTY Mac : ⌥⇧/)</span>.</p>
+    </section>
+
+    <section>
+      <h2>Formater</h2>
+      <table>
+        <tr><td><kbd>:w</kbd></td><td>formate à l'enregistrement</td></tr>
+        <tr><td><kbd>␣cf</kbd></td><td>formater fichier / sélection</td></tr>
+        <tr><td><kbd>gq</kbd></td><td>formater un mouvement</td></tr>
+        <tr><td><kbd>␣uf</kbd></td><td>auto-formatage on/off (global)</td></tr>
+        <tr><td><kbd>␣uF</kbd></td><td>idem, ce buffer seulement</td></tr>
+      </table>
+      <p class="note">JS/TS, JSON, YAML, TOML, CSS, Markdown : <code>oxfmt</code> (<code>vp fmt</code> dans un projet Vite+) · Python <code>ruff</code> · Lua <code>stylua</code> · shell <code>shfmt</code> · Rust <code>rustfmt</code>. Lint : <code>hadolint</code> (Dockerfile), <code>actionlint</code> (workflows GitHub).</p>
+    </section>
+
+    <section>
+      <h2>Plan du fichier</h2>
+      <table>
+        <tr><td><kbd>␣co</kbd></td><td>panneau « outline » à droite</td></tr>
+        <tr><td><kbd>␣cn</kbd></td><td>navigation dans le plan (popup)</td></tr>
+        <tr><td><kbd>Entrée</kbd></td><td>aller au symbole</td></tr>
+        <tr><td><kbd>{</kbd> <kbd>}</kbd></td><td>symbole précédent / suivant</td></tr>
+      </table>
+      <p class="note">En haut de l'écran : signature de la fonction en cours (sticky scroll).</p>
+    </section>
+
+    <section>
+      <h2>Objets de texte</h2>
+      <table>
+        <tr><td><kbd>af</kbd> <kbd>if</kbd></td><td>fonction</td></tr>
+        <tr><td><kbd>ac</kbd> <kbd>ic</kbd></td><td>classe</td></tr>
+        <tr><td><kbd>aa</kbd> <kbd>ia</kbd></td><td>argument</td></tr>
+        <tr><td><kbd>ai</kbd> <kbd>ii</kbd></td><td>condition (if)</td></tr>
+        <tr><td><kbd>al</kbd> <kbd>il</kbd></td><td>boucle</td></tr>
+        <tr><td><kbd>ih</kbd></td><td>bloc modifié (git)</td></tr>
+      </table>
+      <div class="ex"><b>Exemple</b><kbd>daf</kbd> supprime la fonction · <kbd>cia</kbd> réécrit l'argument · <kbd>vif</kbd> sélectionne le corps.</div>
+    </section>
+
+    <section>
+      <h2>Entourer, paires</h2>
+      <table>
+        <tr><td><kbd>sa</kbd></td><td>ajouter : <kbd>saiw"</kbd></td></tr>
+        <tr><td><kbd>sd</kbd></td><td>supprimer : <kbd>sd(</kbd></td></tr>
+        <tr><td><kbd>sr</kbd></td><td>remplacer : <kbd>sr"'</kbd></td></tr>
+      </table>
+      <p class="note"><code>( [ { " ' `</code> se ferment seuls. <kbd>s</kbd> seul (remplacer un caractère) attend un peu ; sans délai : <kbd>cl</kbd>.</p>
+    </section>
+
+    <section>
+      <h2>Replis</h2>
+      <table>
+        <tr><td><kbd>za</kbd></td><td>replier / déplier le bloc</td></tr>
+        <tr><td><kbd>zM</kbd> <kbd>zR</kbd></td><td>tout replier / déplier</td></tr>
+      </table>
+      <p class="note">Blocs calculés par treesitter, tout déplié à l'ouverture.</p>
+    </section>
+
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="head">
+    <h1><span>nvim</span> · IDE</h1>
+    <div class="legend">Page 2/2 · <kbd>F5</kbd>… sur Mac : <kbd>fn</kbd> + <kbd>F5</kbd><span class="ver">v1 · 2026-11-13</span></div>
+  </div>
+
+  <div class="cols">
+
+    <section>
+      <h2>Git</h2>
+      <table>
+        <tr><td><kbd>␣gg</kbd></td><td>lazygit</td></tr>
+        <tr><td><kbd>␣gl</kbd> <kbd>␣gf</kbd></td><td>historique : dépôt / fichier</td></tr>
+        <tr><td><kbd>␣gn</kbd> <kbd>␣gN</kbd></td><td>bloc modifié suivant / précédent</td></tr>
+        <tr><td><kbd>]h</kbd> <kbd>[h</kbd></td><td>idem <span class="warn">(AZERTY)</span></td></tr>
+        <tr><td><kbd>␣gp</kbd></td><td>aperçu du bloc (avant / après)</td></tr>
+        <tr><td><kbd>␣gs</kbd> <kbd>␣gr</kbd></td><td>indexer / annuler le bloc</td></tr>
+        <tr><td><kbd>␣gS</kbd> <kbd>␣gR</kbd></td><td>indexer / annuler le fichier</td></tr>
+        <tr><td><kbd>␣gb</kbd> <kbd>␣gB</kbd></td><td>blame : ligne / fichier</td></tr>
+        <tr><td><kbd>␣ub</kbd></td><td>blame en fin de ligne on/off</td></tr>
+        <tr><td><kbd>␣go</kbd></td><td>ouvrir sur GitHub / GitLab</td></tr>
+      </table>
+      <p class="note">En visuel, <kbd>␣gs</kbd> <kbd>␣gr</kbd> ne traitent que la sélection.</p>
+    </section>
+
+    <section>
+      <h2>Diff (façon VS Code)</h2>
+      <table>
+        <tr><td><kbd>␣gd</kbd></td><td>modifications en cours</td></tr>
+        <tr><td><kbd>␣gD</kbd></td><td>index (ce qui sera commité)</td></tr>
+        <tr><td><kbd>␣gm</kbd></td><td>différences avec main</td></tr>
+        <tr><td><kbd>␣gh</kbd></td><td>historique des commits</td></tr>
+        <tr><td><kbd>:CodeDiff pr 12</kbd></td><td>revoir une pull request</td></tr>
+      </table>
+      <p class="note">Côte à côte, surlignage au caractère près ; indexer un fichier ou un bloc depuis la liste ; résolution de conflits.</p>
+    </section>
+
+    <section>
+      <h2>Débogage</h2>
+      <table>
+        <tr><td><kbd>F5</kbd> <kbd>␣dc</kbd></td><td>lancer / continuer</td></tr>
+        <tr><td><kbd>F9</kbd> <kbd>␣db</kbd></td><td>point d'arrêt</td></tr>
+        <tr><td><kbd>␣dB</kbd></td><td>point d'arrêt conditionnel</td></tr>
+        <tr><td><kbd>F10</kbd> <kbd>␣do</kbd></td><td>pas à pas (sans entrer)</td></tr>
+        <tr><td><kbd>F11</kbd> <kbd>␣di</kbd></td><td>pas à pas (en entrant)</td></tr>
+        <tr><td><kbd>S-F11</kbd> <kbd>␣dO</kbd></td><td>sortir de la fonction</td></tr>
+        <tr><td><kbd>␣dC</kbd></td><td>continuer jusqu'au curseur</td></tr>
+        <tr><td><kbd>␣de</kbd></td><td>valeur sous le curseur</td></tr>
+        <tr><td><kbd>␣dl</kbd> <kbd>␣dt</kbd></td><td>relancer / arrêter</td></tr>
+        <tr><td><kbd>␣du</kbd></td><td>panneaux (variables, pile…)</td></tr>
+      </table>
+      <p class="note">TS/JS : <code>node</code> (fichier courant, ou s'attacher à un <code>--inspect</code>) · Python : <code>debugpy</code> · Rust : <kbd>:RustLsp debuggables</kbd>. Panneaux ouverts avec la session ; lettres de leur barre pour changer d'onglet.</p>
+    </section>
+
+    <section>
+      <h2>Tests</h2>
+      <table>
+        <tr><td><kbd>␣tn</kbd></td><td>test sous le curseur</td></tr>
+        <tr><td><kbd>␣tf</kbd> <kbd>␣ta</kbd></td><td>tests du fichier / du projet</td></tr>
+        <tr><td><kbd>␣tl</kbd></td><td>relancer le dernier</td></tr>
+        <tr><td><kbd>␣td</kbd></td><td>déboguer le test</td></tr>
+        <tr><td><kbd>␣ts</kbd></td><td>panneau des tests</td></tr>
+        <tr><td><kbd>␣to</kbd></td><td>sortie du test</td></tr>
+        <tr><td><kbd>␣tw</kbd></td><td>relancer à chaque modif</td></tr>
+        <tr><td><kbd>␣tS</kbd></td><td>arrêter</td></tr>
+      </table>
+      <p class="note">vitest (<code>vp test</code> dans un projet Vite+) · pytest · cargo test. Résultat ✓ ✗ dans la gouttière.</p>
+    </section>
+
+    <section>
+      <h2>Terminal</h2>
+      <table>
+        <tr><td><kbd>␣tt</kbd></td><td>terminal flottant on/off</td></tr>
+        <tr><td><kbd>Échap</kbd> <kbd>Échap</kbd></td><td>mode normal (copier, défiler)</td></tr>
+        <tr><td><kbd>q</kbd></td><td>masquer (mode normal)</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Markdown</h2>
+      <table>
+        <tr><td><kbd>␣mr</kbd></td><td>rendu dans nvim on/off</td></tr>
+        <tr><td><kbd>␣mp</kbd></td><td>aperçu dans le navigateur</td></tr>
+        <tr><td><kbd>␣mP</kbd></td><td>fermer l'aperçu</td></tr>
+      </table>
+      <p class="note">Rendu direct : titres, tableaux, cases, encadrés <code>&gt; [!NOTE]</code>. Images, diagrammes Mermaid et formules LaTeX affichés dans Ghostty. Aperçu navigateur mis à jour à la frappe.</p>
+    </section>
+
+    <section>
+      <h2>Claude Code</h2>
+      <table>
+        <tr><td><kbd>␣ac</kbd></td><td>ouvrir / fermer</td></tr>
+        <tr><td><kbd>␣af</kbd></td><td>aller dans Claude</td></tr>
+        <tr><td><kbd>␣ar</kbd> <kbd>␣aC</kbd></td><td>reprendre / continuer</td></tr>
+        <tr><td><kbd>␣am</kbd></td><td>choisir le modèle</td></tr>
+        <tr><td><kbd>␣ab</kbd></td><td>fichier dans le contexte</td></tr>
+        <tr><td><kbd>␣as</kbd></td><td>envoyer la sélection (visuel)</td></tr>
+        <tr><td><kbd>␣aa</kbd> <kbd>␣ad</kbd></td><td>accepter / refuser le diff</td></tr>
+      </table>
+      <p class="note">Claude voit le fichier et la sélection courants. Dans nvim-tree, <kbd>␣as</kbd> ajoute le fichier sous le curseur.</p>
+    </section>
+
+    <section>
+      <h2>Buffers, interface</h2>
+      <table>
+        <tr><td><kbd>␣bd</kbd> <kbd>␣bo</kbd></td><td>fermer le buffer / les autres</td></tr>
+        <tr><td><kbd>␣un</kbd></td><td>historique des notifications</td></tr>
+        <tr><td><kbd>␣?</kbd></td><td>raccourcis du buffer</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Entretien</h2>
+      <table>
+        <tr><td><kbd>make nvim-update</kbd></td><td>MAJ plugins et outils (+7 jours)</td></tr>
+        <tr><td><kbd>NOW=nom</kbd></td><td>sans délai (faille de sécurité)</td></tr>
+        <tr><td><kbd>make test-nvim</kbd></td><td>banc Ubuntu (Docker)</td></tr>
+        <tr><td><kbd>:Mason</kbd></td><td>outils installés (LSP…)</td></tr>
+        <tr><td><kbd>:checkhealth</kbd></td><td>diagnostic général</td></tr>
+        <tr><td><kbd>:checkhealth vim.lsp</kbd></td><td>serveurs LSP du buffer</td></tr>
+        <tr><td><kbd>:ConformInfo</kbd></td><td>formateurs du buffer</td></tr>
+      </table>
+      <p class="note"><kbd>:Lazy update</kbd> ne fait rien (versions figées) : passer par <kbd>make nvim-update</kbd>, puis committer <code>lazy-lock.json</code> et <code>cooldown.lua</code>.</p>
+    </section>
+
+  </div>
+</div>

@@ -1,6 +1,6 @@
 # Neovim explorateur
 
-*v2 · 2026-11-11* — `␣` = leader (Espace) · `C-x` = Ctrl+x · touches valables dans l'arbre · `g?` = aide intégrée
+*v3 · 2026-11-13* — `␣` = leader (Espace) · `C-x` = Ctrl+x · touches valables dans l'arbre · `g?` = aide intégrée
 
 ---
 
@@ -54,7 +54,7 @@
 | `S` | chercher un chemin |
 | `/` | recherche vim classique |
 
-**Fichier loin dans l'arbre** : `␣ff` (Telescope) est plus rapide.
+**Fichier loin dans l'arbre** : `␣ff` (recherche floue) est plus rapide.
 
 ## Ouvrir un fichier
 
