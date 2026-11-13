@@ -1,6 +1,6 @@
 return {
   "nvim-telescope/telescope.nvim",
-  branch = "0.1.x",
+  version = "*",
   dependencies = {
     "nvim-lua/plenary.nvim",
     -- fzf implémentation en C pour plus de rapidité
@@ -31,33 +31,15 @@ return {
 
     telescope.load_extension("fzf")
 
-    -- set keymaps
-    local keymap = vim.keymap -- for conciseness
-
-    keymap.set(
-      "n",
-      "<leader>ff",
-      "<cmd>Telescope find_files<cr>",
-      { desc = "Recherche de chaînes de caractères dans les noms de fichiers" }
-    )
-    keymap.set(
-      "n",
-      "<leader>fg",
-      "<cmd>Telescope live_grep<cr>",
-      { desc = "Recherche de chaînes de caractères dans le contenu des fichiers" }
-    )
-    keymap.set(
-      "n",
-      "<leader>fb",
-      "<cmd>Telescope buffers<cr>",
-      { desc = "Recherche de chaînes de caractères dans les noms de buffers" }
-    )
-    keymap.set(
-      "n",
-      "<leader>fx",
-      "<cmd>Telescope grep_string<cr>",
-      { desc = "Recherche de la chaîne de caractères sous le curseur" }
-    )
+    -- Essai temporaire : mêmes recherches que snacks.picker (<leader>f…), sous <leader>F…, pour comparer.
+    -- Si Telescope ne sert plus, supprimer ce fichier.
+    local keymap = vim.keymap
+    keymap.set("n", "<leader>Ff", "<cmd>Telescope find_files<cr>", { desc = "Fichiers (nom)" })
+    keymap.set("n", "<leader>Fg", "<cmd>Telescope live_grep<cr>", { desc = "Texte dans les fichiers" })
+    keymap.set("n", "<leader>Fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers ouverts" })
+    keymap.set("n", "<leader>Fx", "<cmd>Telescope grep_string<cr>", { desc = "Mot sous le curseur" })
+    keymap.set("n", "<leader>Fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fichiers récents" })
+    keymap.set("n", "<leader>Fs", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Symboles du fichier" })
+    keymap.set("n", "<leader>FR", "<cmd>Telescope resume<cr>", { desc = "Reprendre la dernière recherche" })
   end,
 }
-

@@ -28,5 +28,4 @@ keymap("n", "<C-l>", "<C-w>l", { desc = "Déplace le curseur dans la fenêtre dr
 keymap("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { desc = "Buffer suivant" })
 keymap("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Buffer précédent" })
 
-keymap("n", "<leader>bd", ":bp | bd #<CR>", { desc = "Fermer le buffer", silent = true })
-keymap("n", "<leader>bo", ":BufferLineCloseOthers<CR>", { desc = "Fermer les autres", silent = true })
+-- <leader>bd et <leader>bo (fermer le buffer, les autres) : snacks.bufdelete, cf. plugins/snacks.lua
