@@ -39,6 +39,9 @@ opt.swapfile = false -- on supprime le pénible fichier de swap
 
 opt.undofile = true -- on autorise l'undo à l'infini (même quand on revient sur un fichier qu'on avait fermé)
 
+-- replis (calculés par treesitter, cf. plugins/treesitter.lua) : tout déplié à l'ouverture
+opt.foldlevelstart = 99
+
 opt.iskeyword:append("-") -- on traite les mots avec des - comme un seul mot
 
 -- affichage des caractères spéciaux
