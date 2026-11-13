@@ -66,7 +66,8 @@ checkhealth_clean() {
   # - conteneur : pas d'ouvreur d'URL (xdg-open), terminal sans protocole d'images (kitty, Ghostty…)
   # - Mason : langages qu'il sait gérer mais dont on n'installe aucun outil (Go, PHP, Java…)
   # - snacks : ses modules non activés (« setup {disabled} ») ; snacks.image : pas de ghostscript
-  #   (aperçu des PDF, inutile) ni de parsers latex, typst, vue, svelte, norg (images dans ces fichiers)
+  #   (aperçu des PDF, inutile) ni de mmdc (Mermaid : aperçu navigateur), ni de parsers typst, vue, svelte,
+  #   norg (images dans ces fichiers)
   # - blink.cmp : rappel que certaines sources s'activent à la volée (ligne de commande)
   # - which-key : gc / gcc, recouvrement des raccourcis natifs de commentaire
   local alerts
@@ -74,7 +75,7 @@ checkhealth_clean() {
     -e 'vim.ui.open: no handler|does not support the kitty graphics protocol|None of the tools found: .kitty., .wezterm., .ghostty.' \
     -e 'WARNING (Go|cargo|luarocks|Composer|PHP|javac|java|julia|Ruby|RubyGem|gem): not available' \
     -e 'setup \{disabled\}' \
-    -e "Tool not found: 'gs'|\`gs\` is required to render PDF" \
+    -e "Tool not found: 'gs'|\`gs\` is required to render PDF|Tool not found: 'mmdc'|\`mmdc\` is required" \
     -e 'Missing Treesitter languages|Image rendering in docs with missing treesitter' \
     -e 'Some providers may show up as "disabled"' \
     -e 'In mode `n`, <gc> overlaps with <gcc>')
@@ -292,7 +293,7 @@ EOF
 check "tests : neotest + vitest" neotest_vitest
 
 # Pas de toolchain Rust dans le conteneur : on vérifie seulement le serveur
-check "Rust : rust-analyzer et codelldb installés" test -x "$DATA/mason/bin/rust-analyzer" -a -x "$DATA/mason/bin/codelldb"
+check "LSP Rust : rust-analyzer installé" test -x "$DATA/mason/bin/rust-analyzer"
 
 # Exécuté directement (make test-nvim) : bilan ici ; sourcé par full.sh : c'est lui qui conclut
 if [ "${BASH_SOURCE[0]}" = "$0" ]; then

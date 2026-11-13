@@ -13,6 +13,5 @@ lazygit
 xclip
 imagemagick
 unzip
-mermaid-cli
 tectonic
 wget

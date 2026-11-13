@@ -1,7 +1,7 @@
 -- Documentation (markdown) affichée directement
 --   Dans nvim : render-markdown (titres, tableaux, listes, cases, encadrés…) + snacks.image
---     (images, diagrammes Mermaid, formules LaTeX ; terminal Ghostty, kitty ou WezTerm)
---   Dans le navigateur : live-preview, mis à jour à la frappe, défilement synchronisé
+--     (images, formules LaTeX ; terminal Ghostty, kitty ou WezTerm)
+--   Dans le navigateur : live-preview, mis à jour à la frappe, défilement synchronisé, diagrammes Mermaid
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",

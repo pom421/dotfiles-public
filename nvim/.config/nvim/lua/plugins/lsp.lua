@@ -108,6 +108,8 @@ return {
     "mrcjkb/rustaceanvim",
     version = "9.*",
     lazy = false, -- le plugin se charge lui-même à l'ouverture d'un fichier Rust
+    -- Pas de débogueur Rust (codelldb retiré, trop lourd pour un usage rare)
+    init = function() vim.g.rustaceanvim = { dap = { adapter = false } } end,
   },
 
   -- Lua : complétion et types de l'API de nvim et des plugins, pour éditer cette config

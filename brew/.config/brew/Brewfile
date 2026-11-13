@@ -35,8 +35,6 @@ brew "k9s"
 brew "lazygit"
 brew "llm"
 brew "make"
-# Diagrammes Mermaid et formules LaTeX (tectonic) affichés dans les fichiers markdown de nvim (snacks.image)
-brew "mermaid-cli"
 brew "mkcert"
 brew "monolith"
 brew "neovim"
@@ -56,6 +54,7 @@ brew "scalingo"
 brew "sevenzip"
 brew "sqlite-utils"
 brew "stow"
+# Formules LaTeX affichées dans les fichiers markdown de nvim (snacks.image)
 brew "tectonic"
 # tlrc : client tldr officiel (commande `tldr`), la formule tldr a été retirée de Homebrew
 brew "tlrc"

@@ -5,7 +5,7 @@
 --   bigfile  : désactive treesitter et LSP sur les très gros fichiers
 --   bufdelete : ferme un buffer sans fermer sa fenêtre
 --   lazygit, terminal, gitbrowse : lazygit et un terminal en fenêtre flottante, fichier ouvert sur GitHub
---   image    : images, diagrammes Mermaid et formules LaTeX affichés dans le markdown (Ghostty, kitty…)
+--   image    : images et formules LaTeX affichées dans le markdown (Ghostty, kitty…)
 local function pick(name, opts)
   return function() Snacks.picker[name](opts) end
 end

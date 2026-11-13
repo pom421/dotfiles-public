@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v1 · 2026-11-13* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v2 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -183,7 +183,7 @@ Côte à côte, surlignage au caractère près ; indexer un fichier ou un bloc d
 | `␣dl` `␣dt` | relancer / arrêter |
 | `␣du` | panneaux (variables, pile…) |
 
-TS/JS : `node` (fichier courant, ou s'attacher à un `--inspect`) · Python : `debugpy` · Rust : `:RustLsp debuggables`. Panneaux ouverts avec la session ; lettres de leur barre pour changer d'onglet.
+TS/JS : `node` (fichier courant, ou s'attacher à un `--inspect`) · Python : `debugpy`. Panneaux ouverts avec la session ; lettres de leur barre pour changer d'onglet.
 
 ## Tests
 
@@ -216,7 +216,7 @@ vitest (`vp test` dans un projet Vite+) · pytest · cargo test. Résultat ✓ �
 | `␣mp` | aperçu dans le navigateur |
 | `␣mP` | fermer l'aperçu |
 
-Rendu direct : titres, tableaux, cases, encadrés `> [!NOTE]`. Images, diagrammes Mermaid et formules LaTeX affichés dans Ghostty. Aperçu navigateur mis à jour à la frappe.
+Rendu direct : titres, tableaux, cases, encadrés `> [!NOTE]`. Images et formules LaTeX affichées dans Ghostty. Aperçu navigateur mis à jour à la frappe, avec les diagrammes Mermaid.
 
 ## Claude Code
 

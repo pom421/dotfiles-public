@@ -25,10 +25,9 @@ local tools = {
   "oxfmt", -- JS/TS, JSON, YAML, TOML, CSS, Markdown (hors projet Vite+, qui a le sien)
   "stylua",
   "shfmt",
-  -- débogueurs (plugins/dap.lua ; codelldb : Rust, via rustaceanvim)
+  -- débogueurs (plugins/dap.lua)
   "js-debug-adapter",
   "debugpy",
-  "codelldb",
 }
 
 -- Dépendances npm et pip des outils, elles aussi publiées depuis au moins 7 jours
