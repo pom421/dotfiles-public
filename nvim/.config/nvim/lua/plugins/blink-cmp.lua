@@ -9,7 +9,7 @@ return {
   dependencies = { "rafamadriz/friendly-snippets" }, -- snippets prêts à l'emploi, comme dans VS Code
   opts = {
     -- Comme VS Code : Entrée valide, Tab / S-Tab passent d'un champ de snippet à l'autre,
-    -- C-espace ouvre le menu, C-e le ferme ; C-j / C-k naviguent (comme dans Telescope)
+    -- C-espace ouvre le menu, C-e le ferme ; C-j / C-k naviguent
     keymap = {
       preset = "enter",
       ["<C-j>"] = { "select_next", "fallback" },

@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v4 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v5 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -66,8 +66,6 @@ Sources : LSP, chemins, snippets, mots du buffer ; aussi après `:`. La doc de l
 | `␣fp` | toutes les recherches |
 
 **Dans la liste** : `C-j` `C-k` naviguer · `Tab` sélection multiple · `C-v` `C-s` ouvrir en split vertical / horizontal · `C-q` vers la quickfix.
-
-**Essai** : mêmes recherches avec Telescope sous `␣F…` (`␣Ff` `␣Fg` `␣Fb` `␣Fx` `␣Fr` `␣Fs` `␣FR`).
 
 ## Remplacer dans le projet
 
@@ -239,6 +237,7 @@ Claude voit le fichier et la sélection courants. Dans nvim-tree, `␣as` ajoute
 | Touche | Action |
 |---|---|
 | `␣bd` `␣bo` | fermer le buffer / les autres |
+| `␣E` | explorateur snacks (essai) |
 | `␣un` | historique des notifications |
 | `␣?` | raccourcis du buffer |
 

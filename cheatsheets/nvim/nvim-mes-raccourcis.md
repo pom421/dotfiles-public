@@ -1,6 +1,6 @@
 # Neovim mes raccourcis
 
-*v3 · 2026-11-13* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
+*v4 · 2026-11-14* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
 
 ---
 
@@ -11,8 +11,7 @@
 | Extension | Rôle | Commandes |
 |---|---|---|
 | `lazy.nvim` | gère les plugins | `:Lazy` `make nvim-update` |
-| `snacks` | recherche, terminal, lazygit | `␣ff` `␣fg` `␣tt` |
-| `telescope` | recherche (essai) | `␣Ff` `␣Fg` |
+| `snacks` | recherche, explorateur (essai), terminal | `␣ff` `␣E` `␣tt` |
 | `nvim-tree` | explorateur de fichiers | `␣e` → fiche explorateur |
 | `bufferline` | buffers en onglets | `S-h` `S-l` `:BufferLinePick` |
 | `lualine` | barre d'état | — |
@@ -77,7 +76,7 @@ Défaut équivalent : `:bn` `:bp` `:bd`. Haut / bas de l'écran : `zt` `zb` dép
 | `␣fb` | liste des buffers | `:ls` |
 | `␣fx` | chercher le mot sous curseur | `*` (fichier courant) |
 
-## Dans les listes (snacks, Telescope)
+## Dans les listes (snacks)
 
 | Touche | Chez moi | Défaut |
 |---|---|---|

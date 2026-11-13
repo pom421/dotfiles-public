@@ -11,7 +11,6 @@ return {
       { "<leader>c", group = "code" },
       { "<leader>d", group = "débogage" },
       { "<leader>f", group = "rechercher (snacks)" },
-      { "<leader>F", group = "rechercher (Telescope, essai)" },
       { "<leader>g", group = "git" },
       { "<leader>m", group = "markdown" },
       { "<leader>s", group = "rechercher / remplacer" },
