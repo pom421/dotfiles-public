@@ -1,3 +1,4 @@
+| Après un `git pull` (autre machine) | `make nvim-sync` : plugins, outils et parsers nvim calés sur la config, ce qui en a été retiré est désinstallé |
 # Dotfiles
 
 Mes dotfiles pour macOS (perso, zsh) et Ubuntu (boulot, bash), installés avec
@@ -246,7 +247,7 @@ y() { … }
 | Paquets brew en trop | `make brew-cleanup` (liste seulement) |
 | VSCode (réglages, extensions, profils) | cf. [VSCode](#vscode) |
 | Mettre à jour nvim (plugins, LSP, formateurs…) | `make nvim-update` : versions publiées depuis 7 jours ou plus ; faille urgente : `make nvim-update NOW=plugin` |
-| Vérifier nvim sur Ubuntu | `make test-nvim` (Docker, réseau) ; raccourcis : `cheatsheets/nvim/nvim-ide.html` |
+| Vérifier nvim sur Ubuntu | `make test-nvim` (Docker, réseau) ; fiches : `cheatsheets/README.md` |
 | Vérifier avant de pousser | `make check` (shellcheck, gitleaks) et `make test` (Docker) |
 
 ## VSCode

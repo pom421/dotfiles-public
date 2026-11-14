@@ -1,0 +1,149 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neovim entretien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap">
+<style>
+/* Même charte que snacks-explorateur.html : A4 paysage, sections en colonnes, touches en capsules mono */
+:root{
+  --bg:#e9ece8; --paper:#ffffff; --ink:#1d2320; --muted:#5d6762;
+  --line:#cfd6d1; --key:#eef2ef; --accent:#2f7d4f; --ex:#fbf5e8; --exline:#c9a35c;
+  --f-body:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:13px;line-height:1.3;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.sheet{background:var(--paper);max-width:297mm;margin:0 auto 24px;padding:9mm 9mm 8mm;box-shadow:0 1px 6px rgba(0,0,0,.12);
+  display:flex;flex-direction:column;gap:6px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.head h1{font-family:var(--f-mono);font-size:20px;margin:0;font-weight:600;letter-spacing:-.02em}
+.head h1 span{color:var(--accent)}
+.legend{font-size:11px;color:var(--muted)}
+.legend .ver{margin-left:10px;font-family:var(--f-mono);font-size:9px;opacity:.75}
+.cols{column-count:4;column-gap:5mm}
+section{break-inside:avoid;margin:0 0 9px}
+h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;color:var(--accent);
+  border-bottom:1px solid var(--line);padding-bottom:1px;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:inherit}
+td{padding:1px 0;vertical-align:top;text-align:left}
+td:first-child{white-space:nowrap;padding-right:6px;width:1%}
+tr+tr td{border-top:1px dotted var(--line)}
+kbd,code{font-family:var(--f-mono);font-size:.88em}
+kbd{background:var(--key);border:1px solid var(--line);border-radius:3px;padding:0 3px;font-weight:600;white-space:nowrap}
+p.note{margin:3px 0 0;font-size:11.5px;color:var(--muted)}
+p.note b{color:var(--ink)}
+.ex{background:var(--ex);border:1px dashed var(--exline);border-radius:4px;padding:3px 6px;margin:4px 0 0;font-size:11.5px}
+.ex b{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--exline);display:block}
+pre{font-family:var(--f-mono);font-size:10.5px;background:var(--key);border-left:3px solid var(--accent);padding:3px 6px;margin:3px 0;white-space:pre-wrap;line-height:1.3}
+pre.cfg{font-size:9px}
+.glyph td:first-child{font-family:var(--f-mono);text-align:center}
+
+@media (max-width:640px){.cols{column-count:1}.sheet{padding:16px}}
+@media (min-width:641px) and (max-width:900px){.cols{column-count:2}}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#000;--muted:#444;--line:#bbb;--key:#f0f0f0;--accent:#1f6a3e;--ex:#fbf3e2;--exline:#9a7330;color-scheme:light}
+  body{padding:0;font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{box-shadow:none;margin:0;max-width:none;width:297mm;height:209mm;box-sizing:border-box;padding:7mm 8mm 6mm;break-after:page;overflow:hidden}
+  .sheet:last-child{break-after:auto}
+  .cols{column-count:4;column-gap:5mm;column-fill:balance}
+  .head h1{font-size:17pt}
+  section{margin-bottom:7px}
+}
+</style>
+
+<div class="sheet">
+  <div class="head">
+    <h1><span>nvim</span> · entretien</h1>
+    <div class="legend">Commandes <code>make</code> : à la racine de <code>dotfiles-public</code> · config : <code>nvim/.config/nvim/</code> du repo<span class="ver">v1 · 2026-11-14</span></div>
+  </div>
+
+  <div class="cols">
+
+    <section>
+      <h2>Après un git pull</h2>
+      <table>
+        <tr><td><kbd>make nvim-sync</kbd></td><td>tout caler sur la config</td></tr>
+      </table>
+      <p class="note">Enchaîne : liens de config (stow), liens morts retirés, plugins au commit de <code>lazy-lock.json</code>, outils Mason et parsers de la config. <b>Ce qui a été retiré de la config est désinstallé</b> (plugins, outils, parsers).</p>
+      <div class="ex"><b>Exemple</b>Rust retiré sur le Mac → <code>git pull</code> puis <kbd>make nvim-sync</kbd> sur le poste Ubuntu : rust-analyzer, rustaceanvim et le parser partent.</div>
+    </section>
+
+    <section>
+      <h2>Mettre à jour</h2>
+      <table>
+        <tr><td><kbd>make nvim-update</kbd></td><td>plugins et outils (+7 jours)</td></tr>
+        <tr><td><kbd>NOW=snacks.nvim</kbd></td><td>sans délai (faille de sécurité)</td></tr>
+        <tr><td><kbd>make test-nvim</kbd></td><td>banc Ubuntu (Docker, ~15 min)</td></tr>
+        <tr><td><code>git commit</code></td><td><code>lazy-lock.json</code> + <code>cooldown.lua</code></td></tr>
+      </table>
+      <p class="note"><b>Délai de 7 jours</b> : seules les versions publiées depuis une semaine sont prises (attaque de la chaîne d'approvisionnement). Les autres machines suivent avec <kbd>make nvim-sync</kbd>.</p>
+    </section>
+
+    <section>
+      <h2>Ajouter un langage</h2>
+      <table>
+        <tr><td><code>treesitter.lua</code></td><td>parser → <code>languages</code></td></tr>
+        <tr><td><code>mason.lua</code></td><td>serveur, formateur → <code>tools</code></td></tr>
+        <tr><td><code>lsp.lua</code></td><td>serveur → <code>servers</code></td></tr>
+        <tr><td><code>conform.lua</code></td><td>formateur par filetype</td></tr>
+        <tr><td><kbd>make nvim-sync</kbd></td><td>installer</td></tr>
+        <tr><td><code>tests/nvim.sh</code></td><td>un test, puis <kbd>make test-nvim</kbd></td></tr>
+      </table>
+      <p class="note">Noms : <kbd>:Mason</kbd> (paquets), <code>:h lspconfig-all</code> (serveurs). <b>Retirer</b> : l'enlever des listes, puis <kbd>make nvim-sync</kbd>.</p>
+    </section>
+
+    <section>
+      <h2>Diagnostiquer</h2>
+      <table>
+        <tr><td><kbd>:checkhealth</kbd></td><td>tout (long)</td></tr>
+        <tr><td><kbd>:checkhealth vim.lsp</kbd></td><td>serveurs LSP du buffer</td></tr>
+        <tr><td><kbd>:ConformInfo</kbd></td><td>formateurs du buffer</td></tr>
+        <tr><td><kbd>:Mason</kbd></td><td>outils installés</td></tr>
+        <tr><td><kbd>:Lazy</kbd></td><td>plugins, temps de chargement</td></tr>
+        <tr><td><kbd>:messages</kbd> <kbd>␣un</kbd></td><td>messages / notifications</td></tr>
+        <tr><td><kbd>:lua =vim.bo.filetype</kbd></td><td>filetype du buffer</td></tr>
+        <tr><td><code>nvim --clean</code></td><td>nvim sans config</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Où sont les choses</h2>
+      <table>
+        <tr><td><code>~/.config/nvim</code></td><td>liens vers le repo (stow)</td></tr>
+        <tr><td><code>~/.local/share/nvim/lazy</code></td><td>plugins (150 Mo)</td></tr>
+        <tr><td><code>…/nvim/mason</code></td><td>outils (450 à 500 Mo)</td></tr>
+        <tr><td><code>…/nvim/site/parser</code></td><td>parsers (45 Mo)</td></tr>
+        <tr><td><code>~/.local/state/nvim</code></td><td>journaux (<code>lsp.log</code>…), undo</td></tr>
+        <tr><td><code>~/.cache/nvim</code></td><td>cache, effaçable</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Réparer</h2>
+      <table>
+        <tr><td><kbd>:TSSync</kbd></td><td>réinstaller les parsers manquants</td></tr>
+        <tr><td><kbd>:MasonSync</kbd></td><td>idem pour les outils</td></tr>
+        <tr><td><kbd>:Lazy restore</kbd></td><td>plugins au commit du lock</td></tr>
+      </table>
+      <p class="note"><b>Repartir de zéro</b> : <code>rm -rf ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim</code>, puis <kbd>make nvim-sync</kbd> (≈ 5 min).</p>
+    </section>
+
+    <section>
+      <h2>Pièges</h2>
+      <p class="note" style="margin-top:0"><b><kbd>:Lazy update</kbd> ne fait rien</b> : versions figées. Passer par <kbd>make nvim-update</kbd>.</p>
+      <p class="note"><b><kbd>:MasonInstall</kbd>, <kbd>:TSInstall</kbd> à la main</b> : pour essayer seulement. Absents de la config, ils sont retirés au prochain <kbd>make nvim-sync</kbd>.</p>
+      <p class="note"><b>Brew à part</b> : nvim, node, ripgrep… viennent du Brewfile (<code>make brew</code>), sans délai de 7 jours.</p>
+      <p class="note"><b>Ancien lien après un fichier supprimé</b> du repo : <code>make clean-links</code> (déjà fait par <kbd>make nvim-sync</kbd>).</p>
+    </section>
+
+  </div>
+</div>

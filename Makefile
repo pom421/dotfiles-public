@@ -32,7 +32,7 @@ endif
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
 	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
-	unfold clean-links dry-run uninstall check test test-full test-nvim nvim-update bench cheatsheets
+	unfold clean-links dry-run uninstall check test test-full test-nvim nvim-update nvim-sync bench cheatsheets
 
 help:
 	@echo "Profils"
@@ -43,6 +43,7 @@ help:
 	@echo "  zsh-plugins    télécharge zinit et les plugins (réseau), puis les active"
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
 	@echo "  nvim-update    met à jour plugins et outils nvim, avec un cooldown de 7 jours"
+	@echo "  nvim-sync      après un git pull : plugins, outils et parsers nvim calés sur la config"
 	@echo "  brew-cleanup   liste ce qui est installé par brew mais absent des Brewfiles"
 	@echo "  vscode-export  versionne les profils VSCode (noms, dossiers, extensions)"
 	@echo "  vscode-settings-drift  réglages VSCode modifiés depuis l'interface, à reporter dans une couche"
@@ -154,6 +155,12 @@ nvim: need-stow
 # Correctif de sécurité urgent : make nvim-update NOW=plugin1,plugin2
 nvim-update:
 	@node "$(REPO)/scripts/nvim-cooldown.ts" $(if $(NOW),--now $(NOW))
+
+# Après un git pull (autre machine) : liens, plugins, outils Mason et parsers calés sur la config ;
+# ce qui en a été retiré est désinstallé
+nvim-sync: nvim clean-links
+	@out=$$(nvim --headless "+Lazy! restore" "+Lazy! clean" "+MasonSync" "+TSSync" +qa 2>&1); rc=$$?; \
+		printf '%s\n' "$$out" | grep -vE "checkout|Finished task|Running task|^$$"; exit $$rc
 
 aerospace: need-stow
 	$(call stow_pkgs,aerospace)

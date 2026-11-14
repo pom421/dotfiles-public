@@ -1,0 +1,204 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Snacks recherche</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap">
+<style>
+/* Même charte que snacks-explorateur.html : A4 paysage, sections en colonnes, touches en capsules mono */
+:root{
+  --bg:#e9ece8; --paper:#ffffff; --ink:#1d2320; --muted:#5d6762;
+  --line:#cfd6d1; --key:#eef2ef; --accent:#2f7d4f; --ex:#fbf5e8; --exline:#c9a35c;
+  --f-body:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:13px;line-height:1.3;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.sheet{background:var(--paper);max-width:297mm;margin:0 auto 24px;padding:9mm 9mm 8mm;box-shadow:0 1px 6px rgba(0,0,0,.12);
+  display:flex;flex-direction:column;gap:6px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.head h1{font-family:var(--f-mono);font-size:20px;margin:0;font-weight:600;letter-spacing:-.02em}
+.head h1 span{color:var(--accent)}
+.legend{font-size:11px;color:var(--muted)}
+.legend .ver{margin-left:10px;font-family:var(--f-mono);font-size:9px;opacity:.75}
+.cols{column-count:4;column-gap:5mm}
+section{break-inside:avoid;margin:0 0 9px}
+h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;color:var(--accent);
+  border-bottom:1px solid var(--line);padding-bottom:1px;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:inherit}
+td{padding:1px 0;vertical-align:top;text-align:left}
+td:first-child{white-space:nowrap;padding-right:6px;width:1%}
+tr+tr td{border-top:1px dotted var(--line)}
+kbd,code{font-family:var(--f-mono);font-size:.88em}
+kbd{background:var(--key);border:1px solid var(--line);border-radius:3px;padding:0 3px;font-weight:600;white-space:nowrap}
+p.note{margin:3px 0 0;font-size:11.5px;color:var(--muted)}
+p.note b{color:var(--ink)}
+.ex{background:var(--ex);border:1px dashed var(--exline);border-radius:4px;padding:3px 6px;margin:4px 0 0;font-size:11.5px}
+.ex b{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--exline);display:block}
+pre{font-family:var(--f-mono);font-size:10.5px;background:var(--key);border-left:3px solid var(--accent);padding:3px 6px;margin:3px 0;white-space:pre-wrap;line-height:1.3}
+pre.cfg{font-size:9px}
+.glyph td:first-child{font-family:var(--f-mono);text-align:center}
+
+@media (max-width:640px){.cols{column-count:1}.sheet{padding:16px}}
+@media (min-width:641px) and (max-width:900px){.cols{column-count:2}}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#000;--muted:#444;--line:#bbb;--key:#f0f0f0;--accent:#1f6a3e;--ex:#fbf3e2;--exline:#9a7330;color-scheme:light}
+  body{padding:0;font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{box-shadow:none;margin:0;max-width:none;width:297mm;height:209mm;box-sizing:border-box;padding:7mm 8mm 6mm;break-after:page;overflow:hidden}
+  .sheet:last-child{break-after:auto}
+  .cols{column-count:4;column-gap:5mm;column-fill:balance}
+  .head h1{font-size:17pt}
+  section{margin-bottom:7px}
+}
+</style>
+
+<div class="sheet">
+  <div class="head">
+    <h1><span>snacks</span> · recherche, listes, git</h1>
+    <div class="legend"><kbd>␣</kbd> = leader (Espace) · <kbd>C-x</kbd> = Ctrl+x · <kbd>A-x</kbd> = Option droite+x · explorateur : fiche à part<span class="ver">v1 · 2026-11-14</span></div>
+  </div>
+
+  <div class="cols">
+
+    <section>
+      <h2>Fichiers · texte</h2>
+      <table>
+        <tr><td><kbd>␣ff</kbd></td><td>fichier par nom</td></tr>
+        <tr><td><kbd>␣fg</kbd></td><td>texte dans le projet</td></tr>
+        <tr><td><kbd>␣fx</kbd></td><td>mot sous le curseur / sélection</td></tr>
+        <tr><td><kbd>␣fb</kbd></td><td>buffers ouverts</td></tr>
+        <tr><td><kbd>␣fr</kbd></td><td>fichiers récents</td></tr>
+        <tr><td><kbd>␣f/</kbd></td><td>lignes du buffer</td></tr>
+        <tr><td><kbd>␣fR</kbd></td><td>reprendre la dernière recherche</td></tr>
+        <tr><td><kbd>␣fp</kbd></td><td>toutes les recherches</td></tr>
+      </table>
+      <div class="ex"><b>Exemple</b><kbd>␣fg</kbd> <code>useState</code> → <kbd>Tab</kbd> <kbd>Tab</kbd> → <kbd>C-q</kbd> : les 2 résultats dans la quickfix.</div>
+    </section>
+
+    <section>
+      <h2>Code · aide</h2>
+      <table>
+        <tr><td><kbd>␣fs</kbd> <kbd>␣fS</kbd></td><td>symboles fichier / projet</td></tr>
+        <tr><td><kbd>␣fd</kbd> <kbd>␣fD</kbd></td><td>diagnostics fichier / projet</td></tr>
+        <tr><td><kbd>gd</kbd> <kbd>grr</kbd> <kbd>gri</kbd></td><td>définition, références… (LSP)</td></tr>
+        <tr><td><kbd>␣st</kbd></td><td>TODO, FIXME du projet</td></tr>
+        <tr><td><kbd>␣fh</kbd></td><td>aide de nvim</td></tr>
+        <tr><td><kbd>␣fk</kbd></td><td>raccourcis</td></tr>
+        <tr><td><kbd>␣fc</kbd></td><td>commandes</td></tr>
+      </table>
+      <p class="note">Une seule réponse (une définition) : saut direct, sans liste.</p>
+    </section>
+
+    <section>
+      <h2>Dans une liste</h2>
+      <table>
+        <tr><td><code>texte</code></td><td>filtre (champ du haut)</td></tr>
+        <tr><td><kbd>C-j</kbd> <kbd>C-k</kbd></td><td>résultat suivant / précédent</td></tr>
+        <tr><td><kbd>Entrée</kbd></td><td>ouvrir</td></tr>
+        <tr><td><kbd>C-v</kbd> <kbd>C-s</kbd></td><td>split vertical / horizontal</td></tr>
+        <tr><td><kbd>S-Entrée</kbd></td><td>choisir la fenêtre</td></tr>
+        <tr><td><kbd>Tab</kbd> <kbd>S-Tab</kbd></td><td>sélection multiple</td></tr>
+        <tr><td><kbd>C-a</kbd></td><td>tout sélectionner</td></tr>
+        <tr><td><kbd>C-q</kbd></td><td>vers la quickfix</td></tr>
+        <tr><td><kbd>C-f</kbd> <kbd>C-b</kbd></td><td>défiler l'aperçu</td></tr>
+        <tr><td><kbd>C-d</kbd> <kbd>C-u</kbd></td><td>défiler la liste</td></tr>
+        <tr><td><kbd>C-↑</kbd> <kbd>C-↓</kbd></td><td>recherches précédentes</td></tr>
+        <tr><td><kbd>Échap</kbd> <kbd>Échap</kbd></td><td>fermer</td></tr>
+        <tr><td><kbd>?</kbd></td><td>toutes les touches (mode normal)</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Options de la liste</h2>
+      <table>
+        <tr><td><kbd>A-h</kbd></td><td>fichiers cachés on/off</td></tr>
+        <tr><td><kbd>A-i</kbd></td><td>fichiers ignorés (git) on/off</td></tr>
+        <tr><td><kbd>A-p</kbd></td><td>aperçu on/off</td></tr>
+        <tr><td><kbd>A-m</kbd></td><td>plein écran on/off</td></tr>
+        <tr><td><kbd>A-r</kbd></td><td>expression régulière on/off</td></tr>
+        <tr><td><kbd>C-g</kbd></td><td><kbd>␣fg</kbd> : filtrer les résultats</td></tr>
+      </table>
+      <p class="note"><b><kbd>C-g</kbd> dans <kbd>␣fg</kbd></b> : fige la recherche, le texte tapé filtre alors les lignes trouvées.</p>
+    </section>
+
+    <section>
+      <h2>Saisie du filtre</h2>
+      <table>
+        <tr><td><code>foo bar</code></td><td>les deux mots, dans l'ordre voulu</td></tr>
+        <tr><td><code>'foo</code></td><td>texte exact (pas flou)</td></tr>
+        <tr><td><code>^foo</code> <code>foo$</code></td><td>commence / finit par</td></tr>
+        <tr><td><code>!foo</code></td><td>exclure</td></tr>
+        <tr><td><code>foo | bar</code></td><td>l'un ou l'autre</td></tr>
+        <tr><td><kbd>C-r</kbd> <kbd>C-w</kbd></td><td>insérer le mot sous le curseur</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Git (lazygit)</h2>
+      <table>
+        <tr><td><kbd>␣gg</kbd></td><td>lazygit flottant</td></tr>
+        <tr><td><kbd>␣gl</kbd></td><td>historique du dépôt</td></tr>
+        <tr><td><kbd>␣gf</kbd></td><td>historique du fichier</td></tr>
+        <tr><td><kbd>␣go</kbd></td><td>ouvrir sur GitHub / GitLab</td></tr>
+      </table>
+      <p class="note">Dans herdr, l'onglet <code>git</code> fait le même travail : <kbd>␣gg</kbd> sert pour un commit rapide sans quitter nvim.</p>
+    </section>
+
+    <section>
+      <h2>GitHub (gh)</h2>
+      <table>
+        <tr><td><kbd>␣gi</kbd> <kbd>␣gI</kbd></td><td>issues : ouvertes / toutes</td></tr>
+        <tr><td><kbd>␣gp</kbd> <kbd>␣gP</kbd></td><td>pull requests : ouvertes / toutes</td></tr>
+        <tr><td><kbd>A-b</kbd></td><td>ouvrir dans le navigateur</td></tr>
+        <tr><td><kbd>C-y</kbd></td><td>copier le lien</td></tr>
+      </table>
+      <p class="note">Prérequis : <code>gh auth login</code>.</p>
+    </section>
+
+    <section>
+      <h2>Issue · PR ouverte</h2>
+      <table>
+        <tr><td><kbd>Entrée</kbd></td><td>actions (revue, fusion, checkout…)</td></tr>
+        <tr><td><kbd>a</kbd></td><td>commenter</td></tr>
+        <tr><td><kbd>i</kbd></td><td>modifier</td></tr>
+        <tr><td><kbd>c</kbd> <kbd>o</kbd></td><td>fermer / rouvrir</td></tr>
+      </table>
+      <p class="note">Revue ligne à ligne d'une PR : <kbd>:CodeDiff pr 12</kbd> (fiche IDE).</p>
+    </section>
+
+    <section>
+      <h2>Interface</h2>
+      <table>
+        <tr><td><kbd>␣e</kbd></td><td>explorateur (fiche à part)</td></tr>
+        <tr><td><kbd>␣bd</kbd> <kbd>␣bo</kbd></td><td>fermer le buffer / les autres</td></tr>
+        <tr><td><kbd>␣tt</kbd></td><td>terminal flottant on/off</td></tr>
+        <tr><td><kbd>␣un</kbd></td><td>historique des notifications</td></tr>
+      </table>
+      <p class="note"><b><kbd>␣bd</kbd> garde la fenêtre</b> (et la disposition) ; <kbd>:bd</kbd> la ferme.</p>
+    </section>
+
+    <section>
+      <h2>Automatique</h2>
+      <p class="note" style="margin-top:0"><b>words</b> : autres occurrences du symbole surlignées (LSP).</p>
+      <p class="note"><b>bigfile</b> : très gros fichier ouvert sans treesitter ni LSP.</p>
+      <p class="note"><b>image</b> : images et formules du markdown dans Ghostty.</p>
+      <p class="note"><b>input</b>, <b>notifier</b> : questions et messages en fenêtres flottantes.</p>
+    </section>
+
+    <section>
+      <h2>Pièges</h2>
+      <p class="note" style="margin-top:0"><b>Deux fenêtres</b> : le filtre (mode insertion) et la liste. Premier <kbd>Échap</kbd> : mode normal, on peut utiliser <kbd>j</kbd> <kbd>k</kbd> ; second : ferme.</p>
+      <p class="note"><b><kbd>A-…</kbd> sur Mac</b> : Option <b>droite</b> uniquement (Ghostty).</p>
+      <p class="note"><b>Fichier absent de <kbd>␣ff</kbd></b> : caché ou ignoré par git → <kbd>A-h</kbd> / <kbd>A-i</kbd>.</p>
+    </section>
+
+  </div>
+</div>

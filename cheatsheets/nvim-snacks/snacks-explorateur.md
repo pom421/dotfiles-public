@@ -1,6 +1,6 @@
-# Neovim explorateur
+# Snacks explorateur
 
-*v4 · 2026-11-14* — `␣` = leader (Espace) · `C-x` = Ctrl+x · touches valables dans la liste · `?` = aide intégrée
+*v5 · 2026-11-14* — `␣` = leader (Espace) · `C-x` = Ctrl+x · touches valables dans la liste · `?` = aide intégrée
 
 ---
 

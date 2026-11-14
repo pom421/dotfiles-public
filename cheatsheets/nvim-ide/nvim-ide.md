@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v7 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v8 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -59,13 +59,10 @@ Sources : LSP, chemins, snippets, mots du buffer ; aussi après `:`. La doc de l
 | `␣fg` | texte dans le projet |
 | `␣fx` | mot sous le curseur / sélection |
 | `␣fb` `␣fr` | buffers / fichiers récents |
-| `␣f/` | lignes du buffer |
 | `␣fs` `␣fS` | symboles fichier / projet |
-| `␣fh` `␣fk` `␣fc` | aide, raccourcis, commandes |
-| `␣fR` | reprendre la dernière recherche |
 | `␣fp` | toutes les recherches |
 
-**Dans la liste** : `C-j` `C-k` naviguer · `Tab` sélection multiple · `C-v` `C-s` ouvrir en split vertical / horizontal · `C-q` vers la quickfix.
+Dans la liste : `C-j` `C-k`, `Tab` sélection, `C-q` quickfix. **Suite : fiche snacks.**
 
 ## Remplacer dans le projet
 
@@ -200,14 +197,6 @@ TS/JS : `node` (fichier courant, ou s'attacher à un `--inspect`) · Python : `d
 
 vitest (`vp test` dans un projet Vite+) · pytest. Résultat ✓ ✗ dans la gouttière.
 
-## Terminal
-
-| Touche | Action |
-|---|---|
-| `␣tt` | terminal flottant on/off |
-| `Échap` `Échap` | mode normal (copier, défiler) |
-| `q` | masquer (mode normal) |
-
 ## Markdown
 
 | Touche | Action |
@@ -245,12 +234,8 @@ Claude voit le fichier et la sélection courants. Dans l'explorateur, `␣as` aj
 
 | Touche | Action |
 |---|---|
+| `make nvim-sync` | après un `git pull` |
 | `make nvim-update` | MAJ plugins et outils (+7 jours) |
-| `NOW=nom` | sans délai (faille de sécurité) |
-| `make test-nvim` | banc Ubuntu (Docker) |
-| `:Mason` | outils installés (LSP…) |
-| `:checkhealth` | diagnostic général |
 | `:checkhealth vim.lsp` | serveurs LSP du buffer |
-| `:ConformInfo` | formateurs du buffer |
 
-`:Lazy update` ne fait rien (versions figées) : passer par `make nvim-update`, puis committer `lazy-lock.json` et `cooldown.lua`.
+Le reste : fiche entretien.

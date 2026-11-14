@@ -28,6 +28,19 @@ return {
       -- Installe les parsers manquants (asynchrone, ne fait rien s'ils sont déjà là)
       require("nvim-treesitter").install(languages)
 
+      -- :TSSync : installe la liste et désinstalle les parsers qui n'y sont plus (make nvim-sync)
+      vim.api.nvim_create_user_command("TSSync", function()
+        local ts = require("nvim-treesitter")
+        local extra = vim.tbl_filter(
+          function(lang) return not vim.list_contains(languages, lang) end,
+          ts.get_installed("parsers")
+        )
+        ts.install(languages):wait(600000)
+        if #extra > 0 then
+          ts.uninstall(extra):wait(60000)
+        end
+      end, { desc = "Parsers : installe la liste, retire le reste", bar = true })
+
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(args)
           -- pcall : pas d'erreur sans parser pour ce filetype, ou s'il est en cours d'installation

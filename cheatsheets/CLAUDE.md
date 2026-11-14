@@ -14,6 +14,11 @@
 - **Repo public** : ne jamais reprendre le contenu de `dotfiles-private` (contexte perso/pro, chemins, identités)
 
 ## Organisation
+- Un dossier par catégorie, du plus général au plus outillé (index : `README.md`, à tenir à jour) :
+  - `nvim-base/` : vim natif, valable sans config
+  - `nvim-ide/` : ma config (IDE, raccourcis, entretien)
+  - `nvim-<plugin>/` : un gros plugin qui a son propre fonctionnement (ex. `nvim-snacks/`) ; les petits restent dans la fiche IDE
+  - un dossier par outil hors nvim (ex. `herdr/`, `claude/`)
 - Par domaine (ex. nvim) : **1 fiche générique** + des **fiches thématiques** pour approfondir
 - Générique = l'essentiel du domaine, 2 pages max
 - Thématique = un sous-sujet en détail (ex. registres, macros, buffers), sans répéter la générique

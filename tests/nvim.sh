@@ -55,6 +55,15 @@ check "nvim : parsers treesitter compilés" parsers_installed
 
 check "nvim : outils Mason installés (:MasonSync)" nvim --headless "+MasonSync" +qa
 
+# make nvim-sync (après un git pull) retire ce qui n'est plus dans la config : un parser en trop
+nvim_sync_prunes() {
+  nvim --headless "+lua require('nvim-treesitter').install({ 'go' }):wait(300000)" +qa >/dev/null 2>&1
+  [ -f "$DATA/site/parser/go.so" ] || { echo "préparation : parser go non installé"; return 1; }
+  make -s nvim-sync >/tmp/nvim-sync.log 2>&1 || { tail -20 /tmp/nvim-sync.log; return 1; }
+  [ ! -f "$DATA/site/parser/go.so" ] || { echo "parser go toujours installé"; return 1; }
+}
+check "nvim : make nvim-sync retire un parser absent de la config" nvim_sync_prunes
+
 checkhealth_clean() {
   # Dans un vrai terminal : avec une interface, les plugins chargés à l'événement VeryLazy
   # (which-key…) le sont aussi, et snacks remplace vim.ui.input / select.

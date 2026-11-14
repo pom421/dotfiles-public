@@ -1,6 +1,6 @@
-# Fiche Neovim
+# Neovim essentiel
 
-*v2 · 2026-11-11* — Page 1/2 · `C-x` = Ctrl+x
+*v3 · 2026-11-14* — Page 1/2 · `C-x` = Ctrl+x
 
 ---
 
