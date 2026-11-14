@@ -1,6 +1,6 @@
 # Neovim mes raccourcis
 
-*v4 · 2026-11-14* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
+*v5 · 2026-11-14* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
 
 ---
 
@@ -11,8 +11,7 @@
 | Extension | Rôle | Commandes |
 |---|---|---|
 | `lazy.nvim` | gère les plugins | `:Lazy` `make nvim-update` |
-| `snacks` | recherche, explorateur (essai), terminal | `␣ff` `␣E` `␣tt` |
-| `nvim-tree` | explorateur de fichiers | `␣e` → fiche explorateur |
+| `snacks` | recherche, explorateur, terminal | `␣ff` `␣e` `␣tt` |
 | `bufferline` | buffers en onglets | `S-h` `S-l` `:BufferLinePick` |
 | `lualine` | barre d'état | — |
 | `treesitter` | coloration, indentation | `:TSInstall rust` `:TSUpdate` |
@@ -94,17 +93,14 @@ Défaut équivalent : `:bn` `:bp` `:bd`. Haut / bas de l'écran : `zt` `zb` dép
 
 Défaut équivalent : `:m '>+1` ou `d` puis `p`.
 
-## Explorateur (nvim-tree)
+## Explorateur (snacks)
 
-| Touche | Chez moi | Défaut nvim-tree |
+| Touche | Chez moi | Défaut snacks |
 |---|---|---|
-| `␣e` | basculer + révéler | `:NvimTreeToggle` |
-| `=` | dossier = racine | `C-]` (inaccessible AZERTY) |
-| `l` | déplier / ouvrir | `Entrée` `o` |
-| `h` | replier le dossier | `BS` |
-| `C-k` | infos fichier (nvim-tree) | ⚠ masque ma fenêtre du haut |
+| `␣e` | ouvrir / fermer | `:lua Snacks.explorer()` |
+| `C-j` `C-k` | liste bas / haut | ⚠ masque mes fenêtres bas / haut |
 
-**`d` sur un fichier ouvert** : passe au suivant au lieu de fermer la fenêtre (`close_window = false`).
+Toutes les touches : fiche explorateur.
 
 ## Options qui changent les touches
 

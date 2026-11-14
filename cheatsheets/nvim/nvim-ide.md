@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v5 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v6 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -230,14 +230,14 @@ Rendu direct : titres, tableaux, cases, encadrés `> [!NOTE]`. Images et formule
 | `␣as` | envoyer la sélection (visuel) |
 | `␣aa` `␣ad` | accepter / refuser le diff |
 
-Claude voit le fichier et la sélection courants. Dans nvim-tree, `␣as` ajoute le fichier sous le curseur.
+Claude voit le fichier et la sélection courants. Dans l'explorateur, `␣as` ajoute le fichier sous le curseur.
 
 ## Buffers, interface
 
 | Touche | Action |
 |---|---|
 | `␣bd` `␣bo` | fermer le buffer / les autres |
-| `␣E` | explorateur snacks (essai) |
+| `␣e` | explorateur de fichiers |
 | `␣un` | historique des notifications |
 | `␣?` | raccourcis du buffer |
 

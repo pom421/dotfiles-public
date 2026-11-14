@@ -64,7 +64,7 @@ p.note b{color:var(--ink)}
 <div class="sheet">
   <div class="head">
     <h1><span>nvim</span> · ma config vs défaut</h1>
-    <div class="legend"><kbd>␣</kbd> = leader (Espace) · colonne « Défaut » = nvim sans config · <span class="lost">rouge</span> = fonction perdue<span class="ver">v4 · 2026-11-14</span></div>
+    <div class="legend"><kbd>␣</kbd> = leader (Espace) · colonne « Défaut » = nvim sans config · <span class="lost">rouge</span> = fonction perdue<span class="ver">v5 · 2026-11-14</span></div>
   </div>
 
   <div class="cols">
@@ -74,8 +74,7 @@ p.note b{color:var(--ink)}
       <table>
         <tr><th>Extension</th><th>Rôle</th><th>Commandes</th></tr>
         <tr><td><code>lazy.nvim</code></td><td>gère les plugins</td><td><kbd>:Lazy</kbd> <kbd>make nvim-update</kbd></td></tr>
-        <tr><td><code>snacks</code></td><td>recherche, explorateur (essai), terminal</td><td><kbd>␣ff</kbd> <kbd>␣E</kbd> <kbd>␣tt</kbd></td></tr>
-        <tr><td><code>nvim-tree</code></td><td>explorateur de fichiers</td><td><kbd>␣e</kbd> → fiche explorateur</td></tr>
+        <tr><td><code>snacks</code></td><td>recherche, explorateur, terminal</td><td><kbd>␣ff</kbd> <kbd>␣e</kbd> <kbd>␣tt</kbd></td></tr>
         <tr><td><code>bufferline</code></td><td>buffers en onglets</td><td><kbd>S-h</kbd> <kbd>S-l</kbd> <kbd>:BufferLinePick</kbd></td></tr>
         <tr><td><code>lualine</code></td><td>barre d'état</td><td>—</td></tr>
         <tr><td><code>treesitter</code></td><td>coloration, indentation</td><td><kbd>:TSInstall rust</kbd> <kbd>:TSUpdate</kbd></td></tr>
@@ -164,16 +163,13 @@ p.note b{color:var(--ink)}
     </section>
 
     <section>
-      <h2>Explorateur (nvim-tree)</h2>
+      <h2>Explorateur (snacks)</h2>
       <table>
-        <tr><th>Touche</th><th>Chez moi</th><th>Défaut nvim-tree</th></tr>
-        <tr><td><kbd>␣e</kbd></td><td>basculer + révéler</td><td class="def"><kbd>:NvimTreeToggle</kbd></td></tr>
-        <tr><td><kbd>=</kbd></td><td>dossier = racine</td><td class="def"><kbd>C-]</kbd> (inaccessible AZERTY)</td></tr>
-        <tr><td><kbd>l</kbd></td><td>déplier / ouvrir</td><td class="def"><kbd>Entrée</kbd> <kbd>o</kbd></td></tr>
-        <tr><td><kbd>h</kbd></td><td>replier le dossier</td><td class="def"><kbd>BS</kbd></td></tr>
-        <tr><td><kbd>C-k</kbd></td><td>infos fichier (nvim-tree)</td><td class="def lost">masque ma fenêtre du haut</td></tr>
+        <tr><th>Touche</th><th>Chez moi</th><th>Défaut snacks</th></tr>
+        <tr><td><kbd>␣e</kbd></td><td>ouvrir / fermer</td><td class="def"><kbd>:lua Snacks.explorer()</kbd></td></tr>
+        <tr><td><kbd>C-j</kbd> <kbd>C-k</kbd></td><td>liste bas / haut</td><td class="def lost">masque mes fenêtres bas / haut</td></tr>
       </table>
-      <p class="note"><b><code>d</code> sur un fichier ouvert</b> : passe au suivant au lieu de fermer la fenêtre (<code>close_window = false</code>).</p>
+      <p class="note">Toutes les touches : fiche explorateur.</p>
     </section>
 
     <section>

@@ -1,32 +1,30 @@
 # Neovim explorateur
 
-*v3 · 2026-11-13* — `␣` = leader (Espace) · `C-x` = Ctrl+x · touches valables dans l'arbre · `g?` = aide intégrée
+*v4 · 2026-11-14* — `␣` = leader (Espace) · `C-x` = Ctrl+x · touches valables dans la liste · `?` = aide intégrée
 
 ---
 
-**nvim · explorateur (nvim-tree)**
+**nvim · explorateur (snacks)**
 
 ## Ouvrir · fermer · focus
 
 | Touche | Action |
 |---|---|
-| `␣e` | basculer + révéler |
-| `:NvimTreeToggle` | basculer sans révéler |
-| `:NvimTreeFocus` | ouvrir et y aller |
-| `:NvimTreeFindFile` | révéler fichier actif |
-| `q` | fermer l'arbre |
-| `g?` | aide intégrée |
+| `␣e` | ouvrir / fermer |
+| `nvim .` | ouvre l'explorateur (remplace netrw) |
+| `q` `Échap` | fermer l'explorateur |
+| `?` | aide intégrée |
+
+**Le fichier actif est révélé** automatiquement dans l'arbre.
 
 ## Fenêtres gauche ↔ droite
 
 | Touche | Action |
 |---|---|
-| `C-h` | aller dans l'arbre |
+| `C-h` | aller dans l'explorateur |
 | `C-l` | revenir au fichier |
 | `C-w w` | fenêtre suivante |
-| `C-w p` | fenêtre précédente |
-| `:NvimTreeResize 40` | largeur 40 |
-| `:NvimTreeResize +5` | élargir de 5 |
+| `C-w >` `C-w <` | élargir / rétrécir |
 | `C-w =` | égaliser les splits |
 
 ## Se déplacer dans l'arbre
@@ -34,53 +32,51 @@
 | Touche | Action |
 |---|---|
 | `j` `k` | ligne suivante / précédente |
-| `l` `Entrée` `o` | déplier / ouvrir |
-| `h` `BS` | replier le dossier parent |
-| `P` | aller au dossier parent |
-| `<` `>` | frère précédent / suivant |
-| `K` `J` | premier / dernier frère |
-| `W` | tout replier |
-| `E` | tout déplier |
-| `L` | grouper dossiers vides |
-| `[c` `]c` | fichier git modifié |
-| `[e` `]e` | fichier avec diagnostic |
+| `l` `Entrée` | déplier / ouvrir |
+| `h` | replier le dossier |
+| `Z` | tout replier |
+| `gg` `G` | début / fin de liste |
+| `C-d` `C-u` | défiler |
+| `]g` `[g` | fichier git modifié |
+| `]d` `[d` | fichier avec diagnostic |
+| `]e` `[e` | fichier avec erreur |
+| `]w` `[w` | fichier avec alerte |
 
-## Chercher
+## Filtrer
 
 | Touche | Action |
 |---|---|
-| `f` | filtrer l'arbre en direct |
-| `F` | effacer le filtre |
-| `S` | chercher un chemin |
-| `/` | recherche vim classique |
+| `/` | aller dans le champ filtre |
+| `texte` | filtre tout l'arbre |
+| `Échap` | retour à la liste |
+| `␣/` | texte dans ce dossier (grep) |
 
-**Fichier loin dans l'arbre** : `␣ff` (recherche floue) est plus rapide.
+**Le filtre cherche aussi dans les dossiers fermés** et les déplie.
+
+> **Exemple** : `/` `date` → `Entrée` : ouvre `src/utils/date.lua`.
 
 ## Ouvrir un fichier
 
 | Touche | Action |
 |---|---|
-| `Entrée` | ouvrir, focus sur fichier |
-| `Tab` | aperçu, focus reste arbre |
+| `Entrée` `l` | ouvrir |
+| `P` | aperçu oui / non |
 | `C-v` | split vertical |
-| `C-x` | split horizontal |
-| `C-t` | nouvel onglet |
-| `C-e` | à la place de l'arbre |
-| `O` | ouvrir sans choisir fenêtre |
-| `s` | ouvrir avec appli macOS |
+| `C-s` | split horizontal |
+| `S-Entrée` | choisir la fenêtre |
+| `o` | ouvrir avec appli système |
 | `double-clic` | ouvrir à la souris |
 
-> **Exemple** : Parcourir des fichiers : `j` `Tab` `j` `Tab`… puis `Entrée` sur le bon.
-
-## Racine de l'arbre
+## Dossier courant (racine)
 
 | Touche | Action |
 |---|---|
-| `=` | dossier sous curseur = racine |
-| `-` | remonter la racine d'un cran |
-| `R` | rafraîchir l'arbre |
+| `.` | dossier sous curseur = racine |
+| `BS` | remonter la racine d'un cran |
+| `C-c` | dossier de l'onglet (`:tcd`) |
+| `u` | rafraîchir |
 
-**`=` remplace `C-]`** (inaccessible en AZERTY Mac). Souris : double clic droit. Chemin précis : `:NvimTreeOpen ~/x`
+**`.` change aussi le dossier de travail** de nvim (`:pwd`) : `␣ff` y cherche ensuite.
 
 ## Créer · renommer · supprimer
 
@@ -88,47 +84,33 @@
 |---|---|
 | `a` | créer fichier |
 | `a` `nom/` | créer dossier (finir par `/`) |
-| `r` | renommer (nom complet) |
-| `e` | renommer, garde l'extension |
-| `u` | renommer chemin complet |
-| `C-r` | renommer, nom effacé |
-| `d` | supprimer (définitif) |
-| `D` | mettre à la corbeille |
+| `r` | renommer |
+| `d` | mettre à la corbeille |
 
 > **Exemple** : `a` → `src/utils/date.lua` → `Entrée` : crée les dossiers manquants et le fichier.
 
-## Copier · couper · coller
+## Sélection multiple
 
 | Touche | Action |
 |---|---|
-| `c` | copier fichier / dossier |
-| `x` | couper (pour déplacer) |
-| `p` | coller sous le curseur |
+| `Tab` | sélectionner, ligne suivante |
+| `S-Tab` | idem, ligne précédente |
+| `V` `j`… | sélection visuelle |
+| `C-a` | tout sélectionner |
 
-**Où colle `p`** : dans le dossier sous le curseur, ou à côté si c'est un fichier.
+`d`, `m`, `c`, `y` agissent sur la sélection, sinon sur la ligne.
 
-## Copier un chemin
-
-| Touche | Action |
-|---|---|
-| `y` | nom du fichier |
-| `ge` | nom sans extension |
-| `Y` | chemin relatif |
-| `gy` | chemin absolu |
-
-Copié dans `"+` → `Cmd+V` ailleurs, `"+p` dans nvim.
-
-## Sélection multiple (marques)
+## Déplacer · copier
 
 | Touche | Action |
 |---|---|
-| `m` | marquer / démarquer |
-| `bmv` | déplacer les marqués |
-| `bd` | supprimer les marqués |
-| `bt` | marqués à la corbeille |
-| `M` | n'afficher que les marqués |
+| `m` | déplacer la sélection ici |
+| `c` | copier la sélection ici |
+| `m` (sans sélection) | renommer / déplacer |
+| `c` (sans sélection) | copier sous un nom |
+| `y` puis `p` | copier, coller ailleurs |
 
-> **Exemple** : `m` `j` `m` `j` `m` → `bmv` → `archive/` : 3 fichiers déplacés.
+> **Exemple** : `Tab` `Tab` `Tab` → aller sur `archive/` → `m` : 3 fichiers déplacés.
 
 ## Afficher · masquer
 
@@ -136,65 +118,39 @@ Copié dans `"+` → `Cmd+V` ailleurs, `"+p` dans nvim.
 |---|---|
 | `H` | fichiers cachés (dotfiles) |
 | `I` | fichiers ignorés par git |
-| `U` | filtres personnalisés |
-| `B` | seulement buffers ouverts |
-| `C` | seulement fichiers modifiés |
 
-## Infos · commandes
+## Autres actions
 
 | Touche | Action |
 |---|---|
-| `C-k` | infos fichier (taille, date) |
-| `.` | commande vim sur le fichier |
-
-## Icônes git
-
-| Touche | Action |
-|---|---|
-| ✗ | modifié, non indexé |
-| ✓ | indexé (`git add`) |
-| ★ | nouveau, non suivi |
-| ➜ | renommé |
-| ◌ | ignoré par git |
+| `C-t` | terminal dans ce dossier |
+| `C-q` | sélection → liste quickfix |
+| `␣as` | fichier → contexte de Claude |
 
 ## Pièges
 
-**LazyVim ≠ lazy.nvim** : ici nvim-tree, pas neo-tree.
+**Deux fenêtres** : le champ filtre en haut, la liste en dessous. Les touches de cette fiche marchent dans la liste ; `/` passe de l'une à l'autre.
 
-**`C-k` dans l'arbre** = infos, pas « fenêtre du haut » : la touche locale masque ton raccourci.
+**`Échap` dans la liste ferme l'explorateur** ; pour juste revenir au fichier : `C-l`.
 
-**`Tab` / `Entrée` sur la 1re ligne** (racine) : remonte la racine d'un cran. Annuler : `=` sur l'ancien dossier.
+**`d` va à la corbeille** (`trash` sur macOS, `gio trash` sous Ubuntu) ; sans ces commandes, suppression définitive (`:checkhealth snacks`).
 
-**`d` est définitif** : préférer `D` (corbeille).
-
-**macOS : `/home` est vide** (montage réseau). Ton dossier : `/Users/<nom>` = `~`.
+**`C-j` `C-k`** descendent / montent dans la liste, pas de fenêtre en dessous / au-dessus.
 
 **`[` `]` en AZERTY** : Option gauche + Maj + `(` `)`. Avec Ctrl, ça ne passe pas.
 
-**`␣e` ferme l'arbre** s'il est ouvert ; pour juste y aller : `C-h`.
+**macOS : `/home` est vide** (montage réseau). Ton dossier : `/Users/<nom>` = `~`.
 
-## Personnaliser (nvim-tree.lua)
+## Ma config (snacks.lua)
 
 ```
-require("nvim-tree").setup({
-  actions = { remove_file =
-    { close_window = false } },
-  on_attach = function(b)
-    local api = require("nvim-tree.api")
-    api.config.mappings
-      .default_on_attach(b)
-    local t, n = api.tree, api.node
-    local map = function(k, f)
-      vim.keymap.set("n", k, f,
-        { buffer = b })
-    end
-    map("=", t.change_root_to_node)
-    map("h", n.navigate.parent_close)
-    map("l", n.open.edit)
-  end,
-})
+opts = {
+  explorer = { enabled = true },
+},
+keys = {
+  { "<leader>e",
+    function() Snacks.explorer() end },
+}
 ```
 
-**`close_window = false`** : après `d`, on passe au fichier suivant au lieu de fermer la fenêtre.
-
-**Sans `default_on_attach`**, tous les raccourcis par défaut disparaissent.
+**`enabled = true`** : `nvim dossier` ouvre l'explorateur à la place de netrw.

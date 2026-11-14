@@ -107,6 +107,16 @@ for f in t.md t.js t.ts t.tsx t.sh t.lua; do
   check "nvim : ouvre $f sans erreur, avec coloration" nvim_opens "$F/$f"
 done
 
+# `nvim dossier` ouvre l'explorateur snacks (à la place de netrw), qui liste le dossier
+explorer_opens() {
+  rm -f /tmp/explorer.txt
+  in_tty "stty cols 120 rows 40; nvim $F '+lua vim.defer_fn(function() local p = Snacks.picker.get({ source = \"explorer\" })[1]; vim.fn.writefile({ p and tostring(#p:items()) or \"absent\" }, \"/tmp/explorer.txt\"); vim.cmd(\"qa!\") end, 3000)'" >/dev/null
+  local n
+  n=$(cat /tmp/explorer.txt 2>/dev/null)
+  [[ $n =~ ^[0-9]+$ && $n -gt 1 ]] || { echo "explorateur : ${n:-rien}"; return 1; }
+}
+check "nvim : nvim dossier ouvre l'explorateur" explorer_opens
+
 # Les autres langages, sans terminal (plus rapide) : coloration treesitter active
 colored() {
   local bad="" f r

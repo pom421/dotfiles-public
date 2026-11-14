@@ -1,6 +1,6 @@
 -- snacks.nvim : collection de petits modules intégrés (même style, même raccourcis)
 --   picker   : recherche floue (fichiers, texte, buffers, symboles LSP…)
---   explorer : explorateur de fichiers (essai sur <leader>E, à comparer avec nvim-tree sur <leader>e)
+--   explorer : explorateur de fichiers (<leader>e), aussi ouvert par `nvim .` ; d met à la corbeille
 --   words    : surligne les autres occurrences LSP du symbole sous le curseur, comme VS Code
 --   notifier : notifications en popup (vim.notify), input : vim.ui.input en fenêtre flottante
 --   bigfile  : désactive treesitter et LSP sur les très gros fichiers
@@ -34,6 +34,7 @@ return {
     input = { enabled = true },
     bigfile = { enabled = true },
     image = { enabled = true },
+    explorer = { enabled = true },
     gh = {},
   },
   keys = {
@@ -54,8 +55,8 @@ return {
     { "<leader>fR", pick("resume"), desc = "Reprendre la dernière recherche" },
     { "<leader>fp", pick("pickers"), desc = "Toutes les recherches" },
     -- Navigation LSP en liste (aperçu du code) ; gd/gD/grr/gri/grt : cf. plugins/lsp.lua
-    -- Explorateur de fichiers (essai)
-    { "<leader>E", function() Snacks.explorer() end, desc = "Explorateur (snacks, essai)" },
+    -- Explorateur de fichiers
+    { "<leader>e", function() Snacks.explorer() end, desc = "Explorateur de fichiers" },
     -- Buffers
     {
       "<leader>bd",

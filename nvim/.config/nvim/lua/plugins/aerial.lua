@@ -3,7 +3,7 @@ return {
   "stevearc/aerial.nvim",
   version = "4.*",
   cmd = { "AerialToggle", "AerialNavToggle" },
-  dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+  dependencies = { "nvim-treesitter/nvim-treesitter" },
   opts = {
     layout = { default_direction = "right", min_width = 30 },
     -- Le plan suit le curseur

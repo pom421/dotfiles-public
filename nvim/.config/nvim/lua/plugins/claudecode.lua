@@ -15,7 +15,7 @@ return {
     { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Choisir le modèle" },
     { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Ajouter le fichier au contexte" },
     { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "x", desc = "Envoyer la sélection" },
-    { "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", desc = "Ajouter le fichier", ft = { "NvimTree" } },
+    { "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", desc = "Ajouter le fichier", ft = { "snacks_picker_list" } },
     -- Diff proposé par Claude
     { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accepter la modification" },
     { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Refuser la modification" },

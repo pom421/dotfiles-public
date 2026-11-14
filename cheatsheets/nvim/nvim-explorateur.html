@@ -62,8 +62,8 @@ pre.cfg{font-size:9px}
 
 <div class="sheet">
   <div class="head">
-    <h1><span>nvim</span> · explorateur (nvim-tree)</h1>
-    <div class="legend"><kbd>␣</kbd> = leader (Espace) · <kbd>C-x</kbd> = Ctrl+x · touches valables dans l'arbre · <kbd>g?</kbd> = aide intégrée<span class="ver">v3 · 2026-11-13</span></div>
+    <h1><span>nvim</span> · explorateur (snacks)</h1>
+    <div class="legend"><kbd>␣</kbd> = leader (Espace) · <kbd>C-x</kbd> = Ctrl+x · touches valables dans la liste · <kbd>?</kbd> = aide intégrée<span class="ver">v4 · 2026-11-14</span></div>
   </div>
 
   <div class="cols">
@@ -71,24 +71,21 @@ pre.cfg{font-size:9px}
     <section>
       <h2>Ouvrir · fermer · focus</h2>
       <table>
-        <tr><td><kbd>␣e</kbd></td><td>basculer + révéler</td></tr>
-        <tr><td><kbd>:NvimTreeToggle</kbd></td><td>basculer sans révéler</td></tr>
-        <tr><td><kbd>:NvimTreeFocus</kbd></td><td>ouvrir et y aller</td></tr>
-        <tr><td><kbd>:NvimTreeFindFile</kbd></td><td>révéler fichier actif</td></tr>
-        <tr><td><kbd>q</kbd></td><td>fermer l'arbre</td></tr>
-        <tr><td><kbd>g?</kbd></td><td>aide intégrée</td></tr>
+        <tr><td><kbd>␣e</kbd></td><td>ouvrir / fermer</td></tr>
+        <tr><td><code>nvim .</code></td><td>ouvre l'explorateur (remplace netrw)</td></tr>
+        <tr><td><kbd>q</kbd> <kbd>Échap</kbd></td><td>fermer l'explorateur</td></tr>
+        <tr><td><kbd>?</kbd></td><td>aide intégrée</td></tr>
       </table>
+      <p class="note"><b>Le fichier actif est révélé</b> automatiquement dans l'arbre.</p>
     </section>
 
     <section>
       <h2>Fenêtres gauche ↔ droite</h2>
       <table>
-        <tr><td><kbd>C-h</kbd></td><td>aller dans l'arbre</td></tr>
+        <tr><td><kbd>C-h</kbd></td><td>aller dans l'explorateur</td></tr>
         <tr><td><kbd>C-l</kbd></td><td>revenir au fichier</td></tr>
         <tr><td><kbd>C-w w</kbd></td><td>fenêtre suivante</td></tr>
-        <tr><td><kbd>C-w p</kbd></td><td>fenêtre précédente</td></tr>
-        <tr><td><kbd>:NvimTreeResize 40</kbd></td><td>largeur 40</td></tr>
-        <tr><td><kbd>:NvimTreeResize +5</kbd></td><td>élargir de 5</td></tr>
+        <tr><td><kbd>C-w &gt;</kbd> <kbd>C-w &lt;</kbd></td><td>élargir / rétrécir</td></tr>
         <tr><td><kbd>C-w =</kbd></td><td>égaliser les splits</td></tr>
       </table>
     </section>
@@ -97,54 +94,52 @@ pre.cfg{font-size:9px}
       <h2>Se déplacer dans l'arbre</h2>
       <table>
         <tr><td><kbd>j</kbd> <kbd>k</kbd></td><td>ligne suivante / précédente</td></tr>
-        <tr><td><kbd>l</kbd> <kbd>Entrée</kbd> <kbd>o</kbd></td><td>déplier / ouvrir</td></tr>
-        <tr><td><kbd>h</kbd> <kbd>BS</kbd></td><td>replier le dossier parent</td></tr>
-        <tr><td><kbd>P</kbd></td><td>aller au dossier parent</td></tr>
-        <tr><td><kbd>&lt;</kbd> <kbd>&gt;</kbd></td><td>frère précédent / suivant</td></tr>
-        <tr><td><kbd>K</kbd> <kbd>J</kbd></td><td>premier / dernier frère</td></tr>
-        <tr><td><kbd>W</kbd></td><td>tout replier</td></tr>
-        <tr><td><kbd>E</kbd></td><td>tout déplier</td></tr>
-        <tr><td><kbd>L</kbd></td><td>grouper dossiers vides</td></tr>
-        <tr><td><kbd>[c</kbd> <kbd>]c</kbd></td><td>fichier git modifié</td></tr>
-        <tr><td><kbd>[e</kbd> <kbd>]e</kbd></td><td>fichier avec diagnostic</td></tr>
+        <tr><td><kbd>l</kbd> <kbd>Entrée</kbd></td><td>déplier / ouvrir</td></tr>
+        <tr><td><kbd>h</kbd></td><td>replier le dossier</td></tr>
+        <tr><td><kbd>Z</kbd></td><td>tout replier</td></tr>
+        <tr><td><kbd>gg</kbd> <kbd>G</kbd></td><td>début / fin de liste</td></tr>
+        <tr><td><kbd>C-d</kbd> <kbd>C-u</kbd></td><td>défiler</td></tr>
+        <tr><td><kbd>]g</kbd> <kbd>[g</kbd></td><td>fichier git modifié</td></tr>
+        <tr><td><kbd>]d</kbd> <kbd>[d</kbd></td><td>fichier avec diagnostic</td></tr>
+        <tr><td><kbd>]e</kbd> <kbd>[e</kbd></td><td>fichier avec erreur</td></tr>
+        <tr><td><kbd>]w</kbd> <kbd>[w</kbd></td><td>fichier avec alerte</td></tr>
       </table>
     </section>
 
     <section>
-      <h2>Chercher</h2>
+      <h2>Filtrer</h2>
       <table>
-        <tr><td><kbd>f</kbd></td><td>filtrer l'arbre en direct</td></tr>
-        <tr><td><kbd>F</kbd></td><td>effacer le filtre</td></tr>
-        <tr><td><kbd>S</kbd></td><td>chercher un chemin</td></tr>
-        <tr><td><kbd>/</kbd></td><td>recherche vim classique</td></tr>
+        <tr><td><kbd>/</kbd></td><td>aller dans le champ filtre</td></tr>
+        <tr><td><code>texte</code></td><td>filtre tout l'arbre</td></tr>
+        <tr><td><kbd>Échap</kbd></td><td>retour à la liste</td></tr>
+        <tr><td><kbd>␣/</kbd></td><td>texte dans ce dossier (grep)</td></tr>
       </table>
-      <p class="note"><b>Fichier loin dans l'arbre</b> : <kbd>␣ff</kbd> (recherche floue) est plus rapide.</p>
+      <p class="note"><b>Le filtre cherche aussi dans les dossiers fermés</b> et les déplie.</p>
+      <div class="ex"><b>Exemple</b><kbd>/</kbd> <code>date</code> → <kbd>Entrée</kbd> : ouvre <code>src/utils/date.lua</code>.</div>
     </section>
 
     <section>
       <h2>Ouvrir un fichier</h2>
       <table>
-        <tr><td><kbd>Entrée</kbd></td><td>ouvrir, focus sur fichier</td></tr>
-        <tr><td><kbd>Tab</kbd></td><td>aperçu, focus reste arbre</td></tr>
+        <tr><td><kbd>Entrée</kbd> <kbd>l</kbd></td><td>ouvrir</td></tr>
+        <tr><td><kbd>P</kbd></td><td>aperçu oui / non</td></tr>
         <tr><td><kbd>C-v</kbd></td><td>split vertical</td></tr>
-        <tr><td><kbd>C-x</kbd></td><td>split horizontal</td></tr>
-        <tr><td><kbd>C-t</kbd></td><td>nouvel onglet</td></tr>
-        <tr><td><kbd>C-e</kbd></td><td>à la place de l'arbre</td></tr>
-        <tr><td><kbd>O</kbd></td><td>ouvrir sans choisir fenêtre</td></tr>
-        <tr><td><kbd>s</kbd></td><td>ouvrir avec appli macOS</td></tr>
+        <tr><td><kbd>C-s</kbd></td><td>split horizontal</td></tr>
+        <tr><td><kbd>S-Entrée</kbd></td><td>choisir la fenêtre</td></tr>
+        <tr><td><kbd>o</kbd></td><td>ouvrir avec appli système</td></tr>
         <tr><td><kbd>double-clic</kbd></td><td>ouvrir à la souris</td></tr>
       </table>
-      <div class="ex"><b>Exemple</b>Parcourir des fichiers : <kbd>j</kbd> <kbd>Tab</kbd> <kbd>j</kbd> <kbd>Tab</kbd>… puis <kbd>Entrée</kbd> sur le bon.</div>
     </section>
 
     <section>
-      <h2>Racine de l'arbre</h2>
+      <h2>Dossier courant (racine)</h2>
       <table>
-        <tr><td><kbd>=</kbd></td><td>dossier sous curseur = racine</td></tr>
-        <tr><td><kbd>-</kbd></td><td>remonter la racine d'un cran</td></tr>
-        <tr><td><kbd>R</kbd></td><td>rafraîchir l'arbre</td></tr>
+        <tr><td><kbd>.</kbd></td><td>dossier sous curseur = racine</td></tr>
+        <tr><td><kbd>BS</kbd></td><td>remonter la racine d'un cran</td></tr>
+        <tr><td><kbd>C-c</kbd></td><td>dossier de l'onglet (<code>:tcd</code>)</td></tr>
+        <tr><td><kbd>u</kbd></td><td>rafraîchir</td></tr>
       </table>
-      <p class="note"><b><kbd>=</kbd> remplace <kbd>C-]</kbd></b> (inaccessible en AZERTY Mac). Souris : double clic droit. Chemin précis : <code>:NvimTreeOpen ~/x</code></p>
+      <p class="note"><b><kbd>.</kbd> change aussi le dossier de travail</b> de nvim (<code>:pwd</code>) : <kbd>␣ff</kbd> y cherche ensuite.</p>
     </section>
 
     <section>
@@ -152,47 +147,33 @@ pre.cfg{font-size:9px}
       <table>
         <tr><td><kbd>a</kbd></td><td>créer fichier</td></tr>
         <tr><td><kbd>a</kbd> <code>nom/</code></td><td>créer dossier (finir par <code>/</code>)</td></tr>
-        <tr><td><kbd>r</kbd></td><td>renommer (nom complet)</td></tr>
-        <tr><td><kbd>e</kbd></td><td>renommer, garde l'extension</td></tr>
-        <tr><td><kbd>u</kbd></td><td>renommer chemin complet</td></tr>
-        <tr><td><kbd>C-r</kbd></td><td>renommer, nom effacé</td></tr>
-        <tr><td><kbd>d</kbd></td><td>supprimer (définitif)</td></tr>
-        <tr><td><kbd>D</kbd></td><td>mettre à la corbeille</td></tr>
+        <tr><td><kbd>r</kbd></td><td>renommer</td></tr>
+        <tr><td><kbd>d</kbd></td><td>mettre à la corbeille</td></tr>
       </table>
       <div class="ex"><b>Exemple</b><kbd>a</kbd> → <code>src/utils/date.lua</code> → <kbd>Entrée</kbd> : crée les dossiers manquants et le fichier.</div>
     </section>
 
     <section>
-      <h2>Copier · couper · coller</h2>
+      <h2>Sélection multiple</h2>
       <table>
-        <tr><td><kbd>c</kbd></td><td>copier fichier / dossier</td></tr>
-        <tr><td><kbd>x</kbd></td><td>couper (pour déplacer)</td></tr>
-        <tr><td><kbd>p</kbd></td><td>coller sous le curseur</td></tr>
+        <tr><td><kbd>Tab</kbd></td><td>sélectionner, ligne suivante</td></tr>
+        <tr><td><kbd>S-Tab</kbd></td><td>idem, ligne précédente</td></tr>
+        <tr><td><kbd>V</kbd> <kbd>j</kbd>…</td><td>sélection visuelle</td></tr>
+        <tr><td><kbd>C-a</kbd></td><td>tout sélectionner</td></tr>
       </table>
-      <p class="note"><b>Où colle <kbd>p</kbd></b> : dans le dossier sous le curseur, ou à côté si c'est un fichier.</p>
+      <p class="note"><kbd>d</kbd>, <kbd>m</kbd>, <kbd>c</kbd>, <kbd>y</kbd> agissent sur la sélection, sinon sur la ligne.</p>
     </section>
 
     <section>
-      <h2>Copier un chemin</h2>
+      <h2>Déplacer · copier</h2>
       <table>
-        <tr><td><kbd>y</kbd></td><td>nom du fichier</td></tr>
-        <tr><td><kbd>ge</kbd></td><td>nom sans extension</td></tr>
-        <tr><td><kbd>Y</kbd></td><td>chemin relatif</td></tr>
-        <tr><td><kbd>gy</kbd></td><td>chemin absolu</td></tr>
+        <tr><td><kbd>m</kbd></td><td>déplacer la sélection ici</td></tr>
+        <tr><td><kbd>c</kbd></td><td>copier la sélection ici</td></tr>
+        <tr><td><kbd>m</kbd> (sans sélection)</td><td>renommer / déplacer</td></tr>
+        <tr><td><kbd>c</kbd> (sans sélection)</td><td>copier sous un nom</td></tr>
+        <tr><td><kbd>y</kbd> puis <kbd>p</kbd></td><td>copier, coller ailleurs</td></tr>
       </table>
-      <p class="note">Copié dans <code>"+</code> → <kbd>Cmd+V</kbd> ailleurs, <kbd>"+p</kbd> dans nvim.</p>
-    </section>
-
-    <section>
-      <h2>Sélection multiple (marques)</h2>
-      <table>
-        <tr><td><kbd>m</kbd></td><td>marquer / démarquer</td></tr>
-        <tr><td><kbd>bmv</kbd></td><td>déplacer les marqués</td></tr>
-        <tr><td><kbd>bd</kbd></td><td>supprimer les marqués</td></tr>
-        <tr><td><kbd>bt</kbd></td><td>marqués à la corbeille</td></tr>
-        <tr><td><kbd>M</kbd></td><td>n'afficher que les marqués</td></tr>
-      </table>
-      <div class="ex"><b>Exemple</b><kbd>m</kbd> <kbd>j</kbd> <kbd>m</kbd> <kbd>j</kbd> <kbd>m</kbd> → <kbd>bmv</kbd> → <code>archive/</code> : 3 fichiers déplacés.</div>
+      <div class="ex"><b>Exemple</b><kbd>Tab</kbd> <kbd>Tab</kbd> <kbd>Tab</kbd> → aller sur <code>archive/</code> → <kbd>m</kbd> : 3 fichiers déplacés.</div>
     </section>
 
     <section>
@@ -200,63 +181,38 @@ pre.cfg{font-size:9px}
       <table>
         <tr><td><kbd>H</kbd></td><td>fichiers cachés (dotfiles)</td></tr>
         <tr><td><kbd>I</kbd></td><td>fichiers ignorés par git</td></tr>
-        <tr><td><kbd>U</kbd></td><td>filtres personnalisés</td></tr>
-        <tr><td><kbd>B</kbd></td><td>seulement buffers ouverts</td></tr>
-        <tr><td><kbd>C</kbd></td><td>seulement fichiers modifiés</td></tr>
       </table>
     </section>
 
     <section>
-      <h2>Infos · commandes</h2>
+      <h2>Autres actions</h2>
       <table>
-        <tr><td><kbd>C-k</kbd></td><td>infos fichier (taille, date)</td></tr>
-        <tr><td><kbd>.</kbd></td><td>commande vim sur le fichier</td></tr>
-      </table>
-    </section>
-
-    <section>
-      <h2>Icônes git</h2>
-      <table class="glyph">
-        <tr><td>✗</td><td>modifié, non indexé</td></tr>
-        <tr><td>✓</td><td>indexé (<code>git add</code>)</td></tr>
-        <tr><td>★</td><td>nouveau, non suivi</td></tr>
-        <tr><td>➜</td><td>renommé</td></tr>
-        <tr><td>◌</td><td>ignoré par git</td></tr>
+        <tr><td><kbd>C-t</kbd></td><td>terminal dans ce dossier</td></tr>
+        <tr><td><kbd>C-q</kbd></td><td>sélection → liste quickfix</td></tr>
+        <tr><td><kbd>␣as</kbd></td><td>fichier → contexte de Claude</td></tr>
       </table>
     </section>
 
     <section>
       <h2>Pièges</h2>
-      <p class="note" style="margin-top:0"><b>LazyVim ≠ lazy.nvim</b> : ici nvim-tree, pas neo-tree.</p>
-      <p class="note"><b><kbd>C-k</kbd> dans l'arbre</b> = infos, pas « fenêtre du haut » : la touche locale masque ton raccourci.</p>
-      <p class="note"><b><kbd>Tab</kbd> / <kbd>Entrée</kbd> sur la 1<sup>re</sup> ligne</b> (racine) : remonte la racine d'un cran. Annuler : <kbd>=</kbd> sur l'ancien dossier.</p>
-      <p class="note"><b><kbd>d</kbd> est définitif</b> : préférer <kbd>D</kbd> (corbeille).</p>
-      <p class="note"><b>macOS : <code>/home</code> est vide</b> (montage réseau). Ton dossier : <code>/Users/&lt;nom&gt;</code> = <code>~</code>.</p>
+      <p class="note" style="margin-top:0"><b>Deux fenêtres</b> : le champ filtre en haut, la liste en dessous. Les touches de cette fiche marchent dans la liste ; <kbd>/</kbd> passe de l'une à l'autre.</p>
+      <p class="note"><b><kbd>Échap</kbd> dans la liste ferme l'explorateur</b> ; pour juste revenir au fichier : <kbd>C-l</kbd>.</p>
+      <p class="note"><b><kbd>d</kbd> va à la corbeille</b> (<code>trash</code> sur macOS, <code>gio trash</code> sous Ubuntu) ; sans ces commandes, suppression définitive (<code>:checkhealth snacks</code>).</p>
+      <p class="note"><b><kbd>C-j</kbd> <kbd>C-k</kbd></b> descendent / montent dans la liste, pas de fenêtre en dessous / au-dessus.</p>
       <p class="note"><b><kbd>[</kbd> <kbd>]</kbd> en AZERTY</b> : Option gauche + Maj + <kbd>(</kbd> <kbd>)</kbd>. Avec Ctrl, ça ne passe pas.</p>
-      <p class="note"><b><kbd>␣e</kbd> ferme l'arbre</b> s'il est ouvert ; pour juste y aller : <kbd>C-h</kbd>.</p>
+      <p class="note"><b>macOS : <code>/home</code> est vide</b> (montage réseau). Ton dossier : <code>/Users/&lt;nom&gt;</code> = <code>~</code>.</p>
     </section>
 
     <section>
-      <h2>Personnaliser (nvim-tree.lua)</h2>
-<pre class="cfg">require("nvim-tree").setup({
-  actions = { remove_file =
-    { close_window = false } },
-  on_attach = function(b)
-    local api = require("nvim-tree.api")
-    api.config.mappings
-      .default_on_attach(b)
-    local t, n = api.tree, api.node
-    local map = function(k, f)
-      vim.keymap.set("n", k, f,
-        { buffer = b })
-    end
-    map("=", t.change_root_to_node)
-    map("h", n.navigate.parent_close)
-    map("l", n.open.edit)
-  end,
-})</pre>
-      <p class="note"><b><code>close_window = false</code></b> : après <kbd>d</kbd>, on passe au fichier suivant au lieu de fermer la fenêtre.</p>
-      <p class="note"><b>Sans <code>default_on_attach</code></b>, tous les raccourcis par défaut disparaissent.</p>
+      <h2>Ma config (snacks.lua)</h2>
+<pre class="cfg">opts = {
+  explorer = { enabled = true },
+},
+keys = {
+  { "&lt;leader&gt;e",
+    function() Snacks.explorer() end },
+}</pre>
+      <p class="note"><b><code>enabled = true</code></b> : <code>nvim dossier</code> ouvre l'explorateur à la place de netrw.</p>
     </section>
 
   </div>

@@ -13,6 +13,17 @@ return {
     opts = { mappings = { suffix_last = "", suffix_next = "" } },
   },
 
-  -- Icônes (which-key, et nvim-web-devicons pour les autres plugins)
-  { "nvim-mini/mini.icons", version = "*", lazy = true, opts = {} },
+  -- Icônes de tous les plugins : se fait passer pour nvim-web-devicons (lualine, bufferline, aerial…)
+  {
+    "nvim-mini/mini.icons",
+    version = "*",
+    lazy = true,
+    opts = {},
+    init = function()
+      package.preload["nvim-web-devicons"] = function()
+        require("mini.icons").mock_nvim_web_devicons()
+        return package.loaded["nvim-web-devicons"]
+      end
+    end,
+  },
 }
