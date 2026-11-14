@@ -1,6 +1,6 @@
 -- Débogueur (DAP) : points d'arrêt, pas à pas, variables, pile d'appels
 --   JS/TS : vscode-js-debug (celui de VS Code) ; Python : debugpy. Adaptateurs installés par Mason
---   (plugins/mason.lua). Rust : pas de débogueur (codelldb retiré : 144 Mo pour un usage rare).
+--   (plugins/mason.lua).
 -- Touches F comme VS Code (sur Mac : fn + F5…), ou <leader>d…
 local function dap(fn, ...)
   local args = { ... }

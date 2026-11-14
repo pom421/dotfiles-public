@@ -127,7 +127,7 @@ colored() {
   done
   [ -z "$bad" ] || { echo "sans coloration :$bad"; return 1; }
 }
-check "nvim : coloration py rs go java c cpp cs scala rb" colored t.py t.rs t.go t.java t.c t.cpp t.cs t.scala t.rb
+check "nvim : coloration py java c cpp scala rb" colored t.py t.java t.c t.cpp t.scala t.rb
 check "nvim : coloration jsx yaml json toml xml xslt xsd csv sql Dockerfile" \
   colored t.jsx t.yaml t.json t.toml t.xml t.xslt t.xsd t.csv t.sql Dockerfile
 
@@ -306,9 +306,6 @@ EOF
   [[ $out == *"passed=1 failed=1"* ]] || { echo "$out" | tail -5; return 1; }
 }
 check "tests : neotest + vitest" neotest_vitest
-
-# Pas de toolchain Rust dans le conteneur : on vérifie seulement le serveur
-check "LSP Rust : rust-analyzer installé" test -x "$DATA/mason/bin/rust-analyzer"
 
 # Exécuté directement (make test-nvim) : bilan ici ; sourcé par full.sh : c'est lui qui conclut
 if [ "${BASH_SOURCE[0]}" = "$0" ]; then

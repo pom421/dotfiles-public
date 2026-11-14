@@ -1,7 +1,7 @@
 -- Formatage à l'enregistrement (<leader>uf pour le couper), ou à la demande (<leader>cf)
 --   JS/TS, JSON, YAML, TOML, CSS, HTML, Markdown : oxfmt (Prettier, en Rust), celui de Vite+
 --     (`vp fmt`) dans un projet Vite+, sinon celui du projet, sinon celui de Mason
---   Python : ruff ; Lua : stylua ; shell : shfmt ; Rust : rustfmt (de la toolchain)
+--   Python : ruff ; Lua : stylua ; shell : shfmt
 --   Autres : le formateur du serveur LSP s'il en a un
 local web = { "oxfmt" }
 
@@ -34,7 +34,6 @@ return {
       lua = { "stylua" },
       sh = { "shfmt" },
       bash = { "shfmt" },
-      rust = { "rustfmt" },
     },
     formatters = {
       oxfmt = {

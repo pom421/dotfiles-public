@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v6 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v7 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -24,7 +24,7 @@
 | `␣uh` | types inférés on/off |
 | `C-o` `C-i` | revenir / repartir après un saut |
 
-**Serveurs** : TS/JS `tsc` (TS 7) + `oxlint` · Python `ty` + `ruff` · Rust `rust-analyzer` · HTML, CSS · YAML, JSON (schémas) · Lua · Bash. React (TSX/JSX) : par `tsc`, avec `@types/react` dans le projet. Les autres occurrences du symbole sont surlignées.
+**Serveurs** : TS/JS `tsc` (TS 7) + `oxlint` · Python `ty` + `ruff` · HTML, CSS · YAML, JSON (schémas) · Lua · Bash. React (TSX/JSX) : par `tsc`, avec `@types/react` dans le projet. Les autres occurrences du symbole sont surlignées.
 
 ## Diagnostics
 
@@ -88,7 +88,7 @@ Prérempli avec le mot sous le curseur (ou la sélection), limité aux fichiers 
 | `␣uf` | auto-formatage on/off (global) |
 | `␣uF` | idem, ce buffer seulement |
 
-JS/TS, JSON, YAML, TOML, CSS, Markdown : `oxfmt` (`vp fmt` dans un projet Vite+) · Python `ruff` · Lua `stylua` · shell `shfmt` · Rust `rustfmt`. Lint : `hadolint` (Dockerfile), `actionlint` (workflows GitHub).
+JS/TS, JSON, YAML, TOML, CSS, Markdown : `oxfmt` (`vp fmt` dans un projet Vite+) · Python `ruff` · Lua `stylua` · shell `shfmt`. Lint : `hadolint` (Dockerfile), `actionlint` (workflows GitHub).
 
 ## Plan du fichier
 
@@ -198,7 +198,7 @@ TS/JS : `node` (fichier courant, ou s'attacher à un `--inspect`) · Python : `d
 | `␣tw` | relancer à chaque modif |
 | `␣tS` | arrêter |
 
-vitest (`vp test` dans un projet Vite+) · pytest · cargo test. Résultat ✓ ✗ dans la gouttière.
+vitest (`vp test` dans un projet Vite+) · pytest. Résultat ✓ ✗ dans la gouttière.
 
 ## Terminal
 

@@ -12,11 +12,8 @@ local tools = {
   "oxlint", -- lint JS/TS (celui de Vite+, qui passe par `vp lint` s'il est dans le projet)
   "ty", -- Python : typage, navigation (Astral)
   "ruff", -- Python : lint et format (Astral)
-  "rust-analyzer",
   "yaml-language-server",
-  "json-lsp",
-  "html-lsp",
-  "css-lsp", -- CSS, SCSS, Less
+  "json-lsp", -- contient aussi les serveurs HTML et CSS (cf. plugins/lsp.lua)
   "lua-language-server",
   "bash-language-server",
   -- linters (shellcheck est utilisé par bash-language-server ; hadolint, actionlint : nvim-lint)

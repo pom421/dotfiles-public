@@ -13,7 +13,6 @@ local servers = {
   "cssls",
   "lua_ls",
   "bashls",
-  -- Rust : rust-analyzer est lancé par rustaceanvim (plus bas)
 }
 
 return {
@@ -41,6 +40,11 @@ return {
           json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
         },
       })
+      -- HTML et CSS (SCSS, Less) : même paquet npm que JSON (vscode-langservers-extracted, extrait de
+      -- VS Code). Mason l'installerait une fois par serveur (3 × 96 Mo) : on prend ceux de json-lsp
+      local extracted = vim.fn.stdpath("data") .. "/mason/packages/json-lsp/node_modules/.bin/"
+      vim.lsp.config("html", { cmd = { extracted .. "vscode-html-language-server", "--stdio" } })
+      vim.lsp.config("cssls", { cmd = { extracted .. "vscode-css-language-server", "--stdio" } })
       vim.lsp.config("lua_ls", {
         settings = { Lua = { workspace = { checkThirdParty = false } } },
       })
@@ -104,15 +108,6 @@ return {
 
   -- Schémas JSON et YAML (catalogue schemastore.org)
   { "b0o/SchemaStore.nvim", lazy = true },
-
-  -- Rust : lance et configure rust-analyzer (Mason), avec ses extras (macros, runnables, débogage)
-  {
-    "mrcjkb/rustaceanvim",
-    version = "9.*",
-    lazy = false, -- le plugin se charge lui-même à l'ouverture d'un fichier Rust
-    -- Pas de débogueur Rust (codelldb retiré, trop lourd pour un usage rare)
-    init = function() vim.g.rustaceanvim = { dap = { adapter = false } } end,
-  },
 
   -- Lua : complétion et types de l'API de nvim et des plugins, pour éditer cette config
   {

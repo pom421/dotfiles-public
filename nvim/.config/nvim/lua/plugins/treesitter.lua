@@ -8,8 +8,7 @@ local languages = {
   -- web
   "javascript", "typescript", "tsx", "jsdoc", "html", "css", "scss", "graphql",
   -- langages
-  "python", "rust", "go", "gomod", "gosum", "gowork", "java", "c", "cpp", "c_sharp",
-  "scala", "ruby", "elixir", "heex",
+  "python", "java", "c", "cpp", "scala", "ruby", "elixir", "heex",
   -- données et configuration (xml couvre aussi xslt, xsd et svg)
   "json", "json5", "yaml", "toml", "xml", "dtd", "csv", "tsv", "ini", "properties",
   "sql", "proto", "hcl", "terraform", "dockerfile", "make", "jq", "editorconfig", "ssh_config",

@@ -1,5 +1,5 @@
 -- Tests : lancer le test sous le curseur, le fichier ou tout le projet ; résultats dans la gouttière
---   JS/TS : vitest (`vp test` dans un projet Vite+) ; Python : pytest ; Rust : cargo test (rustaceanvim)
+--   JS/TS : vitest (`vp test` dans un projet Vite+) ; Python : pytest
 
 --- Binaire du projet (node_modules/.bin), en remontant depuis dir (par défaut le dossier courant)
 local function local_bin(name, dir)
@@ -41,7 +41,6 @@ return {
       adapters = {
         vitest,
         require("neotest-python"),
-        require("rustaceanvim.neotest"),
       },
     })
   end,
