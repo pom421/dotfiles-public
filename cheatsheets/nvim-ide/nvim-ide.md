@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v9 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v10 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -201,6 +201,8 @@ vitest (`vp test` dans un projet Vite+) · pytest. Résultat ✓ ✗ dans la gou
 
 | Touche | Action |
 |---|---|
+| `gf` | suivre le lien (fichier ou web) |
+| `C-o` | revenir après le lien |
 | `␣mr` | rendu dans nvim on/off |
 | `␣mp` | aperçu dans le navigateur |
 | `␣mP` | fermer l'aperçu |

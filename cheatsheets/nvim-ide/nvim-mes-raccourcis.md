@@ -1,6 +1,6 @@
 # Neovim mes raccourcis
 
-*v5 · 2026-11-14* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
+*v6 · 2026-11-14* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
 
 ---
 
@@ -123,5 +123,6 @@ Toutes les touches : fiche explorateur.
 |---|---|---|
 | `gd` `gD` | définition, déclaration (LSP) | déclaration locale / globale (texte) |
 | `grr` `gri` `grt` | idem, en liste avec aperçu | liste quickfix |
+| `gf` | fichier, ou lien web (navigateur) | fichier seulement (lien : `gx`) |
 | `gq` | formateur du langage | coupe les lignes à `textwidth` |
 | `s` | entourer : `sa` `sd` `sr` | ⚠ retardé (sinon `cl`) |

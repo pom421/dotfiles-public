@@ -1,6 +1,3 @@
-| Après un `git pull` (autre machine) | `make nvim-sync` : plugins, outils et parsers nvim calés sur la config, ce qui en a été retiré est désinstallé |
-| Ouvrir un projet (onglets claude, nvim, git, term) | `projet` (dossier courant), `projet nom` ; philosophie : [`docs/ide.md`](docs/ide.md) |
-| Claude Code isolé dans une microVM | `claude-vm` (lancé par `projet`) ; Claude sur la machine : `PROJET_CLAUDE=host projet` |
 # Dotfiles
 
 Mes dotfiles pour macOS (perso, zsh) et Ubuntu (boulot, bash), installés avec
@@ -249,6 +246,9 @@ y() { … }
 | Paquets brew en trop | `make brew-cleanup` (liste seulement) |
 | VSCode (réglages, extensions, profils) | cf. [VSCode](#vscode) |
 | Mettre à jour nvim (plugins, LSP, formateurs…) | `make nvim-update` : versions publiées depuis 7 jours ou plus ; faille urgente : `make nvim-update NOW=plugin` |
+| Après un `git pull` (autre machine) | `make nvim-sync` : plugins, outils et parsers nvim calés sur la config, ce qui en a été retiré est désinstallé |
+| Ouvrir un projet (onglets claude, nvim, git, term) | `projet` (dossier courant), `projet nom` ; philosophie : [`docs/ide.md`](docs/ide.md) |
+| Claude Code isolé dans une microVM | `claude-vm` (lancé par `projet`) ; Claude sur la machine : `PROJET_CLAUDE=host projet` |
 | Vérifier nvim sur Ubuntu | `make test-nvim` (Docker, réseau) ; fiches : `cheatsheets/README.md` |
 | Vérifier avant de pousser | `make check` (shellcheck, gitleaks) et `make test` (Docker) |
 

@@ -137,6 +137,15 @@ reloads_changed_file() {
 }
 check "nvim : relit un fichier modifié par un autre programme" reloads_changed_file
 
+# gf suit un lien Markdown : fichier dans nvim, site web vers le navigateur (vim.ui.open simulé)
+gf_follows_links() {
+  local out
+  printf '[doc](cible.md) et [site](https://neovim.io)\n' >$F/liens.md; : >$F/cible.md
+  out=$(cd $F && nvim --headless liens.md "+lua vim.ui.open = function(u) io.stdout:write(u .. ' ') end" "+call search('https')" "+normal gf" "+call search('cible')" "+normal gf" "+lua io.stdout:write(vim.fn.expand('%'))" +qa 2>&1)
+  [ "$out" = "https://neovim.io cible.md" ] || { echo "sortie : $out"; return 1; }
+}
+check "nvim : gf ouvre un fichier ou un lien web" gf_follows_links
+
 # Serveur de claudecode lancé au démarrage : Claude (onglet herdr) s'y connecte par /ide
 ide_server_started() {
   rm -f /tmp/ide.txt

@@ -41,3 +41,14 @@ keymap({ "n", "x" }, "<leader>ay", function()
   vim.fn.setreg("+", ref)
   vim.notify(ref, vim.log.levels.INFO, { title = "Copié pour Claude" })
 end, { desc = "Copier la référence pour Claude" })
+
+-- gf ouvre aussi les liens web (navigateur) : une seule touche pour suivre un lien Markdown,
+-- qu'il pointe vers un fichier (docs/ide.md) ou un site (https://…)
+keymap("n", "gf", function()
+  local cible = vim.fn.expand("<cfile>")
+  if cible:match("^%a[%w+.-]*://") then
+    vim.ui.open(cible)
+  else
+    vim.cmd("normal! gf")
+  end
+end, { desc = "Aller au fichier ou ouvrir le lien" })
