@@ -1,0 +1,16 @@
+# herdr : multiplexeur de terminal qui reconnaît les agents (make herdr ; Mac et Linux).
+# Un workspace par projet, ouvert par `projet` (shell/.config/shell/tools.d/herdr.sh) avec
+# 4 onglets : 1 claude, 2 nvim, 3 git (lazygit), 4 term. Philosophie : docs/ide.md.
+# Options : `herdr --default-config` ; vérifier : `herdr config check` ;
+# appliquer sans redémarrer : `herdr server reload-config`.
+onboarding = false
+
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[keys]
+# Préfixe : C-b (défaut). Onglets du projet sans préfixe : Alt+1…9
+# (sur Mac, Option droite : macos-option-as-alt = right dans Ghostty)
+switch_tab = ["prefix+1..9", "alt+1..9"]
+# Pas d'Alt+lettre : nvim s'en sert (Alt-j / Alt-k déplacent la sélection). Projets : C-b w

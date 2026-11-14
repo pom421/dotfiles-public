@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v8 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v9 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -211,15 +211,12 @@ Rendu direct : titres, tableaux, cases, encadrés `> [!NOTE]`. Images et formule
 
 | Touche | Action |
 |---|---|
-| `␣ac` | ouvrir / fermer |
-| `␣af` | aller dans Claude |
-| `␣ar` `␣aC` | reprendre / continuer |
-| `␣am` | choisir le modèle |
-| `␣ab` | fichier dans le contexte |
-| `␣as` | envoyer la sélection (visuel) |
-| `␣aa` `␣ad` | accepter / refuser le diff |
+| `␣ay` | copier `@fichier` (+ lignes en visuel) |
+| `␣ab` | fichier dans le contexte (/ide) |
+| `␣as` | envoyer la sélection (/ide) |
+| `␣aa` `␣ad` | accepter / refuser le diff (/ide) |
 
-Claude voit le fichier et la sélection courants. Dans l'explorateur, `␣as` ajoute le fichier sous le curseur.
+Claude tourne dans l'onglet `claude` de herdr, en microVM : fiche claude. Les fichiers qu'il modifie sont relus tout seuls. `/ide` : seulement avec Claude sur la machine.
 
 ## Buffers, interface
 

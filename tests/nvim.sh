@@ -79,6 +79,7 @@ checkhealth_clean() {
   #   norg (images dans ces fichiers)
   # - blink.cmp : rappel que certaines sources s'activent à la volée (ligne de commande)
   # - which-key : gc / gcc, recouvrement des raccourcis natifs de commentaire
+  # - claudecode : pas de commande claude (Claude tourne dans la microVM sbx, ou pas installé ici)
   local alerts
   alerts=$(grep -E '❌|⚠️' /tmp/health.txt | grep -vE '^[a-zA-Z_.-]+: ' | grep -vE \
     -e 'vim.ui.open: no handler|does not support the kitty graphics protocol|None of the tools found: .kitty., .wezterm., .ghostty.' \
@@ -87,7 +88,8 @@ checkhealth_clean() {
     -e "Tool not found: 'gs'|\`gs\` is required to render PDF|Tool not found: 'mmdc'|\`mmdc\` is required" \
     -e 'Missing Treesitter languages|Image rendering in docs with missing treesitter' \
     -e 'Some providers may show up as "disabled"' \
-    -e 'In mode `n`, <gc> overlaps with <gcc>')
+    -e 'In mode `n`, <gc> overlaps with <gcc>' \
+    -e "Claude CLI not found")
   [ -z "$alerts" ] || { echo "$alerts"; return 1; }
 }
 check "nvim : :checkhealth sans erreur ni alerte" checkhealth_clean
@@ -125,6 +127,23 @@ explorer_opens() {
   [[ $n =~ ^[0-9]+$ && $n -gt 1 ]] || { echo "explorateur : ${n:-rien}"; return 1; }
 }
 check "nvim : nvim dossier ouvre l'explorateur" explorer_opens
+
+# Un fichier modifié par un autre programme (Claude dans l'onglet voisin) est relu tout seul
+reloads_changed_file() {
+  local out
+  printf 'un\n' >$F/relu.txt
+  out=$(nvim --headless $F/relu.txt "+lua vim.fn.writefile({ 'deux' }, '$F/relu.txt'); vim.wait(3000, function() return vim.fn.getline(1) == 'deux' end, 100); io.stdout:write(vim.fn.getline(1))" +qa 2>&1)
+  [ "$out" = deux ] || { echo "contenu du buffer : $out"; return 1; }
+}
+check "nvim : relit un fichier modifié par un autre programme" reloads_changed_file
+
+# Serveur de claudecode lancé au démarrage : Claude (onglet herdr) s'y connecte par /ide
+ide_server_started() {
+  rm -f /tmp/ide.txt
+  in_tty "stty cols 120 rows 40; nvim $F/t.lua '+lua vim.defer_fn(function() local ok, c = pcall(require, \"claudecode\"); vim.fn.writefile({ tostring(ok and c.state.server ~= nil) }, \"/tmp/ide.txt\"); vim.cmd(\"qa!\") end, 3000)'" >/dev/null
+  [ "$(cat /tmp/ide.txt 2>/dev/null)" = true ] || { echo "serveur /ide absent"; return 1; }
+}
+check "nvim : serveur /ide de claudecode démarré" ide_server_started
 
 # Les autres langages, sans terminal (plus rapide) : coloration treesitter active
 colored() {

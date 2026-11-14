@@ -1,4 +1,6 @@
 | Après un `git pull` (autre machine) | `make nvim-sync` : plugins, outils et parsers nvim calés sur la config, ce qui en a été retiré est désinstallé |
+| Ouvrir un projet (onglets claude, nvim, git, term) | `projet` (dossier courant), `projet nom` ; philosophie : [`docs/ide.md`](docs/ide.md) |
+| Claude Code isolé dans une microVM | `claude-vm` (lancé par `projet`) ; Claude sur la machine : `PROJET_CLAUDE=host projet` |
 # Dotfiles
 
 Mes dotfiles pour macOS (perso, zsh) et Ubuntu (boulot, bash), installés avec

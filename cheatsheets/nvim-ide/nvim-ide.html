@@ -61,7 +61,7 @@ p.note b{color:var(--ink)}
 <div class="sheet">
   <div class="head">
     <h1><span>nvim</span> · IDE</h1>
-    <div class="legend">Page 1/2 · <kbd>␣</kbd> = leader (Espace) · <kbd>C-x</kbd> = Ctrl+x · <kbd>␣?</kbd> = raccourcis du buffer · which-key s'ouvre après <kbd>␣</kbd><span class="ver">v8 · 2026-11-14</span></div>
+    <div class="legend">Page 1/2 · <kbd>␣</kbd> = leader (Espace) · <kbd>C-x</kbd> = Ctrl+x · <kbd>␣?</kbd> = raccourcis du buffer · which-key s'ouvre après <kbd>␣</kbd><span class="ver">v9 · 2026-11-14</span></div>
   </div>
 
   <div class="cols">
@@ -197,7 +197,7 @@ p.note b{color:var(--ink)}
 <div class="sheet">
   <div class="head">
     <h1><span>nvim</span> · IDE</h1>
-    <div class="legend">Page 2/2 · <kbd>F5</kbd>… sur Mac : <kbd>fn</kbd> + <kbd>F5</kbd><span class="ver">v8 · 2026-11-14</span></div>
+    <div class="legend">Page 2/2 · <kbd>F5</kbd>… sur Mac : <kbd>fn</kbd> + <kbd>F5</kbd><span class="ver">v9 · 2026-11-14</span></div>
   </div>
 
   <div class="cols">
@@ -277,15 +277,12 @@ p.note b{color:var(--ink)}
     <section>
       <h2>Claude Code</h2>
       <table>
-        <tr><td><kbd>␣ac</kbd></td><td>ouvrir / fermer</td></tr>
-        <tr><td><kbd>␣af</kbd></td><td>aller dans Claude</td></tr>
-        <tr><td><kbd>␣ar</kbd> <kbd>␣aC</kbd></td><td>reprendre / continuer</td></tr>
-        <tr><td><kbd>␣am</kbd></td><td>choisir le modèle</td></tr>
-        <tr><td><kbd>␣ab</kbd></td><td>fichier dans le contexte</td></tr>
-        <tr><td><kbd>␣as</kbd></td><td>envoyer la sélection (visuel)</td></tr>
-        <tr><td><kbd>␣aa</kbd> <kbd>␣ad</kbd></td><td>accepter / refuser le diff</td></tr>
+        <tr><td><kbd>␣ay</kbd></td><td>copier <code>@fichier</code> (+ lignes en visuel)</td></tr>
+        <tr><td><kbd>␣ab</kbd></td><td>fichier dans le contexte (/ide)</td></tr>
+        <tr><td><kbd>␣as</kbd></td><td>envoyer la sélection (/ide)</td></tr>
+        <tr><td><kbd>␣aa</kbd> <kbd>␣ad</kbd></td><td>accepter / refuser le diff (/ide)</td></tr>
       </table>
-      <p class="note">Claude voit le fichier et la sélection courants. Dans l'explorateur, <kbd>␣as</kbd> ajoute le fichier sous le curseur.</p>
+      <p class="note">Claude tourne dans l'onglet <code>claude</code> de herdr, en microVM : fiche claude. Les fichiers qu'il modifie sont relus tout seuls. <code>/ide</code> : seulement avec Claude sur la machine.</p>
     </section>
 
     <section>

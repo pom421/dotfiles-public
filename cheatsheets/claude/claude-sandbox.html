@@ -1,0 +1,171 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude sandbox</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap">
+<style>
+/* Même charte que snacks-explorateur.html : A4 paysage, sections en colonnes, touches en capsules mono */
+:root{
+  --bg:#e9ece8; --paper:#ffffff; --ink:#1d2320; --muted:#5d6762;
+  --line:#cfd6d1; --key:#eef2ef; --accent:#2f7d4f; --ex:#fbf5e8; --exline:#c9a35c;
+  --f-body:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121614; --paper:#1b201d; --ink:#e3e9e5; --muted:#9aa59f;
+  --line:#344039; --key:#252c28; --accent:#6cc28f; --ex:#2a261d; --exline:#a8874a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:13px;line-height:1.3;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.sheet{background:var(--paper);max-width:297mm;margin:0 auto 24px;padding:9mm 9mm 8mm;box-shadow:0 1px 6px rgba(0,0,0,.12);
+  display:flex;flex-direction:column;gap:6px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.head h1{font-family:var(--f-mono);font-size:20px;margin:0;font-weight:600;letter-spacing:-.02em}
+.head h1 span{color:var(--accent)}
+.legend{font-size:11px;color:var(--muted)}
+.legend .ver{margin-left:10px;font-family:var(--f-mono);font-size:9px;opacity:.75}
+.cols{column-count:4;column-gap:5mm}
+section{break-inside:avoid;margin:0 0 9px}
+h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;color:var(--accent);
+  border-bottom:1px solid var(--line);padding-bottom:1px;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:inherit}
+td{padding:1px 0;vertical-align:top;text-align:left}
+td:first-child{white-space:nowrap;padding-right:6px;width:1%}
+tr+tr td{border-top:1px dotted var(--line)}
+kbd,code{font-family:var(--f-mono);font-size:.88em}
+kbd{background:var(--key);border:1px solid var(--line);border-radius:3px;padding:0 3px;font-weight:600;white-space:nowrap}
+p.note{margin:3px 0 0;font-size:11.5px;color:var(--muted)}
+p.note b{color:var(--ink)}
+.ex{background:var(--ex);border:1px dashed var(--exline);border-radius:4px;padding:3px 6px;margin:4px 0 0;font-size:11.5px}
+.ex b{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--exline);display:block}
+pre{font-family:var(--f-mono);font-size:10.5px;background:var(--key);border-left:3px solid var(--accent);padding:3px 6px;margin:3px 0;white-space:pre-wrap;line-height:1.3}
+pre.cfg{font-size:9px}
+.glyph td:first-child{font-family:var(--f-mono);text-align:center}
+/* Tableaux de commandes longues : la commande peut passer à la ligne */
+table.cmd td:first-child{white-space:normal;width:52%}
+table.cmd code{word-break:break-word}
+
+@media (max-width:640px){.cols{column-count:1}.sheet{padding:16px}}
+@media (min-width:641px) and (max-width:900px){.cols{column-count:2}}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#fff;--paper:#fff;--ink:#000;--muted:#444;--line:#bbb;--key:#f0f0f0;--accent:#1f6a3e;--ex:#fbf3e2;--exline:#9a7330;color-scheme:light}
+  body{padding:0;font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{box-shadow:none;margin:0;max-width:none;width:297mm;height:209mm;box-sizing:border-box;padding:7mm 8mm 6mm;break-after:page;overflow:hidden}
+  .sheet:last-child{break-after:auto}
+  .cols{column-count:4;column-gap:5mm;column-fill:balance}
+  .head h1{font-size:17pt}
+  section{margin-bottom:7px}
+}
+</style>
+
+<div class="sheet">
+  <div class="head">
+    <h1><span>claude</span> · dans une microVM (sbx)</h1>
+    <div class="legend">sbx = Docker Sandboxes · <kbd>␣</kbd> = leader de nvim · pourquoi et limites : <code>docs/ide.md</code><span class="ver">v1 · 2026-11-14</span></div>
+  </div>
+
+  <div class="cols">
+
+    <section>
+      <h2>Lancer Claude</h2>
+      <table class="cmd">
+        <tr><td><code>projet</code></td><td>onglet <code>claude</code> en microVM</td></tr>
+        <tr><td><code>claude-vm</code></td><td>idem, hors herdr</td></tr>
+        <tr><td><code>claude-vm ~/pro/app</code></td><td>pour un autre dossier</td></tr>
+        <tr><td><code>claude-vm -- --continue</code></td><td>options de claude après <code>--</code></td></tr>
+        <tr><td><code>PROJET_CLAUDE=host projet</code></td><td>Claude sur la machine</td></tr>
+      </table>
+      <p class="note"><b>Une microVM par projet</b>, créée au premier lancement puis reprise (outils installés, historique de Claude). Nom : dossier + empreinte du chemin.</p>
+    </section>
+
+    <section>
+      <h2>Ce que voit Claude</h2>
+      <table>
+        <tr><td>projet</td><td>lecture et écriture, même chemin</td></tr>
+        <tr><td>reste du disque</td><td>rien (<code>~/.ssh</code>, trousseau…)</td></tr>
+        <tr><td>réseau</td><td>via un proxy filtrant</td></tr>
+        <tr><td>identifiants</td><td>ajoutés par le proxy, hors VM</td></tr>
+        <tr><td>réseau local</td><td>non (ni nvim, ni localhost)</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Ce qui reste exposé</h2>
+      <p class="note" style="margin-top:0"><b>Secrets du projet</b> (<code>.env</code>) : lisibles. Les garder dans le trousseau (<code>secret get</code>).</p>
+      <p class="note"><b>Ce que Claude écrit, je l'exécute</b> plus tard sur la machine : scripts <code>package.json</code>, <code>Makefile</code>, <code>.git/hooks</code>, <code>.envrc</code>. Relire avant de lancer.</p>
+      <p class="note"><b>Pousser depuis la machine</b> (onglet git), pas depuis la microVM.</p>
+    </section>
+
+    <section>
+      <h2>Travailler avec nvim</h2>
+      <table>
+        <tr><td><kbd>␣ay</kbd></td><td>copier <code>@fichier</code> (+ lignes en visuel)</td></tr>
+        <tr><td><kbd>Cmd-V</kbd></td><td>coller dans Claude</td></tr>
+        <tr><td>automatique</td><td>nvim relit les fichiers modifiés</td></tr>
+        <tr><td><kbd>␣gd</kbd></td><td>relire le diff (façon VS Code)</td></tr>
+        <tr><td><kbd>A-3</kbd></td><td>lazygit : indexer, committer</td></tr>
+      </table>
+      <div class="ex"><b>Exemple</b><kbd>V</kbd> <kbd>j</kbd> <kbd>j</kbd> <kbd>␣ay</kbd> → <kbd>A-1</kbd> → « simplifie ça » <kbd>Cmd-V</kbd> : <code>@src/app.ts (lignes 12-14)</code>.</div>
+    </section>
+
+    <section>
+      <h2>Gérer les microVM</h2>
+      <table class="cmd">
+        <tr><td><code>sbx</code></td><td>tableau de bord</td></tr>
+        <tr><td><code>sbx ls</code></td><td>lister</td></tr>
+        <tr><td><code>sbx stop nom</code></td><td>arrêter, état gardé</td></tr>
+        <tr><td><code>sbx rm nom</code></td><td>supprimer</td></tr>
+        <tr><td><code>sbx prune</code></td><td>supprimer celles à l'arrêt</td></tr>
+        <tr><td><code>sbx exec -it nom bash</code></td><td>shell dans la VM</td></tr>
+        <tr><td><code>sbx ports nom --publish 3000</code></td><td>publier un port</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Réseau</h2>
+      <table class="cmd">
+        <tr><td><code>sbx policy ls</code></td><td>règles en place</td></tr>
+        <tr><td><code>sbx policy allow network docs.rs</code></td><td>autoriser un site</td></tr>
+        <tr><td><code>sbx policy reset</code></td><td>choisir la politique</td></tr>
+      </table>
+      <p class="note"><b>Balanced</b> (défaut) : IA, registres de paquets, GitHub… autorisés, le reste bloqué. <b>Locked Down</b> : presque rien. <b>Open</b> : tout. Une doc bloquée : l'autoriser plutôt que tout ouvrir.</p>
+    </section>
+
+    <section>
+      <h2>Mode machine (host)</h2>
+      <table>
+        <tr><td><code>/ide</code></td><td>dans Claude : lier à nvim</td></tr>
+        <tr><td><kbd>␣as</kbd></td><td>envoyer la sélection</td></tr>
+        <tr><td><kbd>␣ab</kbd></td><td>fichier dans le contexte</td></tr>
+        <tr><td><kbd>␣aa</kbd> <kbd>␣ad</kbd></td><td>accepter / refuser le diff</td></tr>
+        <tr><td><code>/sandbox</code></td><td>bac à sable natif des commandes</td></tr>
+      </table>
+      <p class="note">Code de confiance seulement : Claude a mes droits sur tout le disque.</p>
+    </section>
+
+    <section>
+      <h2>Installer (une fois)</h2>
+      <p class="note" style="margin-top:0"><b>Mac</b> : <code>make brew</code> (cask <code>docker/tap/sbx</code>).</p>
+      <p class="note"><b>Ubuntu 24.04</b> (pas de formule brew) : dépôt apt de Docker puis paquet :</p>
+<pre>curl -fsSL https://get.docker.com \
+  | sudo REPO_ONLY=1 sh
+sudo apt install docker-sbx
+sudo usermod -aG kvm $USER</pre>
+      <p class="note">Puis se reconnecter. Prérequis : <code>ls /dev/kvm</code> (virtualisation active ; dans une VM, imbriquée).</p>
+      <p class="note"><b>Puis</b> : <code>sbx login</code> (compte Docker, gratuit), et <code>/login</code> dans Claude au premier lancement.</p>
+    </section>
+
+    <section>
+      <h2>Pièges</h2>
+      <p class="note" style="margin-top:0"><b>herdr et l'état de Claude</b> (travaille, bloqué…) : détecté à l'écran ; à vérifier en microVM, les hooks de <code>herdr integration</code> n'y entrent pas.</p>
+      <p class="note"><b>Lent sur un gros projet</b> : <code>git status</code>, <code>node_modules</code>… passent par le partage de fichiers.</p>
+      <p class="note"><b>Signature des commits</b> : clé absente de la VM. Committer depuis lazygit.</p>
+    </section>
+
+  </div>
+</div>

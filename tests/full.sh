@@ -28,6 +28,21 @@ check "zsh interactif : démarrage silencieux" silent "zsh -ic true"
 # shellcheck source=tests/nvim.sh
 . tests/nvim.sh
 
+# ─── herdr ───────────────────────────────────────────────────────
+# Après nvim : l'onglet nvim de projet trouve les plugins déjà installés
+echo "== herdr"
+check "herdr : config valide" herdr config check
+# projet ouvre un workspace à 4 onglets (claude, nvim, git, term), et y revient sans doublon
+projet_opens_tabs() {
+  local out
+  out=$(HERDR_SESSION=banc HERDR_ENV=1 bash -ic 'cd ~/dotfiles/dotfiles-public && projet && projet; sleep 1
+    herdr workspace list | jq -r ".result.workspaces | length"
+    herdr tab list --workspace w1 | jq -r "[.result.tabs[].label] | join(\" \")"
+    herdr server stop' 2>&1)
+  [[ $out == *$'1\nclaude nvim git term'* ]] || { echo "$out" | tail -5; return 1; }
+}
+check "herdr : projet ouvre les onglets claude, nvim, git, term" projet_opens_tabs
+
 # ─── Bilan ───────────────────────────────────────────────────────
 echo
 if [ "$failures" -eq 0 ]; then echo "Tout est ok"; else echo "$failures échec(s)"; fi

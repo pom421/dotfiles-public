@@ -2,7 +2,7 @@
 #
 # Profils :
 #   make minimal   shell, bash, git (+ zsh s'il est installé) : sans brew, sans réseau, sans sudo
-#   make full      minimal + brew + nvim, vscode, espanso, ghostty ; zsh et ses plugins
+#   make full      minimal + brew + nvim, vscode, espanso, ghostty, herdr ; zsh et ses plugins
 #                  (+ aerospace, karabiner) sur Mac, bash sur Linux
 # Le contexte (perso, pro) vient de dotfiles-private, installé ensuite avec son propre stow.
 
@@ -31,15 +31,15 @@ endif
 
 .DEFAULT_GOAL := help
 .PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
-	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty aerospace karabiner brew brew-cleanup install-brew need-stow \
+	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty herdr aerospace karabiner brew brew-cleanup install-brew need-stow \
 	unfold clean-links dry-run uninstall check test test-full test-nvim nvim-update nvim-sync bench cheatsheets
 
 help:
 	@echo "Profils"
 	@echo "  minimal        shell, bash, git (+ zsh) : sans brew ni réseau (formation, CI)"
-	@echo "  full           minimal + brew, $(LOGIN_SHELL), nvim, vscode, espanso, ghostty$(if $(APP_TARGETS), + $(APP_TARGETS))"
+	@echo "  full           minimal + brew, $(LOGIN_SHELL), nvim, vscode, espanso, ghostty, herdr$(if $(APP_TARGETS), + $(APP_TARGETS))"
 	@echo "Paquets"
-	@echo "  shell bash zsh git nvim vscode espanso ghostty brew$(if $(APP_TARGETS), $(APP_TARGETS))"
+	@echo "  shell bash zsh git nvim vscode espanso ghostty herdr brew$(if $(APP_TARGETS), $(APP_TARGETS))"
 	@echo "  zsh-plugins    télécharge zinit et les plugins (réseau), puis les active"
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
 	@echo "  nvim-update    met à jour plugins et outils nvim, avec un cooldown de 7 jours"
@@ -67,7 +67,7 @@ minimal: need-stow
 	$(call stow_pkgs,$(MINIMAL_PACKAGES))
 	@$(MAKE) --no-print-directory git-tools
 
-full: install-brew brew minimal $(LOGIN_SHELL) git nvim vscode espanso ghostty $(APP_TARGETS) clean-links
+full: install-brew brew minimal $(LOGIN_SHELL) git nvim vscode espanso ghostty herdr $(APP_TARGETS) clean-links
 
 # ─── Outils communs ──────────────────────────────────────────────
 need-stow:
@@ -174,6 +174,10 @@ ghostty: need-stow
 	if [ "$(OS)" = Darwin ] && [ -f "$$lib" ] && [ ! -L "$$lib" ]; then \
 		mv "$$lib" "$$lib.pre-dotfiles" && echo "sauvegarde : $$lib -> $$lib.pre-dotfiles (masquait ~/.config/ghostty/config)"; \
 	fi
+
+# herdr : multiplexeur (projets en onglets claude, nvim, git, term), cf. docs/ide.md
+herdr: need-stow
+	$(call stow_pkgs,herdr)
 
 # Karabiner ne suit pas un karabiner.json en lien symbolique : tout le dossier
 # ~/.config/karabiner est un lien vers le repo (d'où le .stow-local-ignore du paquet).
@@ -284,7 +288,7 @@ brew-cleanup:
 
 # ─── Maintenance ─────────────────────────────────────────────────
 dry-run: need-stow
-	$(STOW) -n -v $(sort $(MINIMAL_PACKAGES) zsh) nvim espanso ghostty brew $(if $(filter aerospace,$(APP_TARGETS)),aerospace)
+	$(STOW) -n -v $(sort $(MINIMAL_PACKAGES) zsh) nvim espanso ghostty herdr brew $(if $(filter aerospace,$(APP_TARGETS)),aerospace)
 
 # Un ancien stow sans --no-folding a pu remplacer un dossier entier par un lien
 # vers le repo (ex. ~/.config/git -> dotfiles-public/git/.config/git) : les
@@ -330,7 +334,7 @@ clean-links:
 	done
 
 uninstall: need-stow
-	-$(STOW) -D $(sort $(MINIMAL_PACKAGES) zsh) nvim espanso ghostty brew aerospace
+	-$(STOW) -D $(sort $(MINIMAL_PACKAGES) zsh) nvim espanso ghostty herdr brew aerospace
 	-stow -d "$(REPO)" -t "$(VSCODE_TARGET)" -D vscode 2>/dev/null
 	@l="$(XDG_CONFIG_HOME)/karabiner"; if [ -L "$$l" ] && [ "$$l" -ef "$(REPO)/karabiner/.config/karabiner" ]; then rm "$$l" && echo "retiré : $$l"; fi
 	@echo "Les sauvegardes *.pre-dotfiles sont restées en place."

@@ -29,3 +29,15 @@ keymap("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { desc = "Buffer suivant" }
 keymap("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Buffer précédent" })
 
 -- <leader>bd et <leader>bo (fermer le buffer, les autres) : snacks.bufdelete, cf. plugins/snacks.lua
+
+-- Référence du fichier pour Claude, à coller dans son onglet (marche aussi dans la microVM,
+-- qui voit le projet au même chemin) : @src/app.ts, avec les lignes en visuel
+keymap({ "n", "x" }, "<leader>ay", function()
+  local ref = "@" .. vim.fn.expand("%:.")
+  if vim.api.nvim_get_mode().mode:match("^[vV\22]") then
+    local a, b = vim.fn.line("v"), vim.fn.line(".")
+    ref = ref .. " (lignes " .. math.min(a, b) .. "-" .. math.max(a, b) .. ")"
+  end
+  vim.fn.setreg("+", ref)
+  vim.notify(ref, vim.log.levels.INFO, { title = "Copié pour Claude" })
+end, { desc = "Copier la référence pour Claude" })

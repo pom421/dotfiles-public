@@ -28,6 +28,7 @@ brew "git-filter-repo"
 brew "git-lfs"
 brew "git-sizer"
 brew "glow"
+brew "herdr"
 brew "httrack"
 brew "imagemagick"
 brew "jq"
@@ -147,6 +148,7 @@ if OS.mac?
   # bash 5 : macOS fournit bash 3.2, figé depuis 2007 (Linux a déjà un bash 5)
   brew "bash"
   tap "cirruslabs/cli"
+  tap "docker/tap"
   tap "felixkratz/formulae"
   tap "ngrok/ngrok"
   tap "nikitabobko/tap"
@@ -159,6 +161,9 @@ if OS.mac?
   cask "datagrip"
   cask "deepl"
   cask "docker-desktop"
+  # Docker Sandboxes : Claude Code dans une microVM (cf. docs/ide.md). Sous Linux, pas de
+  # formule : paquet apt docker-sbx du dépôt Docker (cheatsheets/claude/claude-sandbox)
+  cask "docker/tap/sbx"
   cask "figma"
   cask "firefox"
   cask "font-fira-code"
