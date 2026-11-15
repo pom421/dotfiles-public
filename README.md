@@ -1,10 +1,10 @@
 # Dotfiles
 
-Mes dotfiles pour macOS (perso, zsh) et Ubuntu (boulot, bash), installés avec
+Mes dotfiles pour macOS (perso) et Ubuntu (boulot), tous deux sous bash, installés avec
 [GNU Stow](https://www.gnu.org/software/stow/). Trois principes :
 
 - **Fonctionne partout, même nu** : sur une machine sans brew ni outils (formation,
-  serveur), `make minimal` donne un bash, un zsh et un git fonctionnels, sans réseau.
+  serveur), `make minimal` donne un bash et un git fonctionnels (et zsh s'il est installé), sans réseau.
 - **Un outil = un endroit** : tout ce qui concerne un outil (alias, fonctions, PATH,
   complétion) est dans un seul fichier, qui ne fait rien si l'outil est absent.
 - **Rien de personnel ici** : identités, proxy, secrets et réglages pro vivent dans
@@ -29,7 +29,7 @@ installeur…) sont sauvegardés en `*.pre-dotfiles`, jamais supprimés.
 
 | | macOS (perso) | Ubuntu (boulot) |
 |---|---|---|
-| Shell | zsh (zinit, Powerlevel10k, plugins) ; bash 5 de brew possible | bash, avec bash-completion |
+| Shell | bash 5 de brew, avec bash-completion (zsh : optionnel, `make zsh`) | bash, avec bash-completion |
 | Avant brew | outils en ligne de commande Xcode (git, make) | quelques paquets apt (cf. plus bas) |
 | Homebrew | `/opt/homebrew` | `/home/linuxbrew/.linuxbrew` |
 | Brewfile | outils communs + applications (casks), tart, borders, trash | outils communs |
@@ -42,7 +42,7 @@ installeur…) sont sauvegardés en `*.pre-dotfiles`, jamais supprimés.
 | `ls` | `ls -GF` (couleurs BSD) | `ls -F --color=auto` (couleurs GNU) |
 
 Tout le reste est commun : la config `shell/` (alias, fonctions, modules d'outils) est
-chargée à l'identique par zsh sur Mac et par bash sur Linux, et la config git est la même.
+chargée à l'identique sur Mac et sur Linux (bash ; zsh reste possible), et la config git est la même.
 
 ### macOS
 
@@ -55,11 +55,12 @@ cd ~/dotfiles/dotfiles-public
 make full
 cd ~/dotfiles/dotfiles-private
 stow common perso
-exec zsh
+# Puis le shell de connexion : cf. « Bash, shell de connexion » plus bas
+exec /opt/homebrew/bin/bash -l
 ```
 
 - `xcode-select --install` fournit git et make, nécessaires avant brew.
-- `make full` installe brew s'il manque, le Brewfile, zsh et ses plugins, git, nvim,
+- `make full` installe brew s'il manque, le Brewfile (dont bash 5), git, nvim,
   VSCode, espanso, Ghostty, AeroSpace et Karabiner.
 - Le repo privé apporte l'identité git (avec la signature GPG) et les secrets : cf.
   `private-template/README.md`.
@@ -76,8 +77,8 @@ exec zsh
   l'Option gauche garde les caractères AZERTY (`| { } [ ] ~ \`).
 - VSCode : cf. la section [VSCode](#vscode) pour le travail entre les deux machines.
 
-**Utiliser bash plutôt que zsh** : la config `shell/` est commune, tout fonctionne
-pareil. Le Brewfile installe bash 5 et `bash-completion@2` (le `/bin/bash` de macOS
+**Bash, shell de connexion** : `make full` installe bash 5 mais ne change pas le shell du compte
+(`chsh` demande ton mot de passe). La config `shell/` est commune à bash et zsh. Le Brewfile installe bash 5 et `bash-completion@2` (le `/bin/bash` de macOS
 est figé en 3.2 : pas de complétion git/make). Pour en faire le shell de connexion :
 
 ```sh
@@ -97,7 +98,7 @@ Pour vérifier :
 Pour essayer sans attendre, dans un onglet : `exec /opt/homebrew/bin/bash -l`.
 `chsh` répond « no changes made » si le shell est déjà celui demandé.
 
-Retour à zsh : `chsh -s /bin/zsh`, puis nouvelle session ; les deux configs coexistent.
+**Revenir à zsh** (config conservée) : `make zsh` (liens + plugins, réseau), `chsh -s /bin/zsh`, puis nouvelle session. Les deux configs coexistent.
 
 ### Linux (Ubuntu)
 
@@ -176,7 +177,7 @@ cd ~/dotfiles/dotfiles-public
 make minimal
 ```
 
-Sans brew, sans réseau, sans repo privé : bash (et zsh s'il est installé) avec la config
+Sans brew, sans réseau, sans repo privé : bash (et la config zsh si zsh est installé) avec la config
 commune, et un git fonctionnel. Aucune identité git n'est devinée : la donner par repo
 (`git config user.email …`) avant de commiter.
 
@@ -264,12 +265,12 @@ Les réglages de chaque outil (config, fiche) sont listés dans
 | Besoin | Commande |
 |---|---|
 | Dans bash, retrouver une commande | taper son début puis ↑ (historique par préfixe), ou Ctrl-R (fzf) |
-| Quels fichiers sont chargés ? | `DOTFILES_DEBUG=1 zsh -i -c exit` (ou `bash`) |
+| Quels fichiers sont chargés ? | `DOTFILES_DEBUG=1 bash -i -c exit` (ou `zsh`) |
 | Temps de démarrage | `make bench` |
 | Proxy du boulot | `proxy on`, `proxy off`, `proxy status` |
 | Secret dans le trousseau | `secret set NOM`, `with_secret VAR NOM commande…` |
 | Après un `brew install delta` / `git-lfs` | `make git-tools` |
-| Après l'ajout d'un plugin zsh | `make zsh-plugins` (le shell ne télécharge jamais rien) |
+| Après l'ajout d'un plugin zsh (si tu utilises zsh) | `make zsh-plugins` (le shell ne télécharge jamais rien) |
 | Fichier supprimé du repo | `make clean-links` |
 | Paquets brew en trop | `make brew-cleanup` (liste seulement) |
 | VSCode (réglages, extensions, profils) | cf. [VSCode](#vscode) |

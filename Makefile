@@ -20,11 +20,9 @@ STOW = stow -d "$(REPO)" -t "$(HOME)" --no-folding
 
 MINIMAL_PACKAGES = shell bash git $(if $(shell command -v zsh 2>/dev/null),zsh)
 ifeq ($(OS),Darwin)
-  LOGIN_SHELL = zsh
   APP_TARGETS = aerospace karabiner
   VSCODE_TARGET = $(HOME)/Library/Application Support/Code/User
 else
-  LOGIN_SHELL = bash
   APP_TARGETS =
   VSCODE_TARGET = $(XDG_CONFIG_HOME)/Code/User
 endif
@@ -36,11 +34,11 @@ endif
 
 help:
 	@echo "Profils"
-	@echo "  minimal        shell, bash, git (+ zsh) : sans brew ni réseau (formation, CI)"
-	@echo "  full           minimal + brew, $(LOGIN_SHELL), nvim, vscode, espanso, ghostty, herdr$(if $(APP_TARGETS), + $(APP_TARGETS))"
+	@echo "  minimal        shell, bash, git (+ config zsh si zsh est installé) : sans brew ni réseau (formation, CI)"
+	@echo "  full           minimal + brew, bash, nvim, vscode, espanso, ghostty, herdr$(if $(APP_TARGETS), + $(APP_TARGETS))"
 	@echo "Paquets"
 	@echo "  shell bash zsh git nvim vscode espanso ghostty herdr brew$(if $(APP_TARGETS), $(APP_TARGETS))"
-	@echo "  zsh-plugins    télécharge zinit et les plugins (réseau), puis les active"
+	@echo "  zsh           (optionnel) config zsh + plugins ; zsh-plugins : zinit et plugins (réseau), puis les active"
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
 	@echo "  nvim-update    met à jour plugins et outils nvim, avec un cooldown de 7 jours"
 	@echo "  nvim-sync      après un git pull : plugins, outils et parsers nvim calés sur la config"
@@ -67,7 +65,7 @@ minimal: need-stow
 	$(call stow_pkgs,$(MINIMAL_PACKAGES))
 	@$(MAKE) --no-print-directory git-tools
 
-full: install-brew brew minimal $(LOGIN_SHELL) git nvim vscode espanso ghostty herdr $(APP_TARGETS) clean-links
+full: install-brew brew minimal bash git nvim vscode espanso ghostty herdr $(APP_TARGETS) clean-links
 
 # ─── Outils communs ──────────────────────────────────────────────
 need-stow:
