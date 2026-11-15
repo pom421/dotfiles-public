@@ -9,12 +9,17 @@ _sbx_nom() {
   printf '%s-%s' "$base" "$(printf '%s' "$1" | cksum | cut -d' ' -f1)"
 }
 
+# Fonction shell (pas un binaire) : `type claude-vm` ou README, « Commandes maison ».
+# Fiche : cheatsheets/claude/claude-sandbox. Lancée aussi par `projet` (herdr.sh).
+#
 # claude-vm [dossier] [-- options de claude] : Claude dans la microVM du projet (créée au premier
 # lancement, reprise ensuite). Par défaut, la racine du dépôt git courant.
+# HERDR_AGENT : herdr ne voit que sbx ; il lit alors l'écran du pane comme celui de Claude (états
+# travaille, bloqué, fini dans sa barre latérale). Sans effet hors de herdr.
 claude-vm() {
   local dir
   if [ $# -gt 0 ] && [ "$1" != "--" ]; then dir=$1; shift; else dir=.; fi
   dir=$(cd "$dir" 2>/dev/null && { git rev-parse --show-toplevel 2>/dev/null || pwd; }) ||
     { echo "claude-vm : dossier introuvable" >&2; return 1; }
-  sbx run --name "$(_sbx_nom "$dir")" claude "$dir" "$@"
+  HERDR_AGENT=claude sbx run --name "$(_sbx_nom "$dir")" claude "$dir" "$@"
 }

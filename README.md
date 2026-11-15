@@ -231,6 +231,34 @@ y() { … }
 - en bash, bash-completion est déjà chargé quand tools.d passe : un outil qui enrobe
   les complétions existantes (fzf : `cd **<Tab>`, `ps **<Tab>`) les trouve en place.
 
+## Commandes maison : où elles sont définies
+
+`projet`, `claude-vm`, `secret`… sont des **fonctions shell** du repo, pas des binaires :
+`which projet` ne trouve rien. Elles vivent dans `shell/.config/shell/` (`core/` : toujours
+chargées ; `tools.d/` : seulement si l'outil est installé).
+
+| Commande | Fichier | Rôle |
+|---|---|---|
+| `projet` | `tools.d/herdr.sh` | ouvre le projet dans herdr (4 onglets : claude, nvim, git, term) |
+| `claude-vm`, `_sbx_nom` | `tools.d/sbx.sh` | Claude dans la microVM du projet ; nom de la VM |
+| `secret`, `with_secret` | `tools.d/secret.sh` | secrets dans le trousseau |
+| `y` | `tools.d/yazi.sh` | yazi, qui change de dossier à la sortie |
+| `show-port`, `listening` | `tools.d/lsof.sh` | qui écoute sur quel port |
+| `wikidocs` | `tools.d/wikidocs.sh` | copie un lien Docs (La Suite) en Markdown |
+| `proxy` | `core/proxy.sh` | proxy du boulot |
+| `mkcd`, `h`, `extract`, `path_prepend` | `core/nav.sh`, `history.sh`, `files.sh`, `path.sh` | |
+
+Retrouver la définition d'une commande :
+
+```bash
+grep -rn '^projet()' ~/.config/shell/          # partout (bash et zsh)
+shopt -s extdebug; declare -F projet           # bash : nom, ligne, fichier
+type projet                                    # affiche le corps de la fonction
+```
+
+Les réglages de chaque outil (config, fiche) sont listés dans
+[`docs/ide.md`](docs/ide.md#où-sont-les-réglages).
+
 ## Au quotidien
 
 | Besoin | Commande |

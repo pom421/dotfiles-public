@@ -75,6 +75,7 @@ identifiants Claude n'y entrent pas : le proxy les ajoute aux requêtes en sorti
 |---|---|---|
 | Isolation | forte : VM, proxy réseau | faible : bac à sable de Claude (`/sandbox`) pour ses commandes seulement |
 | Lien avec nvim (`/ide`) : sélection, diffs à accepter | non (la VM n'atteint pas le réseau local) | oui |
+| Suivi dans herdr (travaille, bloqué, fini) | oui, en lisant l'écran du pane (`HERDR_AGENT=claude`) | oui, par les hooks (`herdr integration install claude`) |
 | Pour quoi | travail autonome, dépendances inconnues, code d'autrui | aller-retour serré sur du code de confiance |
 
 Dans les deux modes, `␣ay` dans nvim copie une référence (`@src/app.ts (lignes 10-20)`) à coller dans

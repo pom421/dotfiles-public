@@ -14,3 +14,6 @@ auto_switch = false
 # (sur Mac, Option droite : macos-option-as-alt = right dans Ghostty)
 switch_tab = ["prefix+1..9", "alt+1..9"]
 # Pas d'Alt+lettre : nvim s'en sert (Alt-j / Alt-k déplacent la sélection). Projets : C-b w
+
+[ui.toast]
+delivery = "herdr"

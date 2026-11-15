@@ -1,11 +1,15 @@
 # herdr : multiplexeur de terminal qui reconnaît les agents (philosophie : docs/ide.md du repo)
 command -v herdr >/dev/null 2>&1 || return 0
 
+# Fonction shell (pas un binaire) : `type projet` ou README, « Commandes maison ».
+# Fiches : cheatsheets/herdr/ (herdr-essentiel) et cheatsheets/claude/ (claude-sandbox).
+#
 # projet [dossier] : ouvre le projet dans herdr, ou y revient s'il est déjà ouvert.
 # Un workspace par projet, 4 onglets : 1 claude, 2 nvim, 3 git (lazygit), 4 term.
 # Dossier : la racine du dépôt git ; un nom connu de zoxide marche aussi (projet dotfiles).
 # Claude tourne dans une microVM (comme claude-vm, sbx.sh) si sbx est installé ; PROJET_CLAUDE=host le lance
 # sur la machine, avec le lien /ide vers nvim mais sans l'isolation.
+# Dans la microVM, HERDR_AGENT=claude fait suivre son état par herdr (voir claude-vm).
 projet() {
   local dir label ws tab pane t cmd
   command -v jq >/dev/null 2>&1 || { echo "projet : jq requis (make brew)" >&2; return 1; }
@@ -30,7 +34,7 @@ projet() {
     herdr workspace focus "$ws" >/dev/null
   else
     if [ "${PROJET_CLAUDE:-vm}" != host ] && command -v sbx >/dev/null 2>&1; then
-      cmd="sbx run --name $(_sbx_nom "$dir") claude '$dir'"
+      cmd="HERDR_AGENT=claude sbx run --name $(_sbx_nom "$dir") claude '$dir'"
     else
       cmd=claude
     fi
