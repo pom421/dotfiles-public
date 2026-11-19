@@ -152,6 +152,8 @@ if OS.mac?
   tap "felixkratz/formulae"
   tap "ngrok/ngrok"
   tap "nikitabobko/tap"
+  # Vite+ (vp) : chaîne d’outils web ; pas de bottle Linux
+  brew "vite-plus"
   brew "trash"
   brew "cirruslabs/cli/tart"
   brew "felixkratz/formulae/borders"

@@ -28,7 +28,7 @@ else
 endif
 
 .DEFAULT_GOAL := help
-.PHONY: help minimal full shell bash zsh zsh-plugins git git-tools nvim vscode vscode-unfold \
+.PHONY: help minimal full shell bash zsh zsh-plugins git git-tools vite-plus nvim vscode vscode-unfold \
 	vscode-export vscode-import vscode-closed vscode-settings vscode-settings-drift espanso ghostty herdr aerospace karabiner brew brew-cleanup install-brew need-stow \
 	unfold clean-links dry-run uninstall check test test-full test-nvim nvim-update nvim-sync bench cheatsheets
 
@@ -40,6 +40,7 @@ help:
 	@echo "  shell bash zsh git nvim vscode espanso ghostty herdr brew$(if $(APP_TARGETS), $(APP_TARGETS))"
 	@echo "  zsh           (optionnel) config zsh + plugins ; zsh-plugins : zinit et plugins (réseau), puis les active"
 	@echo "  git-tools      active delta / git-lfs dans git s'ils sont installés"
+	@echo "  vite-plus      shims et fichier env de Vite+ (vp), appelé par make brew"
 	@echo "  nvim-update    met à jour plugins et outils nvim, avec un cooldown de 7 jours"
 	@echo "  nvim-sync      après un git pull : plugins, outils et parsers nvim calés sur la config"
 	@echo "  brew-cleanup   liste ce qui est installé par brew mais absent des Brewfiles"
@@ -277,6 +278,13 @@ brew: install-brew
 		[ -r "$$f" ] || continue; echo "brew bundle : $$f"; brew bundle --file="$$f" || exit 1; \
 	done
 	@$(MAKE) --no-print-directory git-tools
+	@$(MAKE) --no-print-directory vite-plus
+
+# Vite+ : shims (node, pnpm, CLI globaux…) et fichier env que charge
+# shell/tools.d/vite-plus.sh. Sans vp (Linux : pas de bottle), ne fait rien.
+vite-plus:
+	@command -v vp >/dev/null 2>&1 || { echo "vite-plus : vp absent, rien à faire"; exit 0; }; \
+	vp env setup
 
 # Liste ce qui est installé mais absent des Brewfiles. Pour désinstaller :
 #   brew bundle cleanup --force --file=<fichier affiché>

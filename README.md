@@ -270,6 +270,7 @@ Les réglages de chaque outil (config, fiche) sont listés dans
 | Proxy du boulot | `proxy on`, `proxy off`, `proxy status` |
 | Secret dans le trousseau | `secret set NOM`, `with_secret VAR NOM commande…` |
 | Après un `brew install delta` / `git-lfs` | `make git-tools` |
+| Après un `brew install vite-plus` (Mac) | `make vite-plus` |
 | Après l'ajout d'un plugin zsh (si tu utilises zsh) | `make zsh-plugins` (le shell ne télécharge jamais rien) |
 | Fichier supprimé du repo | `make clean-links` |
 | Paquets brew en trop | `make brew-cleanup` (liste seulement) |
