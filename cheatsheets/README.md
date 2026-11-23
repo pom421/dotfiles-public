@@ -7,6 +7,7 @@ Règles de rédaction : `CLAUDE.md`.
 |---|---|---|
 | **nvim-base** : vim natif, sans config | [nvim-essentiel](nvim-base/nvim-essentiel.md) | grammaire, mouvements, édition, registres, fenêtres |
 | | [nvim-presse-papier](nvim-base/nvim-presse-papier.md) | registres, presse-papier système (macOS, Ubuntu) |
+| | [nvim-remplacer](nvim-base/nvim-remplacer.md) | remplacer un mot à plusieurs endroits : LSP, `cgn` + `.`, `:%s`, grug-far |
 | **nvim-ide** : ma config | [nvim-ide](nvim-ide/nvim-ide.md) | LSP, complétion, formatage, git, diff, débogage, tests, markdown, Claude |
 | | [nvim-mes-raccourcis](nvim-ide/nvim-mes-raccourcis.md) | mes raccourcis face aux défauts de nvim |
 | | [nvim-entretien](nvim-ide/nvim-entretien.md) | mises à jour, après un `git pull`, ajouter un langage, réparer |

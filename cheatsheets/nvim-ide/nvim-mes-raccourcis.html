@@ -64,7 +64,7 @@ p.note b{color:var(--ink)}
 <div class="sheet">
   <div class="head">
     <h1><span>nvim</span> · ma config vs défaut</h1>
-    <div class="legend"><kbd>␣</kbd> = leader (Espace) · colonne « Défaut » = nvim sans config · <span class="lost">rouge</span> = fonction perdue<span class="ver">v6 · 2026-11-14</span></div>
+    <div class="legend"><kbd>␣</kbd> = leader (Espace) · colonne « Défaut » = nvim sans config · <span class="lost">rouge</span> = fonction perdue<span class="ver">v7 · 2026-11-23</span></div>
   </div>
 
   <div class="cols">
@@ -152,6 +152,21 @@ p.note b{color:var(--ink)}
     </section>
 
     <section>
+      <h2>Options qui changent les touches</h2>
+      <table>
+        <tr><th>Option</th><th>Chez moi</th><th>Défaut</th></tr>
+        <tr><td><code>clipboard</code></td><td><kbd>y</kbd> <kbd>d</kbd> <kbd>x</kbd> <kbd>c</kbd> → presse-papier système</td><td class="def">restent dans nvim (<kbd>"+y</kbd>)</td></tr>
+        <tr><td><code>iskeyword</code></td><td><code>foo-bar</code> = 1 mot</td><td class="def">2 mots</td></tr>
+        <tr><td><code>smartcase</code></td><td><kbd>/foo</kbd> ignore la casse, <kbd>/Foo</kbd> non ; <kbd>*</kbd> toujours</td><td class="def">casse respectée</td></tr>
+        <tr><td><code>splitright</code></td><td><kbd>:vsplit</kbd> s'ouvre à droite</td><td class="def">à gauche</td></tr>
+        <tr><td><code>splitbelow</code></td><td><kbd>:split</kbd> s'ouvre en bas</td><td class="def">en haut</td></tr>
+        <tr><td><code>undofile</code></td><td><kbd>u</kbd> marche après réouverture</td><td class="def">historique perdu</td></tr>
+      </table>
+      <div class="ex"><b>Exemple</b><code>clipboard</code> : <kbd>yiw</kbd> puis <kbd>dd</kbd> → le <kbd>dd</kbd> écrase le presse-papier. Supprimer sans écraser : <kbd>"_dd</kbd>.</div>
+      <div class="ex"><b>Exemple</b><code>iskeyword</code> : sur <code>font-size</code>, <kbd>ciw</kbd> remplace tout ; <kbd>w</kbd> saute le mot entier.</div>
+    </section>
+
+    <section>
       <h2>Mode visuel</h2>
       <table>
         <tr><th>Touche</th><th>Chez moi</th><th>Défaut</th></tr>
@@ -170,21 +185,6 @@ p.note b{color:var(--ink)}
         <tr><td><kbd>C-j</kbd> <kbd>C-k</kbd></td><td>liste bas / haut</td><td class="def lost">masque mes fenêtres bas / haut</td></tr>
       </table>
       <p class="note">Toutes les touches : fiche explorateur.</p>
-    </section>
-
-    <section>
-      <h2>Options qui changent les touches</h2>
-      <table>
-        <tr><th>Option</th><th>Chez moi</th><th>Défaut</th></tr>
-        <tr><td><code>clipboard</code></td><td><kbd>y</kbd> <kbd>d</kbd> <kbd>x</kbd> <kbd>c</kbd> → presse-papier système</td><td class="def">restent dans nvim (<kbd>"+y</kbd>)</td></tr>
-        <tr><td><code>iskeyword</code></td><td><code>foo-bar</code> = 1 mot</td><td class="def">2 mots</td></tr>
-        <tr><td><code>smartcase</code></td><td><kbd>/foo</kbd> ignore la casse, <kbd>/Foo</kbd> non</td><td class="def">casse respectée</td></tr>
-        <tr><td><code>splitright</code></td><td><kbd>:vsplit</kbd> s'ouvre à droite</td><td class="def">à gauche</td></tr>
-        <tr><td><code>splitbelow</code></td><td><kbd>:split</kbd> s'ouvre en bas</td><td class="def">en haut</td></tr>
-        <tr><td><code>undofile</code></td><td><kbd>u</kbd> marche après réouverture</td><td class="def">historique perdu</td></tr>
-      </table>
-      <div class="ex"><b>Exemple</b><code>clipboard</code> : <kbd>yiw</kbd> puis <kbd>dd</kbd> → le <kbd>dd</kbd> écrase le presse-papier. Supprimer sans écraser : <kbd>"_dd</kbd>.</div>
-      <div class="ex"><b>Exemple</b><code>iskeyword</code> : sur <code>font-size</code>, <kbd>ciw</kbd> remplace tout ; <kbd>w</kbd> saute le mot entier.</div>
     </section>
 
     <section>

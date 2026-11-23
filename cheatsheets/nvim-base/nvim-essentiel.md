@@ -1,6 +1,6 @@
 # Neovim essentiel
 
-*v3 · 2026-11-14* — Page 1/2 · `C-x` = Ctrl+x
+*v4 · 2026-11-23* — Page 1/2 · `C-x` = Ctrl+x
 
 ---
 
@@ -178,6 +178,8 @@ Puis : `d` `c` `y` `>` `U` `u` `~` `:`
 | `:%s/a/b/gc` | tout, en confirmant |
 | `:'<,'>s/a/b/g` | dans la sélection |
 | `:noh` | effacer surlignage |
+
+`*` `N` `cgn` texte `Esc` puis `.` `.` : au cas par cas (fiche nvim-remplacer)
 
 ## Mode insertion
 

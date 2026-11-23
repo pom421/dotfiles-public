@@ -1,6 +1,6 @@
 # Neovim mes raccourcis
 
-*v6 · 2026-11-14* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
+*v7 · 2026-11-23* — `␣` = leader (Espace) · colonne « Défaut » = nvim sans config · ⚠ = fonction perdue
 
 ---
 
@@ -82,6 +82,21 @@ Défaut équivalent : `:bn` `:bp` `:bd`. Haut / bas de l'écran : `zt` `zb` dép
 | `C-j` | résultat suivant | `C-n` (toujours actif) |
 | `C-k` | résultat précédent | `C-p` (toujours actif) |
 
+## Options qui changent les touches
+
+| Option | Chez moi | Défaut |
+|---|---|---|
+| `clipboard` | `y` `d` `x` `c` → presse-papier système | restent dans nvim (`"+y`) |
+| `iskeyword` | `foo-bar` = 1 mot | 2 mots |
+| `smartcase` | `/foo` ignore la casse, `/Foo` non ; `*` toujours | casse respectée |
+| `splitright` | `:vsplit` s'ouvre à droite | à gauche |
+| `splitbelow` | `:split` s'ouvre en bas | en haut |
+| `undofile` | `u` marche après réouverture | historique perdu |
+
+> **Exemple** : `clipboard` : `yiw` puis `dd` → le `dd` écrase le presse-papier. Supprimer sans écraser : `"_dd`.
+
+> **Exemple** : `iskeyword` : sur `font-size`, `ciw` remplace tout ; `w` saute le mot entier.
+
 ## Mode visuel
 
 | Touche | Chez moi | Défaut |
@@ -101,21 +116,6 @@ Défaut équivalent : `:m '>+1` ou `d` puis `p`.
 | `C-j` `C-k` | liste bas / haut | ⚠ masque mes fenêtres bas / haut |
 
 Toutes les touches : fiche explorateur.
-
-## Options qui changent les touches
-
-| Option | Chez moi | Défaut |
-|---|---|---|
-| `clipboard` | `y` `d` `x` `c` → presse-papier système | restent dans nvim (`"+y`) |
-| `iskeyword` | `foo-bar` = 1 mot | 2 mots |
-| `smartcase` | `/foo` ignore la casse, `/Foo` non | casse respectée |
-| `splitright` | `:vsplit` s'ouvre à droite | à gauche |
-| `splitbelow` | `:split` s'ouvre en bas | en haut |
-| `undofile` | `u` marche après réouverture | historique perdu |
-
-> **Exemple** : `clipboard` : `yiw` puis `dd` → le `dd` écrase le presse-papier. Supprimer sans écraser : `"_dd`.
-
-> **Exemple** : `iskeyword` : sur `font-size`, `ciw` remplace tout ; `w` saute le mot entier.
 
 ## Touches natives redéfinies
 
