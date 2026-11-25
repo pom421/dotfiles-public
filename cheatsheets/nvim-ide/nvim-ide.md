@@ -1,6 +1,6 @@
 # Neovim IDE
 
-*v10 · 2026-11-14* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
+*v11 · 2026-11-25* — Page 1/2 · `␣` = leader (Espace) · `C-x` = Ctrl+x · `␣?` = raccourcis du buffer · which-key s'ouvre après `␣`
 
 ---
 
@@ -45,11 +45,13 @@
 |---|---|
 | `C-espace` | ouvrir le menu |
 | `C-j` `C-k` | proposition suivante / précédente |
-| `Entrée` | valider |
+| `Entrée` | valider la proposition choisie ; rien de choisi = saut de ligne |
 | `C-e` | fermer le menu |
 | `Tab` `S-Tab` | champ de snippet suivant / précédent |
 
 Sources : LSP, chemins, snippets, mots du buffer ; aussi après `:`. La doc de la proposition s'affiche à côté.
+
+**Valider = point d'annulation** : `u` revient au texte tapé avant la complétion.
 
 ## Rechercher (snacks)
 

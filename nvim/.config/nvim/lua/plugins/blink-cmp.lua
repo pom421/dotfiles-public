@@ -16,6 +16,9 @@ return {
       ["<C-k>"] = { "select_prev", "fallback" },
     },
     completion = {
+      -- Rien de présélectionné : Entrée valide seulement une proposition choisie (C-j / C-k),
+      -- sinon c'est un vrai saut de ligne (sinon « machin⏎ » devenait « matchMedia(…) »)
+      list = { selection = { preselect = false } },
       documentation = { auto_show = true, auto_show_delay_ms = 200 },
       -- coloration treesitter des propositions du LSP
       menu = { draw = { treesitter = { "lsp" } } },

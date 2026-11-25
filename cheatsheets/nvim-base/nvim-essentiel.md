@@ -1,6 +1,6 @@
 # Neovim essentiel
 
-*v4 · 2026-11-23* — Page 1/2 · `C-x` = Ctrl+x
+*v5 · 2026-11-25* — Page 1/2 · `C-x` = Ctrl+x
 
 ---
 
@@ -134,6 +134,16 @@ Marche **n'importe où dans l'objet** : pas besoin d'être au début.
 | `R` | mode remplacement (écrase) |
 | `~` | inverser la casse du caractère |
 | `>>` `<<` | indenter / désindenter la ligne |
+
+## Ce que u annule
+
+| Touche | Action |
+|---|---|
+| `i`…`Esc` | toute la saisie, `⏎` compris |
+| `C-g u` | en insertion : couper ici |
+| `←` `→` souris | en insertion : coupent aussi |
+
+`C-g u` avant une ligne délicate : `u` ne retire qu'elle
 
 ---
 
