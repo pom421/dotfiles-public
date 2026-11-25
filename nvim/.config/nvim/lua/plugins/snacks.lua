@@ -19,6 +19,11 @@ return {
   lazy = false,
   opts = {
     picker = {
+      sources = {
+        -- Explorateur : aperçu (P) dans la fenêtre principale, pas sous la liste. Le
+        -- `preview = false` de snacks écrasait le `preview = "main"` du preset sidebar.
+        explorer = { layout = { preview = "main", hidden = { "preview" } } },
+      },
       win = {
         -- C-j / C-k pour descendre / monter dans la liste
         input = {
